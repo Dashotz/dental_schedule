@@ -183,9 +183,69 @@
         }
     </style>
     
-    @stack('styles')
-</head>
-<body>
+        <style>
+            /* Custom Toggle Switch Styling - Better Design */
+            .form-check-input.toggle-status[type="checkbox"] {
+                width: 3rem !important;
+                height: 1.5rem !important;
+                border-radius: 1.5rem !important;
+                background-color: #dc3545 !important;
+                border: 2px solid #dc3545 !important;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+                background-image: none !important;
+            }
+            
+            .form-check-input.toggle-status[type="checkbox"]:checked {
+                background-color: #198754 !important;
+                border-color: #198754 !important;
+            }
+            
+            .form-check-input.toggle-status[type="checkbox"]:focus {
+                border-color: #86b7fe;
+                outline: 0;
+                box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            }
+            
+            /* Toggle knob animation */
+            .form-check-input.toggle-status[type="checkbox"]::after {
+                content: '';
+                position: absolute;
+                width: 1.125rem;
+                height: 1.125rem;
+                border-radius: 50%;
+                background-color: white;
+                top: 0.125rem;
+                left: 0.125rem;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            
+            .form-check-input.toggle-status[type="checkbox"]:checked::after {
+                left: calc(100% - 1.25rem);
+            }
+            
+            /* Larger toggle for show page */
+            .form-check-input.toggle-status[style*="3.5rem"] {
+                width: 3.5rem !important;
+                height: 1.75rem !important;
+            }
+            
+            .form-check-input.toggle-status[style*="3.5rem"]::after {
+                width: 1.375rem;
+                height: 1.375rem;
+                top: 0.125rem;
+                left: 0.125rem;
+            }
+            
+            .form-check-input.toggle-status[style*="3.5rem"]:checked::after {
+                left: calc(100% - 1.5rem);
+            }
+        </style>
+        @stack('styles')
+    </head>
+    <body>
     @auth
         <!-- Sidebar Overlay for Mobile -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
