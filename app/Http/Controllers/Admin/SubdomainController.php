@@ -22,6 +22,11 @@ class SubdomainController extends Controller
 
     public function create()
     {
+        if (request()->ajax()) {
+            return response()->json([
+                'html' => view('admin.subdomains.modals.create')->render()
+            ]);
+        }
         return view('admin.subdomains.create');
     }
 
@@ -38,6 +43,14 @@ class SubdomainController extends Controller
 
         $subdomain = Subdomain::create($validated);
 
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Subdomain created successfully.',
+                'subdomain' => $subdomain
+            ]);
+        }
+
         return redirect()->route('admin.subdomains.show', $subdomain)
             ->with('success', 'Subdomain created successfully.');
     }
@@ -45,11 +58,23 @@ class SubdomainController extends Controller
     public function show(Subdomain $subdomain)
     {
         $subdomain->load(['registrationLinks']);
+        
+        if (request()->ajax()) {
+            return response()->json([
+                'html' => view('admin.subdomains.modals.show', compact('subdomain'))->render()
+            ]);
+        }
+        
         return view('admin.subdomains.show', compact('subdomain'));
     }
 
     public function edit(Subdomain $subdomain)
     {
+        if (request()->ajax()) {
+            return response()->json([
+                'html' => view('admin.subdomains.modals.edit-form', compact('subdomain'))->render()
+            ]);
+        }
         return view('admin.subdomains.edit', compact('subdomain'));
     }
 
@@ -65,6 +90,14 @@ class SubdomainController extends Controller
         ]);
 
         $subdomain->update($validated);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Subdomain updated successfully.',
+                'subdomain' => $subdomain->fresh()
+            ]);
+        }
 
         return redirect()->route('admin.subdomains.show', $subdomain)
             ->with('success', 'Subdomain updated successfully.');

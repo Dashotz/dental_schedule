@@ -8,9 +8,9 @@
         <h2 class="mb-1"><i class="bi bi-globe text-primary"></i> Subdomains Management</h2>
         <p class="text-muted mb-0">Manage all dental clinic subdomains and their settings</p>
     </div>
-    <a href="{{ route('admin.subdomains.create') }}" class="btn btn-primary btn-lg shadow-sm">
+    <button type="button" class="btn btn-primary btn-lg shadow-sm" data-bs-toggle="modal" data-bs-target="#createSubdomainModal" id="openCreateModal">
         <i class="bi bi-plus-circle"></i> Add New Subdomain
-    </a>
+    </button>
 </div>
 
 <div class="card shadow-sm border-0">
@@ -91,11 +91,18 @@
                                 @endif
                             </td>
                             <td class="text-end pe-4">
-                                <a href="{{ route('admin.subdomains.show', $subdomain) }}" 
-                                   class="btn btn-sm btn-outline-primary" 
-                                   title="View Details">
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-primary view-subdomain-btn" 
+                                        data-subdomain-id="{{ $subdomain->id }}"
+                                        title="View Details">
                                     <i class="bi bi-eye"></i> View
-                                </a>
+                                </button>
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-warning edit-subdomain-btn ms-1" 
+                                        data-subdomain-id="{{ $subdomain->id }}"
+                                        title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
                             </td>
                         </tr>
                     @empty
@@ -104,9 +111,9 @@
                                 <div class="py-4">
                                     <i class="bi bi-inbox display-1 text-muted"></i>
                                     <p class="text-muted mt-3 mb-0">No subdomains found.</p>
-                                    <a href="{{ route('admin.subdomains.create') }}" class="btn btn-primary mt-3">
+                                    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createSubdomainModal" id="openCreateModalEmpty">
                                         <i class="bi bi-plus-circle"></i> Create Your First Subdomain
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -124,11 +131,164 @@
         @endif
     </div>
 </div>
+
+<!-- Modals -->
+@include('admin.subdomains.modals.create')
+@include('admin.subdomains.modals.edit')
+<div id="viewSubdomainModalContainer"></div>
 @endsection
 
 @push('scripts')
 <script>
     $(document).ready(function() {
+        // Load create modal content
+        $('#openCreateModal, #openCreateModalEmpty').on('click', function() {
+            if ($('#createSubdomainModal .modal-body form').length === 0) {
+                $.ajax({
+                    url: '{{ route("admin.subdomains.create") }}',
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        $('#createSubdomainModal .modal-body').html($(response.html).find('.modal-body').html());
+                    }
+                });
+            }
+        });
+
+        // Create subdomain form submission
+        $(document).on('submit', '#createSubdomainForm', function(e) {
+            e.preventDefault();
+            const form = $(this);
+            const submitBtn = form.find('button[type="submit"]');
+            submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Creating...');
+
+            $.ajax({
+                url: '{{ route("admin.subdomains.store") }}',
+                method: 'POST',
+                data: form.serialize(),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    $('#createSubdomainModal').modal('hide');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: response.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+                        Object.keys(errors).forEach(function(key) {
+                            const input = form.find(`[name="${key}"]`);
+                            input.addClass('is-invalid');
+                            $(`#${key}_error`).text(errors[key][0]).removeClass('d-none');
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: xhr.responseJSON?.message || 'Failed to create subdomain.'
+                        });
+                    }
+                    submitBtn.prop('disabled', false).html('<i class="bi bi-check-circle me-2"></i>Create Subdomain');
+                }
+            });
+        });
+
+        // View subdomain modal
+        $(document).on('click', '.view-subdomain-btn', function() {
+            const subdomainId = $(this).data('subdomain-id');
+            $.ajax({
+                url: `/admin/subdomains/${subdomainId}`,
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    $('#viewSubdomainModalContainer').html(response.html);
+                    $('#viewSubdomainModal').modal('show');
+                }
+            });
+        });
+
+        // Edit subdomain modal
+        $(document).on('click', '.edit-subdomain-btn', function() {
+            const subdomainId = $(this).data('subdomain-id');
+            window.currentEditSubdomainId = subdomainId;
+            $('#edit_subdomain_id').val(subdomainId);
+            
+            $.ajax({
+                url: `/admin/subdomains/${subdomainId}/edit`,
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    $('#editSubdomainModalBody').html(response.html);
+                    $('#editSubdomainModal').modal('show');
+                }
+            });
+        });
+
+        // Edit subdomain form submission
+        $(document).on('submit', '#editSubdomainForm', function(e) {
+            e.preventDefault();
+            const form = $(this);
+            const subdomainId = window.currentEditSubdomainId;
+            const submitBtn = form.find('button[type="submit"]');
+            submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Updating...');
+
+            $.ajax({
+                url: `/admin/subdomains/${subdomainId}`,
+                method: 'POST',
+                data: form.serialize() + '&_method=PUT',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    $('#editSubdomainModal').modal('hide');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: response.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+                        Object.keys(errors).forEach(function(key) {
+                            const input = form.find(`[name="${key}"]`);
+                            input.addClass('is-invalid');
+                            const errorDiv = input.closest('.mb-3, .mb-4').find('.invalid-feedback');
+                            if (errorDiv.length) {
+                                errorDiv.text(errors[key][0]).removeClass('d-none');
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: xhr.responseJSON?.message || 'Failed to update subdomain.'
+                        });
+                    }
+                    submitBtn.prop('disabled', false).html('<i class="bi bi-check-circle me-2"></i>Update Subdomain');
+                }
+            });
+        });
+
+        // Toggle status
         $('.toggle-status').on('change', function() {
             const toggle = $(this);
             const subdomainId = toggle.data('id');
@@ -136,7 +296,6 @@
             const newStatus = isChecked ? 'activate' : 'deactivate';
             const subdomainName = toggle.closest('tr').find('td:eq(1)').text().trim();
 
-            // Show confirmation dialog
             Swal.fire({
                 title: `Are you sure?`,
                 html: `Do you want to <strong>${newStatus}</strong> the subdomain <strong>"${subdomainName}"</strong>?`,
@@ -149,7 +308,6 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // User confirmed, proceed with the toggle
                     $.ajax({
                         url: `/admin/subdomains/${subdomainId}/toggle-status`,
                         method: 'POST',
@@ -166,7 +324,6 @@
                             });
                         },
                         error: function() {
-                            // Revert the toggle on error
                             toggle.prop('checked', !isChecked);
                             Swal.fire({
                                 icon: 'error',
@@ -176,10 +333,170 @@
                         }
                     });
                 } else {
-                    // User cancelled, revert the toggle
                     toggle.prop('checked', !isChecked);
                 }
             });
+        });
+
+        // Handle actions inside view modal
+        $(document).on('click', '#generateLinkBtnModal', function() {
+            const subdomainId = $(this).data('subdomain-id');
+            Swal.fire({
+                title: 'Generate Registration Link',
+                html: `
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> 
+                        The link will have unlimited uses and will expire when the subscription ends.
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Generate',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/admin/subdomains/${subdomainId}/generate-link`,
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                $('#viewSubdomainModal').modal('hide');
+                                // Reload the view modal
+                                $.ajax({
+                                    url: `/admin/subdomains/${subdomainId}`,
+                                    method: 'GET',
+                                    headers: {
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    },
+                                    success: function(response) {
+                                        $('#viewSubdomainModalContainer').html(response.html);
+                                        $('#viewSubdomainModal').modal('show');
+                                    }
+                                });
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: xhr.responseJSON?.message || 'Failed to generate link.'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#editSubdomainBtnModal', function() {
+            const subdomainId = $(this).data('subdomain-id');
+            $('#viewSubdomainModal').modal('hide');
+            window.currentEditSubdomainId = subdomainId;
+            $('#edit_subdomain_id').val(subdomainId);
+            
+            $.ajax({
+                url: `/admin/subdomains/${subdomainId}/edit`,
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    $('#editSubdomainModalBody').html(response.html);
+                    $('#editSubdomainModal').modal('show');
+                }
+            });
+        });
+
+        // Copy link functionality in view modal
+        $(document).on('click', '#viewSubdomainModal .copy-link-btn', function() {
+            const link = $(this).data('link');
+            navigator.clipboard.writeText(link).then(function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Copied!',
+                    text: 'Registration link copied to clipboard.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }).catch(function() {
+                const input = $('#registrationLinkInputModal');
+                input.select();
+                document.execCommand('copy');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Copied!',
+                    text: 'Registration link copied to clipboard.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            });
+        });
+
+        // Toggle status in view modal
+        $(document).on('change', '#viewSubdomainModal .toggle-status', function() {
+            const toggle = $(this);
+            const subdomainId = toggle.data('id');
+            const isChecked = toggle.is(':checked');
+            const newStatus = isChecked ? 'activate' : 'deactivate';
+            const subdomainName = $('#viewSubdomainModalLabel').text().trim();
+
+            Swal.fire({
+                title: `Are you sure?`,
+                html: `Do you want to <strong>${newStatus}</strong> the subdomain <strong>"${subdomainName}"</strong>?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: isChecked ? '#198754' : '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: `Yes, ${newStatus} it!`,
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/admin/subdomains/${subdomainId}/toggle-status`,
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                $('#viewSubdomainModal').modal('hide');
+                                window.location.reload();
+                            });
+                        },
+                        error: function() {
+                            toggle.prop('checked', !isChecked);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Failed to update status. Please try again.'
+                            });
+                        }
+                    });
+                } else {
+                    toggle.prop('checked', !isChecked);
+                }
+            });
+        });
+
+        // Reset form on modal close
+        $('#createSubdomainModal, #editSubdomainModal').on('hidden.bs.modal', function() {
+            $(this).find('form')[0]?.reset();
+            $(this).find('.is-invalid').removeClass('is-invalid');
+            $(this).find('.invalid-feedback').addClass('d-none');
         });
     });
 </script>

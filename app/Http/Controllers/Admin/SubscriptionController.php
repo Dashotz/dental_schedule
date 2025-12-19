@@ -20,6 +20,13 @@ class SubscriptionController extends Controller
     public function create()
     {
         $subdomains = Subdomain::orderBy('name')->get();
+        
+        if (request()->ajax()) {
+            return response()->json([
+                'html' => view('admin.subscriptions.modals.create', compact('subdomains'))->render()
+            ]);
+        }
+        
         return view('admin.subscriptions.create', compact('subdomains'));
     }
 
@@ -69,6 +76,14 @@ class SubscriptionController extends Controller
 
         // Enable subdomain if subscription is active
         $subdomain->update(['is_active' => true]);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Subscription created successfully.',
+                'subscription' => $subscription->load('subdomain')
+            ]);
+        }
 
         return redirect()->route('admin.subscriptions.index')
             ->with('success', 'Subscription created successfully.');
