@@ -44,7 +44,7 @@ class SubdomainController extends Controller
 
     public function show(Subdomain $subdomain)
     {
-        $subdomain->load(['subscriptions', 'registrationLinks']);
+        $subdomain->load(['registrationLinks']);
         return view('admin.subdomains.show', compact('subdomain'));
     }
 

@@ -13,26 +13,28 @@ class SubscriptionController extends Controller
     public function index()
     {
         $subscriptions = Subscription::with('subdomain')->latest()->paginate(15);
-        return view('admin.subscriptions.index', compact('subscriptions'));
+        $subdomains = Subdomain::orderBy('name')->get();
+        return view('admin.subscriptions.index', compact('subscriptions', 'subdomains'));
     }
 
-    public function create(Subdomain $subdomain)
+    public function create()
     {
-        return view('admin.subscriptions.create', compact('subdomain'));
+        $subdomains = Subdomain::orderBy('name')->get();
+        return view('admin.subscriptions.create', compact('subdomains'));
     }
 
     public function store(Request $request)
     {
-        $subdomainId = $request->route('subdomain');
-        $subdomain = Subdomain::findOrFail($subdomainId);
-
         $validated = $request->validate([
+            'subdomain_id' => ['required', 'exists:subdomains,id'],
             'plan_name' => ['required', 'string', 'in:basic,premium,enterprise'],
             'amount' => ['required', 'numeric', 'min:0'],
             'billing_cycle' => ['required', 'in:monthly,quarterly,yearly'],
             'start_date' => ['required', 'date'],
             'payment_details' => ['nullable', 'string'],
         ]);
+
+        $subdomain = Subdomain::findOrFail($validated['subdomain_id']);
 
         // Always automatically calculate end date based on billing cycle and start date
         $startDate = Carbon::parse($validated['start_date']);
@@ -68,7 +70,7 @@ class SubscriptionController extends Controller
         // Enable subdomain if subscription is active
         $subdomain->update(['is_active' => true]);
 
-        return redirect()->route('admin.subdomains.show', $subdomain)
+        return redirect()->route('admin.subscriptions.index')
             ->with('success', 'Subscription created successfully.');
     }
 

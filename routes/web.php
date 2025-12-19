@@ -58,8 +58,8 @@ Route::middleware('auth')->group(function () {
         
         // Subscriptions
         Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
-        Route::get('/subdomains/{subdomain}/subscriptions/create', [SubscriptionController::class, 'create'])->name('subscriptions.create');
-        Route::post('/subdomains/{subdomain}/subscriptions', [SubscriptionController::class, 'store'])->name('subscriptions.store');
+        Route::get('/subscriptions/create', [SubscriptionController::class, 'create'])->name('subscriptions.create');
+        Route::post('/subscriptions', [SubscriptionController::class, 'store'])->name('subscriptions.store');
         Route::post('/subscriptions/{subscription}/update-status', [SubscriptionController::class, 'updateStatus'])->name('subscriptions.update-status');
         Route::post('/subscriptions/{subscription}/send-reminder', [SubscriptionController::class, 'sendPaymentReminder'])->name('subscriptions.send-reminder');
         

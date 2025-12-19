@@ -7,12 +7,28 @@
     <div class="col-lg-8">
         <div class="card">
             <div class="card-header bg-success text-white">
-                <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Create Subscription for {{ $subdomain->name }}</h5>
+                <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Create New Subscription</h5>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ route('admin.subscriptions.store', $subdomain->id) }}">
+                <form method="POST" action="{{ route('admin.subscriptions.store') }}">
                     @csrf
                     
+                    <div class="mb-3">
+                        <label for="subdomain_id" class="form-label">Subdomain <span class="text-danger">*</span></label>
+                        <select class="form-select @error('subdomain_id') is-invalid @enderror" 
+                                id="subdomain_id" name="subdomain_id" required>
+                            <option value="">Select Subdomain...</option>
+                            @foreach($subdomains as $subdomain)
+                                <option value="{{ $subdomain->id }}" {{ old('subdomain_id') == $subdomain->id ? 'selected' : '' }}>
+                                    {{ $subdomain->name }} ({{ $subdomain->subdomain }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('subdomain_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="plan_name" class="form-label">Plan <span class="text-danger">*</span></label>
@@ -78,7 +94,7 @@
                         <button type="submit" class="btn btn-success">
                             <i class="bi bi-check-circle"></i> Create Subscription
                         </button>
-                        <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="btn btn-secondary">
+                        <a href="{{ route('admin.subscriptions.index') }}" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Cancel
                         </a>
                     </div>

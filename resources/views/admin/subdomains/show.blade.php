@@ -73,9 +73,6 @@
                 <button class="btn btn-primary w-100 mb-2" id="generateLinkBtn">
                     <i class="bi bi-link-45deg"></i> Generate Registration Link
                 </button>
-                <a href="{{ route('admin.subscriptions.create', $subdomain) }}" class="btn btn-success w-100 mb-2">
-                    <i class="bi bi-credit-card"></i> Add Subscription
-                </a>
             </div>
         </div>
 
@@ -115,61 +112,6 @@
                     </div>
                 @else
                     <p class="text-muted mb-0">No active registration link. Generate one to get started.</p>
-                @endif
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Subscriptions -->
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-warning text-white">
-                <h5 class="mb-0"><i class="bi bi-credit-card"></i> Subscriptions</h5>
-            </div>
-            <div class="card-body">
-                @if($subdomain->subscriptions->count() > 0)
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Plan</th>
-                                    <th>Amount</th>
-                                    <th>Billing Cycle</th>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($subdomain->subscriptions as $subscription)
-                                    <tr>
-                                        <td>{{ ucfirst($subscription->plan_name) }}</td>
-                                        <td>${{ number_format($subscription->amount, 2) }}</td>
-                                        <td>{{ ucfirst($subscription->billing_cycle) }}</td>
-                                        <td>{{ $subscription->start_date->format('M d, Y') }}</td>
-                                        <td>{{ $subscription->end_date->format('M d, Y') }}</td>
-                                        <td>
-                                            <span class="badge bg-{{ $subscription->status === 'active' ? 'success' : ($subscription->status === 'expired' ? 'danger' : 'warning') }}">
-                                                {{ ucfirst($subscription->status) }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            @if($subscription->status === 'active' && $subscription->end_date <= now()->addDays(7))
-                                                <button class="btn btn-sm btn-warning send-reminder" data-id="{{ $subscription->id }}">
-                                                    <i class="bi bi-envelope"></i> Send Reminder
-                                                </button>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @else
-                    <p class="text-muted">No subscriptions found.</p>
                 @endif
             </div>
         </div>
@@ -271,33 +213,6 @@
                     timer: 2000,
                     showConfirmButton: false
                 });
-            });
-        });
-
-
-        // Send payment reminder
-        $('.send-reminder').on('click', function() {
-            const subscriptionId = $(this).data('id');
-            $.ajax({
-                url: `/admin/subscriptions/${subscriptionId}/send-reminder`,
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: response.message || 'Payment reminder sent successfully.'
-                    });
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Failed to send reminder.'
-                    });
-                }
             });
         });
     });
