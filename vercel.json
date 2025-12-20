@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "composer install --no-dev --optimize-autoloader && mkdir -p bootstrap/cache && php artisan package:discover --ansi || true",
   "builds": [
     {
       "src": "api/index.php",
