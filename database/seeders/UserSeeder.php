@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
         // Create admin account
         User::create([
             'name' => 'Admin',
-            'email' => 'admin@dental.com',
+            'email' => 'admin@dental',
             'password' => Hash::make('password'),
             'role' => 'admin',
             'phone' => '123-456-7899',
@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
         // Create a doctor
         User::create([
             'name' => 'Dr. John Smith',
-            'email' => 'doctor@dental.com',
+            'email' => 'doctor@dental',
             'password' => Hash::make('password'),
             'role' => 'doctor',
             'phone' => '123-456-7890',
@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
         // Create a staff member
         User::create([
             'name' => 'Jane Doe',
-            'email' => 'staff@dental.com',
+            'email' => 'staff@dental',
             'password' => Hash::make('password'),
             'role' => 'staff',
             'phone' => '123-456-7891',
