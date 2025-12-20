@@ -42,3 +42,7 @@ node_modules
 !/storage/framework/sessions/.gitignore
 /storage/framework/views/*
 !/storage/framework/views/.gitignore
+
+# Bootstrap cache (will be regenerated at runtime)
+/bootstrap/cache/*.php
+!/bootstrap/cache/.gitignore
