@@ -74,12 +74,30 @@ try {
     // Filter out missing service providers from cached files before Laravel loads them
     $packagesFile = __DIR__.'/../bootstrap/cache/packages.php';
     if (file_exists($packagesFile)) {
-        $packages = require $packagesFile;
+        $packages = @include $packagesFile;
         if (is_array($packages) && isset($packages['providers'])) {
-            $packages['providers'] = array_filter($packages['providers'], function($provider) {
+            $filtered = array_filter($packages['providers'], function($provider) {
                 return class_exists($provider);
             });
-            file_put_contents($packagesFile, '<?php return ' . var_export($packages, true) . ';');
+            if (count($filtered) !== count($packages['providers'])) {
+                $packages['providers'] = array_values($filtered);
+                @file_put_contents($packagesFile, '<?php return ' . var_export($packages, true) . ';');
+            }
+        }
+    }
+    
+    // Also check and filter services.php if it exists
+    $servicesFile = __DIR__.'/../bootstrap/cache/services.php';
+    if (file_exists($servicesFile)) {
+        $services = @include $servicesFile;
+        if (is_array($services) && isset($services['providers'])) {
+            $filtered = array_filter($services['providers'], function($provider) {
+                return class_exists($provider);
+            });
+            if (count($filtered) !== count($services['providers'])) {
+                $services['providers'] = array_values($filtered);
+                @file_put_contents($servicesFile, '<?php return ' . var_export($services, true) . ';');
+            }
         }
     }
     
