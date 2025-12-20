@@ -25,14 +25,29 @@ if (!getenv('APP_DEBUG')) {
 
 // Set session and cache drivers if not already set
 // Default to file for serverless environments (Vercel) to avoid database dependency during bootstrap
-if (!getenv('SESSION_DRIVER')) {
+// Note: We'll check database tables after bootstrap and switch if they exist
+$sessionDriver = getenv('SESSION_DRIVER') ?: 'file';
+$cacheStore = getenv('CACHE_STORE') ?: 'file';
+
+// If database is requested but we're in Vercel, start with file to allow bootstrap
+// We'll check and switch after Laravel is loaded
+if (getenv('VERCEL') && ($sessionDriver === 'database' || $cacheStore === 'database')) {
+    // Temporarily use file-based to allow bootstrap, we'll check database after
     putenv('SESSION_DRIVER=file');
     $_ENV['SESSION_DRIVER'] = 'file';
-}
-
-if (!getenv('CACHE_STORE')) {
     putenv('CACHE_STORE=file');
     $_ENV['CACHE_STORE'] = 'file';
+    putenv('CACHE_DRIVER=file');
+    $_ENV['CACHE_DRIVER'] = 'file';
+} else {
+    if (!getenv('SESSION_DRIVER')) {
+        putenv('SESSION_DRIVER=file');
+        $_ENV['SESSION_DRIVER'] = 'file';
+    }
+    if (!getenv('CACHE_STORE')) {
+        putenv('CACHE_STORE=file');
+        $_ENV['CACHE_STORE'] = 'file';
+    }
 }
 
 // Ensure /tmp directories exist for serverless environment
@@ -75,6 +90,50 @@ try {
     
     /** @var Application $app */
     $app = require_once __DIR__.'/../bootstrap/app.php';
+    
+    // Check if database connection works and tables exist, switch to database if available
+    // This allows the site to work even if database tables don't exist yet
+    try {
+        $db = $app->make('db')->connection();
+        $pdo = $db->getPdo();
+        
+        // Check if sessions table exists and switch to database if it does
+        if ($sessionDriver === 'database') {
+            try {
+                $db->select('SELECT 1 FROM sessions LIMIT 1');
+                // Table exists, switch to database
+                putenv('SESSION_DRIVER=database');
+                $_ENV['SESSION_DRIVER'] = 'database';
+            } catch (\Exception $e) {
+                // Sessions table doesn't exist, keep file-based
+                if (function_exists('error_log')) {
+                    error_log('Sessions table not found, using file-based sessions: ' . $e->getMessage());
+                }
+            }
+        }
+        
+        // Check if cache table exists and switch to database if it does
+        if ($cacheStore === 'database') {
+            try {
+                $db->select('SELECT 1 FROM cache LIMIT 1');
+                // Table exists, switch to database
+                putenv('CACHE_STORE=database');
+                $_ENV['CACHE_STORE'] = 'database';
+                putenv('CACHE_DRIVER=database');
+                $_ENV['CACHE_DRIVER'] = 'database';
+            } catch (\Exception $e) {
+                // Cache table doesn't exist, keep file-based
+                if (function_exists('error_log')) {
+                    error_log('Cache table not found, using file-based cache: ' . $e->getMessage());
+                }
+            }
+        }
+    } catch (\Exception $dbError) {
+        // Database connection failed, keep file-based sessions/cache
+        if (function_exists('error_log')) {
+            error_log('Database connection failed, using file-based sessions/cache: ' . $dbError->getMessage());
+        }
+    }
     
     $app->handleRequest(Request::capture());
 } catch (Throwable $e) {
