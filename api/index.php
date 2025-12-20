@@ -17,9 +17,10 @@ if (!getenv('APP_ENV')) {
     $_ENV['APP_ENV'] = 'production';
 }
 
+// Temporarily enable debug to see actual errors
 if (!getenv('APP_DEBUG')) {
-    putenv('APP_DEBUG=false');
-    $_ENV['APP_DEBUG'] = 'false';
+    putenv('APP_DEBUG=true');
+    $_ENV['APP_DEBUG'] = 'true';
 }
 
 // Set session and cache drivers if not already set
@@ -60,27 +61,37 @@ require __DIR__.'/../vendor/autoload.php';
 
 // Bootstrap Laravel and handle the request...
 try {
-    // Clear any cached service provider files that might reference dev dependencies
-    $cacheFiles = [
-        __DIR__.'/../bootstrap/cache/packages.php',
-        __DIR__.'/../bootstrap/cache/services.php',
-    ];
-    foreach ($cacheFiles as $file) {
-        if (file_exists($file)) {
-            @unlink($file);
-        }
-    }
-    
-    // Filter out missing service providers from cached files before Laravel loads them
+    // Filter out missing service providers from cached files BEFORE Laravel loads them
+    // This must happen before bootstrap/app.php is loaded
     $packagesFile = __DIR__.'/../bootstrap/cache/packages.php';
     if (file_exists($packagesFile)) {
         $packages = @include $packagesFile;
-        if (is_array($packages) && isset($packages['providers'])) {
-            $filtered = array_filter($packages['providers'], function($provider) {
-                return class_exists($provider);
-            });
-            if (count($filtered) !== count($packages['providers'])) {
-                $packages['providers'] = array_values($filtered);
+        if (is_array($packages)) {
+            $modified = false;
+            
+            // Filter providers
+            if (isset($packages['providers']) && is_array($packages['providers'])) {
+                $originalCount = count($packages['providers']);
+                $packages['providers'] = array_values(array_filter($packages['providers'], function($provider) {
+                    return class_exists($provider);
+                }));
+                if (count($packages['providers']) !== $originalCount) {
+                    $modified = true;
+                }
+            }
+            
+            // Filter aliases
+            if (isset($packages['aliases']) && is_array($packages['aliases'])) {
+                $originalCount = count($packages['aliases']);
+                $packages['aliases'] = array_filter($packages['aliases'], function($alias) {
+                    return class_exists($alias);
+                });
+                if (count($packages['aliases']) !== $originalCount) {
+                    $modified = true;
+                }
+            }
+            
+            if ($modified) {
                 @file_put_contents($packagesFile, '<?php return ' . var_export($packages, true) . ';');
             }
         }
@@ -90,12 +101,12 @@ try {
     $servicesFile = __DIR__.'/../bootstrap/cache/services.php';
     if (file_exists($servicesFile)) {
         $services = @include $servicesFile;
-        if (is_array($services) && isset($services['providers'])) {
-            $filtered = array_filter($services['providers'], function($provider) {
+        if (is_array($services) && isset($services['providers']) && is_array($services['providers'])) {
+            $originalCount = count($services['providers']);
+            $services['providers'] = array_values(array_filter($services['providers'], function($provider) {
                 return class_exists($provider);
-            });
-            if (count($filtered) !== count($services['providers'])) {
-                $services['providers'] = array_values($filtered);
+            }));
+            if (count($services['providers']) !== $originalCount) {
                 @file_put_contents($servicesFile, '<?php return ' . var_export($services, true) . ';');
             }
         }
