@@ -1,23 +1,44 @@
-/node_modules
+# Vercel ignore file
+# Files and directories to exclude from deployment
+
+# Development files
 /.git
 /.github
-/vendor/bin
-/tests
-/storage/logs/*
-/storage/framework/cache/*
-/storage/framework/sessions/*
-/storage/framework/views/*
-/bootstrap/cache/packages.php
-/bootstrap/cache/services.php
-/.env
-/.env.*
-!.env.example
-/phpunit.xml
-/.phpunit.result.cache
 /.idea
 /.vscode
+/.fleet
+/.nova
+/.zed
 *.log
 *.cache
 .DS_Store
 Thumbs.db
 
+# Environment files (use Vercel environment variables instead)
+.env
+.env.*
+!.env.example
+
+# Tests
+/tests
+phpunit.xml
+.phpunit.result.cache
+
+# Documentation
+README.md
+VERCEL_DEPLOYMENT.md
+*.md
+
+# Development dependencies
+node_modules
+/.vercel
+
+# Storage (will be created in /tmp on Vercel)
+/storage/logs/*
+!/storage/logs/.gitignore
+/storage/framework/cache/*
+!/storage/framework/cache/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore

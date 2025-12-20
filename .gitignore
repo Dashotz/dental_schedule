@@ -30,3 +30,5 @@ Thumbs.db
 # Bootstrap cache
 /bootstrap/cache/*
 !/bootstrap/cache/.gitignore
+
+.vercel
