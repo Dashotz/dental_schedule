@@ -59,7 +59,11 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
+                // Enable SSL for PlanetScale and other cloud databases
                 (PHP_VERSION_ID >= 80500 ? \Pdo\Mysql::ATTR_SSL_CA : \PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
+                // Force SSL if host contains .psdb.cloud (PlanetScale) or SSL is explicitly enabled
+                (PHP_VERSION_ID >= 80500 ? \Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT : \PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT) => 
+                    (str_contains(env('DB_HOST', ''), '.psdb.cloud') || env('DB_SSL', false)) ? false : null,
             ]) : [],
         ],
 
@@ -95,7 +99,11 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => 'prefer',
+            // Require SSL for Supabase (hosts ending with .supabase.co)
+            'sslmode' => str_contains(env('DB_HOST', ''), '.supabase.co') ? 'require' : env('DB_SSLMODE', 'prefer'),
+            'options' => extension_loaded('pdo_pgsql') ? array_filter([
+                PDO::ATTR_EMULATE_PREPARES => true,
+            ]) : [],
         ],
 
         'sqlsrv' => [

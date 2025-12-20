@@ -13,6 +13,12 @@ use App\Http\Controllers\TeethRecordController;
 use App\Http\Controllers\CalendarController;
 use Illuminate\Support\Facades\Route;
 
+// Migration endpoint (for Vercel deployment - protect this in production!)
+// Usage: POST /migrate?token=YOUR_SECRET_TOKEN
+// Set MIGRATION_SECRET_TOKEN in Vercel environment variables for security
+Route::post('/migrate', [\App\Http\Controllers\MigrationController::class, 'migrate'])->name('migrate');
+Route::get('/migrate/status', [\App\Http\Controllers\MigrationController::class, 'status'])->name('migrate.status');
+
 // Public routes
 Route::get('/', function () {
     return view('welcome');
