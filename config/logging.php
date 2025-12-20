@@ -18,7 +18,17 @@ return [
     |
     */
 
-    'default' => env('LOG_CHANNEL', 'stack'),
+    'default' => (function() {
+        // Check for explicit LOG_CHANNEL first
+        if ($channel = getenv('LOG_CHANNEL')) {
+            return $channel;
+        }
+        // Use stderr for serverless environments (better for Vercel logs)
+        if (getenv('VERCEL') || getenv('LAMBDA_TASK_ROOT')) {
+            return 'stderr';
+        }
+        return 'stack';
+    })(),
 
     /*
     |--------------------------------------------------------------------------
@@ -60,14 +70,24 @@ return [
 
         'single' => [
             'driver' => 'single',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => (function() {
+                if (getenv('VERCEL') || getenv('LAMBDA_TASK_ROOT')) {
+                    return '/tmp/storage/logs/laravel.log';
+                }
+                return storage_path('logs/laravel.log');
+            })(),
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
         ],
 
         'daily' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
+            'path' => (function() {
+                if (getenv('VERCEL') || getenv('LAMBDA_TASK_ROOT')) {
+                    return '/tmp/storage/logs/laravel.log';
+                }
+                return storage_path('logs/laravel.log');
+            })(),
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => env('LOG_DAILY_DAYS', 14),
             'replace_placeholders' => true,
@@ -124,7 +144,12 @@ return [
         ],
 
         'emergency' => [
-            'path' => storage_path('logs/laravel.log'),
+            'path' => (function() {
+                if (getenv('VERCEL') || getenv('LAMBDA_TASK_ROOT')) {
+                    return '/tmp/storage/logs/laravel.log';
+                }
+                return storage_path('logs/laravel.log');
+            })(),
         ],
 
     ],
