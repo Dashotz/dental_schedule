@@ -261,7 +261,7 @@
         <div class="row mt-5">
             <div class="col-lg-8 mx-auto">
                 <div class="service-card text-center">
-                    <i class="bi bi-info-circle" style="font-size: 2rem; color: var(--sky-blue); margin-bottom: 15px;"></i>
+                    <i class="bi bi-info-circle" style="font-size: 2rem; color: var(--dental-teal); margin-bottom: 15px;"></i>
                     <h5 class="service-title">Patient Registration</h5>
                     <p class="service-description">To book an appointment, please use the registration link provided by our clinic staff.</p>
                 </div>
