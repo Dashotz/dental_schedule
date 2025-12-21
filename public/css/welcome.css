@@ -119,9 +119,15 @@ body > main.container-fluid {
     padding: 120px 0 80px;
     position: relative;
     overflow-x: hidden;
-    overflow-y: visible;
+    overflow-y: hidden;
     width: 100%;
     max-width: 100%;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.hero-banner::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .hero-banner::before {
@@ -249,7 +255,13 @@ body > main.container-fluid {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
-    overflow-y: visible;
+    overflow-y: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.stats-section::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .stat-card {
@@ -258,11 +270,12 @@ body > main.container-fluid {
     border-radius: 15px;
     padding: 40px 30px;
     text-align: center;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: visible;
+    overflow: hidden;
     box-shadow: 0 2px 10px rgba(32, 178, 170, 0.1);
     margin-bottom: 20px;
+    will-change: transform;
 }
 
 .stat-card::before {
@@ -272,10 +285,11 @@ body > main.container-fluid {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(32, 178, 170, 0.12), transparent);
-    transition: left 0.5s ease;
+    background: linear-gradient(90deg, transparent, rgba(32, 178, 170, 0.15), transparent);
+    transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 15px;
-    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
 }
 
 .stat-card:hover::before {
@@ -283,15 +297,19 @@ body > main.container-fluid {
 }
 
 .stat-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-10px) scale(1.02);
     border-color: var(--dental-teal);
-    box-shadow: 0 10px 30px rgba(32, 178, 170, 0.3);
+    box-shadow: 0 15px 40px rgba(32, 178, 170, 0.4);
     z-index: 10;
 }
 
 .stat-card > * {
     position: relative;
-    z-index: 1;
+    z-index: 2;
+}
+
+.stat-card::-webkit-scrollbar {
+    display: none;
 }
 
 .stat-number {
@@ -326,7 +344,13 @@ body > main.container-fluid {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
-    overflow-y: visible;
+    overflow-y: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.services-section::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .section-header {
@@ -435,7 +459,13 @@ body > main.container-fluid {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
-    overflow-y: visible;
+    overflow-y: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.ratings-section::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .rating-card {
@@ -581,20 +611,18 @@ body > main.container-fluid {
     scrollbar-color: var(--dental-teal) var(--grayish-white);
 }
 
-/* Custom scrollbar for specific containers */
+/* Hide scrollbars in cards and containers */
 .service-card::-webkit-scrollbar,
 .rating-card::-webkit-scrollbar,
 .stat-card::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    display: none;
 }
 
-.service-card::-webkit-scrollbar-thumb,
-.rating-card::-webkit-scrollbar-thumb,
-.stat-card::-webkit-scrollbar-thumb {
-    background: var(--dental-teal);
-    border-radius: 4px;
-    border: 1px solid var(--grayish-white);
+.service-card,
+.rating-card,
+.stat-card {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
 }
 
 /* Responsive */
