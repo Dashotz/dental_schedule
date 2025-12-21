@@ -48,6 +48,5 @@ jobs:
             **/README.md
             **/.github/**
             **/vendor/**
-          dangerous-clean-slate: false
           log-level: verbose
 
