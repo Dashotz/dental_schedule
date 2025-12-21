@@ -1,31 +1,59 @@
 :root {
-    --primary-black: #0a0a0a;
-    --shiny-black: #1a1a1a;
-    --silver: #c0c0c0;
-    --light-silver: #e8e8e8;
-    --blue: #0066ff;
-    --light-blue: #3399ff;
-    --dark-blue: #0044cc;
+    --primary-white: #f5f5f5;
+    --grayish-white: #e9ecef;
+    --light-gray: #dee2e6;
+    --text-gray: #495057;
+    --dark-text: #212529;
+    --sky-blue: #87ceeb;
+    --light-sky-blue: #b0e0e6;
+    --dark-sky-blue: #5dade2;
 }
 
 body {
-    background: var(--primary-black);
-    color: var(--light-silver);
+    background: var(--primary-white);
+    color: var(--dark-text);
+    margin: 0;
+    padding: 0;
 }
 
-/* Navigation Bar */
+/* Ensure body and html have no margin/padding at top */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Remove any default spacing from layout for welcome page */
+body > main.container-fluid {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+}
+
+/* Navigation Bar - Full Width */
 .main-navbar {
-    background: linear-gradient(180deg, var(--shiny-black) 0%, var(--primary-black) 100%);
-    box-shadow: 0 4px 20px rgba(0, 102, 255, 0.3);
+    background: linear-gradient(180deg, var(--grayish-white) 0%, var(--primary-white) 100%);
+    box-shadow: 0 4px 20px rgba(135, 206, 235, 0.3);
     padding: 15px 0;
     position: sticky;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    margin: 0;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
     z-index: 1000;
-    border-bottom: 2px solid var(--blue);
+    border-bottom: 2px solid var(--sky-blue);
+}
+
+.main-navbar .container-fluid {
+    padding-left: 30px;
+    padding-right: 30px;
+    max-width: 100%;
 }
 
 .nav-brand {
-    color: var(--silver) !important;
+    color: var(--text-gray) !important;
     font-weight: 700;
     font-size: 1.5rem;
     text-decoration: none;
@@ -35,12 +63,12 @@ body {
 }
 
 .nav-brand i {
-    color: var(--blue);
+    color: var(--sky-blue);
     font-size: 2rem;
 }
 
 .nav-link-custom {
-    color: var(--silver) !important;
+    color: var(--text-gray) !important;
     font-weight: 500;
     margin: 0 10px;
     transition: all 0.3s ease;
@@ -48,30 +76,30 @@ body {
 }
 
 .nav-link-custom:hover {
-    color: var(--blue) !important;
+    color: var(--sky-blue) !important;
     transform: translateY(-2px);
 }
 
 .btn-staff-login {
-    background: linear-gradient(135deg, var(--blue) 0%, var(--dark-blue) 100%);
-    border: 1px solid var(--blue);
+    background: linear-gradient(135deg, var(--sky-blue) 0%, var(--dark-sky-blue) 100%);
+    border: 1px solid var(--sky-blue);
     color: white;
     padding: 10px 25px;
     border-radius: 25px;
     font-weight: 600;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 102, 255, 0.4);
+    box-shadow: 0 4px 15px rgba(135, 206, 235, 0.4);
 }
 
 .btn-staff-login:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 102, 255, 0.6);
+    box-shadow: 0 6px 20px rgba(135, 206, 235, 0.6);
     color: white;
 }
 
 /* Hero Banner Section */
 .hero-banner {
-    background: linear-gradient(135deg, var(--primary-black) 0%, var(--shiny-black) 50%, var(--primary-black) 100%);
+    background: linear-gradient(135deg, var(--primary-white) 0%, var(--grayish-white) 50%, var(--primary-white) 100%);
     padding: 120px 0 80px;
     position: relative;
     overflow: hidden;
@@ -85,8 +113,8 @@ body {
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 20% 50%, rgba(0, 102, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(192, 192, 192, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 20% 50%, rgba(135, 206, 235, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(135, 206, 235, 0.1) 0%, transparent 50%);
     pointer-events: none;
 }
 
@@ -98,16 +126,16 @@ body {
 .hero-title {
     font-size: 3.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, var(--silver) 0%, var(--blue) 100%);
+    background: linear-gradient(135deg, var(--text-gray) 0%, var(--sky-blue) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 25px;
-    text-shadow: 0 0 30px rgba(0, 102, 255, 0.5);
+    text-shadow: 0 0 30px rgba(135, 206, 235, 0.3);
 }
 
 .hero-subtitle {
-    color: var(--silver);
+    color: var(--text-gray);
     font-size: 1.3rem;
     line-height: 1.8;
     margin-bottom: 35px;
@@ -123,47 +151,48 @@ body {
 }
 
 .btn-primary-custom {
-    background: linear-gradient(135deg, var(--blue) 0%, var(--dark-blue) 100%);
-    border: 2px solid var(--blue);
+    background: linear-gradient(135deg, var(--sky-blue) 0%, var(--dark-sky-blue) 100%);
+    border: 2px solid var(--sky-blue);
     color: white;
-    box-shadow: 0 5px 20px rgba(0, 102, 255, 0.4);
+    box-shadow: 0 5px 20px rgba(135, 206, 235, 0.4);
 }
 
 .btn-primary-custom:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.6);
+    box-shadow: 0 8px 25px rgba(135, 206, 235, 0.6);
     color: white;
 }
 
 .btn-outline-custom {
     background: transparent;
-    border: 2px solid var(--silver);
-    color: var(--silver);
+    border: 2px solid var(--text-gray);
+    color: var(--text-gray);
 }
 
 .btn-outline-custom:hover {
-    background: var(--silver);
-    color: var(--primary-black);
+    background: var(--text-gray);
+    color: var(--primary-white);
     transform: translateY(-3px);
 }
 
 /* Statistics Section */
 .stats-section {
-    background: var(--shiny-black);
+    background: var(--grayish-white);
     padding: 80px 0;
-    border-top: 1px solid rgba(192, 192, 192, 0.1);
-    border-bottom: 1px solid rgba(192, 192, 192, 0.1);
+    border-top: 1px solid rgba(135, 206, 235, 0.2);
+    border-bottom: 1px solid rgba(135, 206, 235, 0.2);
 }
 
 .stat-card {
-    background: linear-gradient(135deg, var(--primary-black) 0%, var(--shiny-black) 100%);
-    border: 1px solid rgba(0, 102, 255, 0.3);
+    background: linear-gradient(135deg, var(--primary-white) 0%, var(--grayish-white) 100%);
+    border: 1px solid rgba(135, 206, 235, 0.4);
     border-radius: 15px;
     padding: 40px 30px;
     text-align: center;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 2px 10px rgba(135, 206, 235, 0.1);
 }
 
 .stat-card::before {
@@ -173,7 +202,7 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(135, 206, 235, 0.15), transparent);
     transition: left 0.5s ease;
 }
 
@@ -183,14 +212,14 @@ body {
 
 .stat-card:hover {
     transform: translateY(-10px);
-    border-color: var(--blue);
-    box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3);
+    border-color: var(--sky-blue);
+    box-shadow: 0 10px 30px rgba(135, 206, 235, 0.4);
 }
 
 .stat-number {
     font-size: 3.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, var(--blue) 0%, var(--silver) 100%);
+    background: linear-gradient(135deg, var(--sky-blue) 0%, var(--text-gray) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -198,7 +227,7 @@ body {
 }
 
 .stat-label {
-    color: var(--silver);
+    color: var(--text-gray);
     font-size: 1.1rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -207,14 +236,14 @@ body {
 
 .stat-icon {
     font-size: 3rem;
-    color: var(--blue);
+    color: var(--sky-blue);
     margin-bottom: 20px;
     opacity: 0.8;
 }
 
 /* Services Section */
 .services-section {
-    background: var(--primary-black);
+    background: var(--primary-white);
     padding: 100px 0;
 }
 
@@ -226,7 +255,7 @@ body {
 .section-title {
     font-size: 3rem;
     font-weight: 800;
-    background: linear-gradient(135deg, var(--silver) 0%, var(--blue) 100%);
+    background: linear-gradient(135deg, var(--text-gray) 0%, var(--sky-blue) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -234,14 +263,14 @@ body {
 }
 
 .section-subtitle {
-    color: var(--silver);
+    color: var(--text-gray);
     font-size: 1.2rem;
     opacity: 0.8;
 }
 
 .service-card {
-    background: linear-gradient(135deg, var(--shiny-black) 0%, var(--primary-black) 100%);
-    border: 1px solid rgba(192, 192, 192, 0.2);
+    background: linear-gradient(135deg, var(--grayish-white) 0%, var(--primary-white) 100%);
+    border: 1px solid rgba(135, 206, 235, 0.3);
     border-radius: 20px;
     padding: 40px 30px;
     text-align: center;
@@ -249,6 +278,7 @@ body {
     height: 100%;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 2px 10px rgba(135, 206, 235, 0.1);
 }
 
 .service-card::after {
@@ -258,7 +288,7 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(0, 102, 255, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(135, 206, 235, 0.15) 0%, transparent 70%);
     opacity: 0;
     transition: opacity 0.4s ease;
 }
@@ -269,14 +299,14 @@ body {
 
 .service-card:hover {
     transform: translateY(-15px) scale(1.02);
-    border-color: var(--blue);
-    box-shadow: 0 15px 40px rgba(0, 102, 255, 0.4);
+    border-color: var(--sky-blue);
+    box-shadow: 0 15px 40px rgba(135, 206, 235, 0.4);
 }
 
 .service-icon {
     width: 100px;
     height: 100px;
-    background: linear-gradient(135deg, var(--blue) 0%, var(--dark-blue) 100%);
+    background: linear-gradient(135deg, var(--sky-blue) 0%, var(--dark-sky-blue) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -284,48 +314,49 @@ body {
     margin: 0 auto 25px;
     color: white;
     font-size: 2.5rem;
-    box-shadow: 0 10px 30px rgba(0, 102, 255, 0.4);
+    box-shadow: 0 10px 30px rgba(135, 206, 235, 0.4);
     transition: all 0.3s ease;
 }
 
 .service-card:hover .service-icon {
     transform: rotate(360deg) scale(1.1);
-    box-shadow: 0 15px 40px rgba(0, 102, 255, 0.6);
+    box-shadow: 0 15px 40px rgba(135, 206, 235, 0.6);
 }
 
 .service-title {
-    color: var(--silver);
+    color: var(--text-gray);
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 15px;
 }
 
 .service-description {
-    color: var(--light-silver);
+    color: var(--text-gray);
     opacity: 0.8;
     line-height: 1.8;
 }
 
 /* Ratings Section */
 .ratings-section {
-    background: var(--shiny-black);
+    background: var(--grayish-white);
     padding: 100px 0;
-    border-top: 1px solid rgba(192, 192, 192, 0.1);
+    border-top: 1px solid rgba(135, 206, 235, 0.2);
 }
 
 .rating-card {
-    background: linear-gradient(135deg, var(--primary-black) 0%, var(--shiny-black) 100%);
-    border: 1px solid rgba(0, 102, 255, 0.3);
+    background: linear-gradient(135deg, var(--primary-white) 0%, var(--grayish-white) 100%);
+    border: 1px solid rgba(135, 206, 235, 0.4);
     border-radius: 20px;
     padding: 35px;
     margin-bottom: 30px;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(135, 206, 235, 0.1);
 }
 
 .rating-card:hover {
     transform: translateY(-5px);
-    border-color: var(--blue);
-    box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3);
+    border-color: var(--sky-blue);
+    box-shadow: 0 10px 30px rgba(135, 206, 235, 0.4);
 }
 
 .rating-stars {
@@ -335,37 +366,37 @@ body {
 }
 
 .rating-text {
-    color: var(--silver);
+    color: var(--text-gray);
     font-style: italic;
     line-height: 1.8;
     margin-bottom: 20px;
 }
 
 .rating-author {
-    color: var(--blue);
+    color: var(--sky-blue);
     font-weight: 600;
     font-size: 1.1rem;
 }
 
 .rating-date {
-    color: var(--light-silver);
+    color: var(--text-gray);
     opacity: 0.6;
     font-size: 0.9rem;
 }
 
 /* Footer */
 .main-footer {
-    background: var(--primary-black);
-    border-top: 2px solid var(--blue);
+    background: var(--grayish-white);
+    border-top: 2px solid var(--sky-blue);
     padding: 50px 0 30px;
 }
 
 .footer-content {
-    color: var(--silver);
+    color: var(--text-gray);
 }
 
 .footer-title {
-    color: var(--blue);
+    color: var(--sky-blue);
     font-weight: 700;
     margin-bottom: 20px;
 }

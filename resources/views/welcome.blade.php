@@ -10,7 +10,7 @@
 
 <!-- Navigation Bar -->
 <nav class="main-navbar">
-    <div class="container">
+    <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center">
             <a href="/" class="nav-brand">
                 <i class="bi bi-tooth"></i>
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="col-lg-5 text-center hero-content">
-                <i class="bi bi-tooth" style="font-size: 15rem; color: var(--blue); opacity: 0.3; animation: float 3s ease-in-out infinite;"></i>
+                <i class="bi bi-tooth" style="font-size: 15rem; color: var(--sky-blue); opacity: 0.3; animation: float 3s ease-in-out infinite;"></i>
             </div>
         </div>
     </div>
@@ -217,7 +217,7 @@
 </section>
 
 <!-- Contact Section -->
-<section id="contact" class="services-section" style="background: var(--shiny-black);">
+<section id="contact" class="services-section" style="background: var(--grayish-white);">
     <div class="container">
         <div class="section-header">
             <h2 class="section-title">Get In Touch</h2>
@@ -255,7 +255,7 @@
         <div class="row mt-5">
             <div class="col-lg-8 mx-auto">
                 <div class="service-card text-center">
-                    <i class="bi bi-info-circle" style="font-size: 2rem; color: var(--blue); margin-bottom: 15px;"></i>
+                    <i class="bi bi-info-circle" style="font-size: 2rem; color: var(--sky-blue); margin-bottom: 15px;"></i>
                     <h5 class="service-title">Patient Registration</h5>
                     <p class="service-description">To book an appointment, please use the registration link provided by our clinic staff.</p>
                 </div>
