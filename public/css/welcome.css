@@ -3,23 +3,37 @@
     --grayish-white: #e9ecef;
     --light-gray: #dee2e6;
     --text-gray: #495057;
+    --text-dark: #2c3e50;
+    --text-medium: #5a6c7d;
+    --text-light: #6c757d;
     --dark-text: #212529;
     --sky-blue: #87ceeb;
+    --sky-blue-dark: #5dade2;
+    --sky-blue-darker: #3498db;
     --light-sky-blue: #b0e0e6;
     --dark-sky-blue: #5dade2;
 }
 
 body {
     background: var(--primary-white);
-    color: var(--dark-text);
+    color: var(--text-dark);
     margin: 0;
     padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* Ensure body and html have no margin/padding at top */
+/* Prevent horizontal scrolling */
 html, body {
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
 /* Remove any default spacing from layout for welcome page */
@@ -27,6 +41,8 @@ body > main.container-fluid {
     padding: 0 !important;
     margin: 0 !important;
     max-width: 100% !important;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 /* Navigation Bar - Full Width */
@@ -38,10 +54,8 @@ body > main.container-fluid {
     top: 0;
     left: 0;
     right: 0;
-    width: 100vw;
+    width: 100%;
     margin: 0;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
     z-index: 1000;
     border-bottom: 2px solid var(--sky-blue);
 }
@@ -50,10 +64,12 @@ body > main.container-fluid {
     padding-left: 30px;
     padding-right: 30px;
     max-width: 100%;
+    width: 100%;
+    margin: 0;
 }
 
 .nav-brand {
-    color: var(--text-gray) !important;
+    color: var(--text-dark) !important;
     font-weight: 700;
     font-size: 1.5rem;
     text-decoration: none;
@@ -63,12 +79,12 @@ body > main.container-fluid {
 }
 
 .nav-brand i {
-    color: var(--sky-blue);
+    color: var(--sky-blue-darker);
     font-size: 2rem;
 }
 
 .nav-link-custom {
-    color: var(--text-gray) !important;
+    color: var(--text-medium) !important;
     font-weight: 500;
     margin: 0 10px;
     transition: all 0.3s ease;
@@ -76,7 +92,7 @@ body > main.container-fluid {
 }
 
 .nav-link-custom:hover {
-    color: var(--sky-blue) !important;
+    color: var(--sky-blue-darker) !important;
     transform: translateY(-2px);
 }
 
@@ -103,6 +119,8 @@ body > main.container-fluid {
     padding: 120px 0 80px;
     position: relative;
     overflow: hidden;
+    width: 100%;
+    max-width: 100%;
 }
 
 .hero-banner::before {
@@ -126,7 +144,7 @@ body > main.container-fluid {
 .hero-title {
     font-size: 3.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, var(--text-gray) 0%, var(--sky-blue) 100%);
+    background: linear-gradient(135deg, var(--text-dark) 0%, var(--sky-blue-darker) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -135,7 +153,7 @@ body > main.container-fluid {
 }
 
 .hero-subtitle {
-    color: var(--text-gray);
+    color: var(--text-medium);
     font-size: 1.3rem;
     line-height: 1.8;
     margin-bottom: 35px;
@@ -165,13 +183,13 @@ body > main.container-fluid {
 
 .btn-outline-custom {
     background: transparent;
-    border: 2px solid var(--text-gray);
-    color: var(--text-gray);
+    border: 2px solid var(--sky-blue-darker);
+    color: var(--sky-blue-darker);
 }
 
 .btn-outline-custom:hover {
-    background: var(--text-gray);
-    color: var(--primary-white);
+    background: var(--sky-blue-darker);
+    color: white;
     transform: translateY(-3px);
 }
 
@@ -181,6 +199,9 @@ body > main.container-fluid {
     padding: 80px 0;
     border-top: 1px solid rgba(135, 206, 235, 0.2);
     border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .stat-card {
@@ -219,7 +240,7 @@ body > main.container-fluid {
 .stat-number {
     font-size: 3.5rem;
     font-weight: 800;
-    background: linear-gradient(135deg, var(--sky-blue) 0%, var(--text-gray) 100%);
+    background: linear-gradient(135deg, var(--sky-blue-darker) 0%, var(--text-dark) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -227,7 +248,7 @@ body > main.container-fluid {
 }
 
 .stat-label {
-    color: var(--text-gray);
+    color: var(--text-medium);
     font-size: 1.1rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -236,15 +257,18 @@ body > main.container-fluid {
 
 .stat-icon {
     font-size: 3rem;
-    color: var(--sky-blue);
+    color: var(--sky-blue-darker);
     margin-bottom: 20px;
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 /* Services Section */
 .services-section {
     background: var(--primary-white);
     padding: 100px 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .section-header {
@@ -255,7 +279,7 @@ body > main.container-fluid {
 .section-title {
     font-size: 3rem;
     font-weight: 800;
-    background: linear-gradient(135deg, var(--text-gray) 0%, var(--sky-blue) 100%);
+    background: linear-gradient(135deg, var(--text-dark) 0%, var(--sky-blue-darker) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -263,9 +287,9 @@ body > main.container-fluid {
 }
 
 .section-subtitle {
-    color: var(--text-gray);
+    color: var(--text-medium);
     font-size: 1.2rem;
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 .service-card {
@@ -324,16 +348,16 @@ body > main.container-fluid {
 }
 
 .service-title {
-    color: var(--text-gray);
+    color: var(--text-dark);
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 15px;
 }
 
 .service-description {
-    color: var(--text-gray);
-    opacity: 0.8;
+    color: var(--text-medium);
     line-height: 1.8;
+    opacity: 0.9;
 }
 
 /* Ratings Section */
@@ -341,6 +365,9 @@ body > main.container-fluid {
     background: var(--grayish-white);
     padding: 100px 0;
     border-top: 1px solid rgba(135, 206, 235, 0.2);
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .rating-card {
@@ -366,21 +393,21 @@ body > main.container-fluid {
 }
 
 .rating-text {
-    color: var(--text-gray);
+    color: var(--text-medium);
     font-style: italic;
     line-height: 1.8;
     margin-bottom: 20px;
 }
 
 .rating-author {
-    color: var(--sky-blue);
+    color: var(--sky-blue-darker);
     font-weight: 600;
     font-size: 1.1rem;
 }
 
 .rating-date {
-    color: var(--text-gray);
-    opacity: 0.6;
+    color: var(--text-light);
+    opacity: 0.8;
     font-size: 0.9rem;
 }
 
@@ -389,14 +416,22 @@ body > main.container-fluid {
     background: var(--grayish-white);
     border-top: 2px solid var(--sky-blue);
     padding: 50px 0 30px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .footer-content {
-    color: var(--text-gray);
+    color: var(--text-medium);
+}
+
+.footer-content p {
+    color: var(--text-light);
+    opacity: 0.9;
 }
 
 .footer-title {
-    color: var(--sky-blue);
+    color: var(--sky-blue-darker);
     font-weight: 700;
     margin-bottom: 20px;
 }
@@ -405,6 +440,24 @@ body > main.container-fluid {
 @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-20px); }
+}
+
+/* Ensure containers don't overflow */
+.container, .container-fluid {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.row {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
+}
+
+[class*="col-"] {
+    padding-left: 15px;
+    padding-right: 15px;
+    max-width: 100%;
 }
 
 /* Responsive */
@@ -417,6 +470,11 @@ body > main.container-fluid {
     }
     .stat-number {
         font-size: 2.5rem;
+    }
+    
+    .main-navbar .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
     }
 }
 
