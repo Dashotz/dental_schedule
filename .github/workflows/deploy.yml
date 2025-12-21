@@ -1,0 +1,46 @@
+name: Deploy to HelioHost via FTP
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch: # Allows manual triggering from GitHub Actions tab
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to HelioHost via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.4
+        with:
+          server: ${{ secrets.HELIOHOST_FTP_HOST }}
+          username: ${{ secrets.HELIOHOST_FTP_USERNAME }}
+          password: ${{ secrets.HELIOHOST_FTP_PASSWORD }}
+          server-dir: ${{ secrets.HELIOHOST_FTP_PATH || '/' }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.env
+            **/.env.*
+            **/.idea/**
+            **/.vscode/**
+            **/.DS_Store
+            **/Thumbs.db
+            **/storage/logs/**
+            **/storage/framework/cache/**
+            **/storage/framework/sessions/**
+            **/storage/framework/views/**
+            **/tests/**
+            **/phpunit.xml
+            **/.phpunit.result.cache
+            **/.phpunit.cache/**
+            **/README.md
+            **/.github/**
+          dangerous-clean-slate: false
+
