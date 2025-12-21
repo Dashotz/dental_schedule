@@ -48,7 +48,13 @@
                 </div>
             </div>
             <div class="col-lg-5 text-center hero-content">
-                <i class="bi bi-tooth" style="font-size: 15rem; color: var(--sky-blue); opacity: 0.3; animation: float 3s ease-in-out infinite;"></i>
+                <div class="hero-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                         alt="Modern dental clinic with professional dentist and patient" 
+                         class="hero-dental-image"
+                         loading="lazy"
+                         onerror="this.src='https://via.placeholder.com/600x400/87CEEB/FFFFFF?text=Dental+Care'">
+                </div>
             </div>
         </div>
     </div>
