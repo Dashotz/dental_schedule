@@ -57,9 +57,6 @@
                 <button class="mobile-menu-btn d-md-none" id="mobileMenuBtn">
                     <i class="bi bi-list"></i>
                 </button>
-                <a href="{{ route('login') }}" class="btn btn-staff-login" title="Staff Login">
-                    <i class="bi bi-person-circle"></i>
-                </a>
             </div>
         </div>
         <!-- Mobile Menu -->
@@ -70,6 +67,9 @@
             <a href="#contact" class="mobile-menu-link">Contact</a>
         </div>
     </div>
+    <a href="{{ route('login') }}" class="btn btn-staff-login" title="Staff Login">
+        <i class="bi bi-person-circle"></i>
+    </a>
 </nav>
 
 <!-- Hero Banner Section -->

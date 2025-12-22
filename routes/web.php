@@ -13,41 +13,45 @@ use App\Http\Controllers\TeethRecordController;
 use App\Http\Controllers\CalendarController;
 use Illuminate\Support\Facades\Route;
 
-// Public routes
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
-// Patient registration via special link only
-Route::get('/register/{token}', [RegistrationLinkController::class, 'showRegistrationForm'])->name('patient.register');
-Route::post('/register/{token}', [PatientController::class, 'store'])->name('patient.store');
-
-// CAPTCHA reload route
-Route::get('/captcha/reload', function() {
-    try {
-        // Generate new CAPTCHA and return the image HTML
-        $captcha = captcha_img('flat');
-        return response()->json(['captcha' => $captcha]);
-    } catch (\Exception $e) {
-        \Log::error('CAPTCHA reload error: ' . $e->getMessage() . ' | Trace: ' . $e->getTraceAsString());
-        // Return error details for debugging
-        return response()->json([
-            'error' => 'Failed to generate CAPTCHA',
-            'message' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine()
-        ], 500);
-    }
-})->name('captcha.reload');
-
-// Authentication routes (Doctor/Staff only)
+// Authentication routes (accessible from all domains)
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+// CAPTCHA reload route (with subdomain check)
+Route::middleware('subdomain.check')->group(function () {
+    Route::get('/captcha/reload', function() {
+        try {
+            // Generate new CAPTCHA and return the image HTML
+            $captcha = captcha_img('flat');
+            return response()->json(['captcha' => $captcha]);
+        } catch (\Exception $e) {
+            \Log::error('CAPTCHA reload error: ' . $e->getMessage() . ' | Trace: ' . $e->getTraceAsString());
+            // Return error details for debugging
+            return response()->json([
+                'error' => 'Failed to generate CAPTCHA',
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ], 500);
+        }
+    })->name('captcha.reload');
+});
+
+// Public routes (with subdomain check, but allow parent domain)
+Route::middleware('subdomain.check')->group(function () {
+    Route::get('/', function () {
+        return view('welcome');
+    })->name('home');
+
+    // Patient registration via special link only
+    Route::get('/register/{token}', [RegistrationLinkController::class, 'showRegistrationForm'])->name('patient.register');
+    Route::post('/register/{token}', [PatientController::class, 'store'])->name('patient.store');
+});
+
 // Protected routes (require authentication)
 Route::middleware('auth')->group(function () {
-    // Admin routes
+    // Admin routes (accessible to admins from any domain)
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         
@@ -68,18 +72,20 @@ Route::middleware('auth')->group(function () {
         Route::get('/insights', [ReportsController::class, 'insights'])->name('insights.index');
     });
     
-    // Doctor/Staff Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
-    // Patients
-    Route::resource('patients', PatientController::class);
-    Route::get('/patients/{patient}/teeth-chart', [TeethRecordController::class, 'showChart'])->name('patients.teeth-chart');
-    Route::post('/patients/{patient}/teeth-records', [TeethRecordController::class, 'store'])->name('patients.teeth-records.store');
-    Route::get('/patients/{patient}/teeth-records/{toothNumber}', [TeethRecordController::class, 'getRecord'])->name('patients.teeth-records.get');
-    
-    // Appointments
-    Route::resource('appointments', AppointmentController::class);
-    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    // Doctor/Staff Dashboard (with subdomain check)
+    Route::middleware('subdomain.check')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        
+        // Patients
+        Route::resource('patients', PatientController::class);
+        Route::get('/patients/{patient}/teeth-chart', [TeethRecordController::class, 'showChart'])->name('patients.teeth-chart');
+        Route::post('/patients/{patient}/teeth-records', [TeethRecordController::class, 'store'])->name('patients.teeth-records.store');
+        Route::get('/patients/{patient}/teeth-records/{toothNumber}', [TeethRecordController::class, 'getRecord'])->name('patients.teeth-records.get');
+        
+        // Appointments
+        Route::resource('appointments', AppointmentController::class);
+        Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    });
     
     // Doctor only routes
     Route::middleware('role:doctor')->group(function () {
