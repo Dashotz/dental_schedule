@@ -44,12 +44,12 @@
                 <a href="#about" class="nav-link-custom d-none d-md-block">About</a>
                 <a href="#testimonials" class="nav-link-custom d-none d-md-block">Testimonials</a>
                 <a href="#contact" class="nav-link-custom d-none d-md-block">Contact</a>
-                <a href="{{ route('login') }}" class="btn btn-staff-login" title="Staff Login">
-                    <i class="bi bi-person-circle"></i>
-                </a>
                 <button class="mobile-menu-btn d-md-none" id="mobileMenuBtn">
                     <i class="bi bi-list"></i>
                 </button>
+                <a href="{{ route('login') }}" class="btn btn-staff-login" title="Staff Login">
+                    <i class="bi bi-person-circle"></i>
+                </a>
             </div>
         </div>
         <!-- Mobile Menu -->
@@ -213,7 +213,7 @@
             <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="service-card">
                     <div class="service-icon">
-                        <i class="bi bi-tooth"></i>
+                        <i class="bi bi-brush"></i>
                     </div>
                     <h5 class="service-title">Teeth Whitening</h5>
                 </div>
@@ -232,7 +232,7 @@
         <div class="row g-4 align-items-center mb-5">
             <div class="col-lg-6">
                 <div class="clinic-image-wrapper">
-                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                    <img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
                          alt="Modern dental clinic facility" 
                          class="clinic-facility-image"
                          loading="lazy">

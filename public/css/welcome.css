@@ -107,25 +107,24 @@ body > main.container-fluid {
 }
 
 .btn-staff-login {
-    background: linear-gradient(135deg, var(--dental-teal) 0%, var(--dental-teal-dark) 100%);
-    border: 1px solid var(--dental-teal);
-    color: white;
-    padding: 10px 15px;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
+    background: none;
+    border: none;
+    color: var(--dental-teal);
+    padding: 0;
+    width: auto;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(32, 178, 170, 0.4);
     text-decoration: none;
+    font-size: 1.8rem;
+    margin-left: 15px;
 }
 
 .btn-staff-login:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(32, 178, 170, 0.6);
-    color: white;
+    transform: scale(1.1);
+    color: var(--dental-teal-dark);
 }
 
 .mobile-menu-btn {
@@ -162,8 +161,14 @@ body > main.container-fluid {
 
 /* Hero Banner Section */
 .hero-banner {
-    background: linear-gradient(135deg, rgba(32, 178, 170, 0.1) 0%, rgba(255, 255, 255, 1) 100%);
+    background: linear-gradient(135deg, rgba(32, 178, 170, 0.85) 0%, rgba(0, 139, 139, 0.85) 100%),
+                url('https://images.unsplash.com/photo-1606811971618-4486d14f3f99?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     padding: 100px 0;
+    position: relative;
 }
 
 .hero-image-wrapper {
@@ -188,16 +193,18 @@ body > main.container-fluid {
 .hero-title {
     font-size: 3.5rem;
     font-weight: 800;
-    color: var(--text-dark);
+    color: var(--primary-white);
     margin-bottom: 25px;
     line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero-subtitle {
-    color: var(--text-medium);
+    color: rgba(255, 255, 255, 0.95);
     font-size: 1.2rem;
     line-height: 1.8;
     margin-bottom: 40px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .hero-buttons {
@@ -208,38 +215,41 @@ body > main.container-fluid {
 }
 
 .btn-primary-hero {
-    background: var(--dental-teal);
-    color: white;
-    padding: 15px 40px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: 2px solid var(--dental-teal);
-}
-
-.btn-primary-hero:hover {
-    background: var(--dental-teal-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(32, 178, 170, 0.4);
-    color: white;
-}
-
-.btn-secondary-hero {
-    background: transparent;
+    background: white;
     color: var(--dental-teal);
     padding: 15px 40px;
     border-radius: 30px;
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s ease;
-    border: 2px solid var(--dental-teal);
+    border: 2px solid white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary-hero:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    color: var(--dental-teal-dark);
+}
+
+.btn-secondary-hero {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid white;
+    backdrop-filter: blur(10px);
 }
 
 .btn-secondary-hero:hover {
-    background: var(--dental-teal);
-    color: white;
+    background: white;
+    color: var(--dental-teal);
     transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
 }
 
 /* Services Preview Section */
@@ -428,11 +438,12 @@ body > main.container-fluid {
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(32, 178, 170, 0.15);
     margin-bottom: 30px;
+    height: 350px;
 }
 
 .clinic-facility-image {
     width: 100%;
-    height: auto;
+    height: 100%;
     border-radius: 15px;
     object-fit: cover;
     transition: transform 0.3s ease;
@@ -734,6 +745,7 @@ body > main.container-fluid {
     .hero-banner {
         padding: 50px 0;
         text-align: center;
+        background-attachment: scroll;
     }
     
     .services-preview {
@@ -782,11 +794,13 @@ body > main.container-fluid {
     .hero-title {
         font-size: 2rem;
         margin-bottom: 15px;
+        color: white;
     }
     
     .hero-subtitle {
         font-size: 1rem;
         margin-bottom: 25px;
+        color: rgba(255, 255, 255, 0.95);
     }
     
     .hero-image-wrapper {
@@ -868,6 +882,7 @@ body > main.container-fluid {
     /* Clinic images */
     .clinic-image-wrapper {
         margin-bottom: 15px;
+        height: 250px;
     }
     
     /* Testimonials */
@@ -988,13 +1003,12 @@ body > main.container-fluid {
     }
     
     .btn-staff-login {
-        width: 40px;
-        height: 40px;
-        padding: 8px;
+        font-size: 1.5rem;
+        margin-left: 10px;
     }
     
-    .btn-staff-login i {
-        font-size: 1.2rem;
+    .btn-staff-login:hover {
+        transform: scale(1.1);
     }
 }
 
@@ -1010,6 +1024,16 @@ body > main.container-fluid {
     
     .hero-banner {
         padding: 40px 0;
+        background-attachment: scroll;
+    }
+    
+    .hero-title {
+        font-size: 1.75rem;
+        color: white;
+    }
+    
+    .hero-subtitle {
+        color: rgba(255, 255, 255, 0.95);
     }
     
     .services-preview,
@@ -1037,6 +1061,7 @@ body > main.container-fluid {
     
     .clinic-image-wrapper {
         margin-bottom: 10px;
+        height: 200px;
     }
     
     .cta-content h2 {
