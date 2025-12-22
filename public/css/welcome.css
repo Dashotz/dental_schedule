@@ -363,10 +363,10 @@ body > main.container-fluid {
     padding: 100px 0;
     width: 100%;
     max-width: 100%;
-    overflow-x: hidden;
-    overflow-y: visible;
+    overflow: hidden !important;
     scrollbar-width: none !important; /* Firefox */
     -ms-overflow-style: none !important; /* IE and Edge */
+    position: relative;
 }
 
 .services-section::-webkit-scrollbar {
@@ -375,16 +375,42 @@ body > main.container-fluid {
     height: 0 !important;
 }
 
-.services-section .container,
-.services-section .row,
-.services-section [class*="col-"] {
-    overflow: visible !important;
+.services-section .container {
+    overflow: hidden !important;
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
+    max-width: 100%;
+    width: 100%;
 }
 
-.services-section .container::-webkit-scrollbar,
-.services-section .row::-webkit-scrollbar,
+.services-section .container::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.services-section .row {
+    overflow: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
+}
+
+.services-section .row::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.services-section [class*="col-"] {
+    overflow: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    max-width: 100%;
+}
+
 .services-section [class*="col-"]::-webkit-scrollbar {
     display: none !important;
     width: 0 !important;
@@ -469,6 +495,17 @@ body > main.container-fluid {
     font-size: 2.5rem;
     box-shadow: 0 10px 30px rgba(32, 178, 170, 0.3);
     transition: all 0.3s ease;
+}
+
+.service-icon-teeth {
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 15px;
+}
+
+.service-icon-teeth i {
+    font-size: 1.8rem;
+    flex: 0 0 auto;
 }
 
 .service-card:hover .service-icon {
