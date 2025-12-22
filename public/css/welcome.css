@@ -105,7 +105,6 @@ body > main.container-fluid {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
     text-decoration: none;
     font-size: 1.8rem;
     position: absolute;
@@ -116,7 +115,6 @@ body > main.container-fluid {
 }
 
 .btn-staff-login:hover {
-    transform: scale(1.1);
     color: var(--dental-teal-dark);
 }
 
@@ -984,10 +982,6 @@ body > main.container-fluid {
     .btn-staff-login {
         font-size: 1.5rem;
         padding: 8px 12px;
-    }
-    
-    .btn-staff-login:hover {
-        transform: scale(1.1);
     }
 }
 
