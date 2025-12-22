@@ -2,15 +2,10 @@
     --primary-white: #ffffff;
     --grayish-white: #f8f9fa;
     --light-gray: #e9ecef;
-    --text-gray: #6c757d;
     --text-dark: #212529;
     --text-medium: #495057;
-    --text-light: #868e96;
     --dental-teal: #20b2aa;
     --dental-teal-dark: #008b8b;
-    --dental-teal-darker: #006666;
-    --light-teal: #7fffd4;
-    --accent-cyan: #00ced1;
 }
 
 * {
@@ -48,9 +43,6 @@ body > main.container-fluid {
     font-size: 0.9rem;
 }
 
-.top-info-bar .container {
-    max-width: 1200px;
-}
 
 .top-info-item {
     display: flex;
@@ -75,9 +67,6 @@ body > main.container-fluid {
     border-bottom: 1px solid var(--light-gray);
 }
 
-.main-navbar .container {
-    max-width: 1200px;
-}
 
 .nav-brand {
     color: var(--text-dark) !important;
@@ -282,24 +271,17 @@ body > main.container-fluid {
 }
 
 .service-preview-card .service-preview-icon {
-    margin-top: -40px;
-    position: relative;
-    z-index: 2;
-    background: var(--primary-white);
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 25px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    display: none;
 }
 
 .service-preview-card h4,
 .service-preview-card p,
 .service-preview-card .service-preview-link {
     padding: 0 30px;
+}
+
+.service-preview-card h4 {
+    margin-top: 20px;
 }
 
 .service-preview-card p {
@@ -357,7 +339,6 @@ body > main.container-fluid {
 .services-section {
     background: var(--grayish-white);
     padding: 100px 0;
-    overflow: visible !important;
 }
 
 .section-header {
