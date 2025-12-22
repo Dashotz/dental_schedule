@@ -163,4 +163,26 @@ class SubdomainController extends Controller
             'message' => 'Registration link generated successfully. Previous link has been deactivated. Link expires when subscription ends.'
         ]);
     }
+
+    public function destroy(Subdomain $subdomain)
+    {
+        // Delete related registration links
+        $subdomain->registrationLinks()->delete();
+        
+        // Delete related subscriptions
+        $subdomain->subscriptions()->delete();
+        
+        // Delete the subdomain
+        $subdomain->delete();
+
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Subdomain deleted successfully.'
+            ]);
+        }
+
+        return redirect()->route('admin.subdomains.index')
+            ->with('success', 'Subdomain deleted successfully.');
+    }
 }

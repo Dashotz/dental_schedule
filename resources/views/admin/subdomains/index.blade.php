@@ -103,6 +103,13 @@
                                         title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </button>
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-danger delete-subdomain-btn ms-1" 
+                                        data-subdomain-id="{{ $subdomain->id }}"
+                                        data-subdomain-name="{{ $subdomain->name }}"
+                                        title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             </td>
                         </tr>
                     @empty
@@ -488,6 +495,59 @@
                     });
                 } else {
                     toggle.prop('checked', !isChecked);
+                }
+            });
+        });
+
+        // Delete subdomain
+        $(document).on('click', '.delete-subdomain-btn', function() {
+            const subdomainId = $(this).data('subdomain-id');
+            const subdomainName = $(this).data('subdomain-name');
+            const deleteBtn = $(this);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `You are about to delete "${subdomainName}". This action cannot be undone and will also delete all related registration links and subscriptions.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
+
+                    $.ajax({
+                        url: `/admin/subdomains/${subdomainId}`,
+                        method: 'POST',
+                        data: {
+                            _method: 'DELETE',
+                            _token: '{{ csrf_token() }}'
+                        },
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: response.message,
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: xhr.responseJSON?.message || 'Failed to delete subdomain.'
+                            });
+                            deleteBtn.prop('disabled', false).html('<i class="bi bi-trash"></i>');
+                        }
+                    });
                 }
             });
         });
