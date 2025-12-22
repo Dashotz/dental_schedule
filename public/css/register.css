@@ -161,6 +161,12 @@ textarea.form-control {
     border-radius: 8px;
     padding: 0.5rem;
     background: #f8f9fa;
+    display: inline-block;
+}
+
+#captcha-container img {
+    display: block;
+    margin: 0 auto;
 }
 
 #reload-captcha {

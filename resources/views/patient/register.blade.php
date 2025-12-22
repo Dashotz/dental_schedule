@@ -261,10 +261,10 @@
 
                         <!-- CAPTCHA -->
                         <div class="row mt-4">
-                            <div class="col-12 col-md-6">
-                                <label for="captcha" class="form-label">Security Verification <span class="text-danger">*</span></label>
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="flex-grow-1" id="captcha-container">
+                            <div class="col-12 col-md-6 offset-md-3">
+                                <label for="captcha" class="form-label text-center d-block">Security Verification <span class="text-danger">*</span></label>
+                                <div class="d-flex align-items-center justify-content-center gap-3">
+                                    <div id="captcha-container">
                                         {!! captcha_img('flat') !!}
                                     </div>
                                     <button type="button" class="btn btn-outline-secondary" id="reload-captcha" title="Reload CAPTCHA">
