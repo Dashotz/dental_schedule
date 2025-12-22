@@ -232,8 +232,8 @@
         <div class="row g-4 align-items-center mb-5">
             <div class="col-lg-6">
                 <div class="clinic-image-wrapper">
-                    <img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
-                         alt="Modern dental clinic facility" 
+                    <img src="https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                         alt="Dental examination and patient care" 
                          class="clinic-facility-image"
                          loading="lazy">
                 </div>
