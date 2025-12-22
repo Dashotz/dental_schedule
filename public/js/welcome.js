@@ -45,16 +45,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add scroll effect to navbar
     const navbar = document.querySelector('.main-navbar');
-    
+
     if (navbar) {
-        window.addEventListener('scroll', function() {
-            const currentScroll = window.pageYOffset;
-            
-            if (currentScroll > 100) {
+    window.addEventListener('scroll', function() {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll > 100) {
                 navbar.style.boxShadow = '0 4px 20px rgba(32, 178, 170, 0.3)';
-            } else {
+        } else {
                 navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-            }
+        }
         });
     }
 
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Here you would typically send this to your backend
             alert('Thank you for subscribing! We will keep you updated.');
             this.reset();
-        });
+});
     }
 
 });

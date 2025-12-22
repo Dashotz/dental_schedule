@@ -120,73 +120,63 @@
     </div>
 
     <div class="col-lg-4 mb-4">
-        <div class="row g-3">
-            <!-- Quick Actions -->
-            <div class="col-12 col-md-6">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-header bg-success text-white">
-                        <h6 class="mb-0"><i class="bi bi-lightning-charge"></i> Quick Actions</h6>
-                    </div>
-                    <div class="card-body">
-                        <button class="btn btn-primary w-100" id="generateLinkBtn">
-                            <i class="bi bi-link-45deg"></i> Generate Registration Link
-                        </button>
-                        <a href="{{ route('admin.subdomains.edit', $subdomain) }}" class="btn btn-warning w-100 mt-2">
-                            <i class="bi bi-pencil"></i> Edit Subdomain
-                        </a>
-                    </div>
-                </div>
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-header bg-success text-white">
+                <h6 class="mb-0"><i class="bi bi-lightning-charge"></i> Quick Actions</h6>
             </div>
+            <div class="card-body">
+                <button class="btn btn-primary w-100" id="generateLinkBtn">
+                    <i class="bi bi-link-45deg"></i> Generate Registration Link
+                </button>
+            </div>
+        </div>
 
-            <!-- Registration Links -->
-            <div class="col-12 col-md-6">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-header bg-info text-white">
-                        <h6 class="mb-0"><i class="bi bi-link-45deg"></i> Registration Links</h6>
+        <!-- Registration Links -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0"><i class="bi bi-link-45deg"></i> Registration Links</h6>
+            </div>
+            <div class="card-body">
+                @php
+                    $activeLink = $subdomain->registrationLinks->where('is_active', true)->first();
+                @endphp
+                @if($activeLink)
+                    <div class="mb-3">
+                        <label class="form-label small text-muted mb-2">Active Registration Link</label>
+                        <div class="input-group">
+                            <input type="text" 
+                                   class="form-control registration-link-input" 
+                                   value="{{ $activeLink->link }}" 
+                                   readonly
+                                   id="registrationLinkInput">
+                            <button class="btn btn-outline-primary copy-link-btn" 
+                                    type="button" 
+                                    data-link="{{ $activeLink->link }}"
+                                    title="Copy to clipboard">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted d-block">
+                                <i class="bi bi-info-circle"></i> 
+                                Uses: <strong>{{ $activeLink->used_count }}</strong>/∞ (Unlimited)
+                            </small>
+                            @if($activeLink->expires_at)
+                                <small class="text-muted d-block mt-1">
+                                    <i class="bi bi-calendar-x"></i> 
+                                    Expires: <strong>{{ $activeLink->expires_at->format('M d, Y') }}</strong>
+                                    <br><span class="text-muted small">(when subscription ends)</span>
+                                </small>
+                            @endif
+                        </div>
                     </div>
-                    <div class="card-body">
-                        @php
-                            $activeLink = $subdomain->registrationLinks->where('is_active', true)->first();
-                        @endphp
-                        @if($activeLink)
-                            <div class="mb-3">
-                                <label class="form-label small text-muted mb-2">Active Registration Link</label>
-                                <div class="input-group">
-                                    <input type="text" 
-                                           class="form-control registration-link-input" 
-                                           value="{{ $activeLink->link }}" 
-                                           readonly
-                                           id="registrationLinkInput">
-                                    <button class="btn btn-outline-primary copy-link-btn" 
-                                            type="button" 
-                                            data-link="{{ $activeLink->link }}"
-                                            title="Copy to clipboard">
-                                        <i class="bi bi-clipboard"></i>
-                                    </button>
-                                </div>
-                                <div class="mt-2">
-                                    <small class="text-muted d-block">
-                                        <i class="bi bi-info-circle"></i> 
-                                        Uses: <strong>{{ $activeLink->used_count }}</strong>/∞ (Unlimited)
-                                    </small>
-                                    @if($activeLink->expires_at)
-                                        <small class="text-muted d-block mt-1">
-                                            <i class="bi bi-calendar-x"></i> 
-                                            Expires: <strong>{{ $activeLink->expires_at->format('M d, Y') }}</strong>
-                                            <br><span class="text-muted small">(when subscription ends)</span>
-                                        </small>
-                                    @endif
-                                </div>
-                            </div>
-                        @else
-                            <div class="text-center py-3">
-                                <i class="bi bi-link-45deg display-6 text-muted"></i>
-                                <p class="text-muted mb-0 mt-2">No active registration link</p>
-                                <small class="text-muted">Generate one to get started</small>
-                            </div>
-                        @endif
+                @else
+                    <div class="text-center py-3">
+                        <i class="bi bi-link-45deg display-6 text-muted"></i>
+                        <p class="text-muted mb-0 mt-2">No active registration link</p>
+                        <small class="text-muted">Generate one to get started</small>
                     </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>

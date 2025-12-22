@@ -95,9 +95,9 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-12 mb-3">
-                        <div class="card">
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100">
                             <div class="card-header bg-success text-white">
                                 <h6 class="mb-0"><i class="bi bi-lightning-charge"></i> Quick Actions</h6>
                             </div>
@@ -112,8 +112,8 @@
                         </div>
                     </div>
 
-                    <div class="col-12">
-                        <div class="card">
+                    <div class="col-12 col-md-6">
+                        <div class="card h-100">
                             <div class="card-header bg-info text-white">
                                 <h6 class="mb-0"><i class="bi bi-link-45deg"></i> Registration Links</h6>
                             </div>

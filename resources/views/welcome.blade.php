@@ -143,10 +143,10 @@
                         <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
                              alt="Dental X-ray" 
                              loading="lazy">
-                    </div>
+                </div>
                     <div class="service-preview-icon">
                         <i class="bi bi-camera"></i>
-                    </div>
+            </div>
                     <h4>CBCT and Dental X-ray</h4>
                     <p>Dental imaging plays a crucial role in accurate diagnosis and treatment planning.</p>
                     <a href="#services" class="service-preview-link">Learn More <i class="bi bi-arrow-right"></i></a>
