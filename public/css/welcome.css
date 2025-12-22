@@ -502,15 +502,29 @@ body > main.container-fluid {
     transition: all 0.3s ease;
 }
 
+.service-icon:not(.service-icon-teeth) i {
+    font-size: inherit;
+}
+
 .service-icon-teeth {
-    gap: 8px;
-    flex-wrap: wrap;
-    padding: 15px;
+    gap: 5px !important;
+    flex-wrap: nowrap !important;
+    padding: 20px 8px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    font-size: 0 !important;
 }
 
 .service-icon-teeth i {
-    font-size: 1.8rem;
-    flex: 0 0 auto;
+    font-size: 1.6rem !important;
+    flex: 0 0 auto !important;
+    display: inline-block !important;
+    color: white !important;
+    line-height: 1 !important;
+    width: auto !important;
+    height: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .service-card:hover .service-icon {
