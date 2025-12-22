@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Welcome - Dental Clinic')
+@section('title', 'Welcome - Dental Care Clinic')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
@@ -8,9 +8,37 @@
 
 @section('content')
 
+<!-- Top Bar -->
+<div class="top-info-bar">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6 col-lg-3">
+                <span class="top-info-item">
+                    <i class="bi bi-clock"></i> Mon-Sun 9:00AM-6:00PM
+                </span>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <span class="top-info-item">
+                    <i class="bi bi-telephone"></i> (123) 456-7890
+                </span>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <span class="top-info-item">
+                    <i class="bi bi-envelope"></i> info@dentalcare.com
+                </span>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <span class="top-info-item">
+                    <i class="bi bi-geo-alt"></i> Your City, Location
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Navigation Bar -->
 <nav class="main-navbar">
-    <div class="container-fluid">
+    <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             <a href="/" class="nav-brand">
                 <i class="bi bi-tooth"></i>
@@ -18,12 +46,23 @@
             </a>
             <div class="d-flex align-items-center">
                 <a href="#services" class="nav-link-custom d-none d-md-block">Services</a>
-                <a href="#ratings" class="nav-link-custom d-none d-md-block">Reviews</a>
+                <a href="#about" class="nav-link-custom d-none d-md-block">About</a>
+                <a href="#testimonials" class="nav-link-custom d-none d-md-block">Testimonials</a>
                 <a href="#contact" class="nav-link-custom d-none d-md-block">Contact</a>
-                <a href="{{ route('login') }}" class="btn btn-staff-login">
-                    <i class="bi bi-person-circle me-2"></i>Staff Login
+                <a href="{{ route('login') }}" class="btn btn-staff-login" title="Staff Login">
+                    <i class="bi bi-person-circle"></i>
                 </a>
+                <button class="mobile-menu-btn d-md-none" id="mobileMenuBtn">
+                    <i class="bi bi-list"></i>
+                </button>
             </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="mobile-menu d-md-none" id="mobileMenu">
+            <a href="#services" class="mobile-menu-link">Services</a>
+            <a href="#about" class="mobile-menu-link">About</a>
+            <a href="#testimonials" class="mobile-menu-link">Testimonials</a>
+            <a href="#contact" class="mobile-menu-link">Contact</a>
         </div>
     </div>
 </nav>
@@ -32,64 +71,57 @@
 <section class="hero-banner">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-7 hero-content">
-                <h1 class="hero-title">Your Smile is Our Priority</h1>
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="hero-title">Your One-Stop Shop For Dental Treatment</h1>
                 <p class="hero-subtitle">
-                    Experience exceptional dental care in a state-of-the-art facility. Our team of experienced professionals 
-                    combines cutting-edge technology with compassionate care to deliver the best oral health solutions for you and your family.
+                    Advanced dental knowledge, cutting-edge technology, and world-class service make Dental Care Clinic 
+                    the perfect choice for both locals and dental tourists. Experience every aspect of our professional dental care.
                 </p>
                 <div class="hero-buttons">
-                    <a href="#services" class="btn btn-primary-custom">
-                        <i class="bi bi-calendar-check me-2"></i>Our Services
+                    <a href="#services" class="btn btn-primary-hero">
+                        Learn More
                     </a>
-                    <a href="#contact" class="btn btn-outline-custom">
-                        <i class="bi bi-telephone me-2"></i>Contact Us
+                    <a href="#contact" class="btn btn-secondary-hero">
+                        Make an Appointment
                     </a>
-                </div>
-            </div>
-            <div class="col-lg-5 text-center hero-content">
-                <div class="hero-image-wrapper">
-                    <img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
-                         alt="Modern dental clinic with professional dentist and patient" 
-                         class="hero-dental-image"
-                         loading="lazy"
-                         onerror="this.src='https://via.placeholder.com/600x400/87CEEB/FFFFFF?text=Dental+Care'">
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Statistics Section -->
-<section class="stats-section">
+<!-- Services Preview Section -->
+<section class="services-preview">
     <div class="container">
         <div class="row g-4">
-            <div class="col-md-3 col-sm-6">
-                <div class="stat-card">
-                    <i class="bi bi-people stat-icon"></i>
-                    <div class="stat-number">10,000+</div>
-                    <div class="stat-label">Happy Patients</div>
+            <div class="col-lg-4 col-md-6">
+                <div class="service-preview-card">
+                    <div class="service-preview-icon">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <h4>Cosmetic Dentistry</h4>
+                    <p>We promise you a smile makeover that goes beyond improving how your teeth and gums function.</p>
+                    <a href="#services" class="service-preview-link">Learn More <i class="bi bi-arrow-right"></i></a>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="stat-card">
-                    <i class="bi bi-calendar-check stat-icon"></i>
-                    <div class="stat-number">50,000+</div>
-                    <div class="stat-label">Appointments</div>
+            <div class="col-lg-4 col-md-6">
+                <div class="service-preview-card">
+                    <div class="service-preview-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4>TMJ Therapy</h4>
+                    <p>Our clinic has advanced diagnostic and treatment facilities for TMJ dysfunction.</p>
+                    <a href="#services" class="service-preview-link">Learn More <i class="bi bi-arrow-right"></i></a>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="stat-card">
-                    <i class="bi bi-award stat-icon"></i>
-                    <div class="stat-number">15+</div>
-                    <div class="stat-label">Years Experience</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="stat-card">
-                    <i class="bi bi-star-fill stat-icon"></i>
-                    <div class="stat-number">4.9</div>
-                    <div class="stat-label">Average Rating</div>
+            <div class="col-lg-4 col-md-6">
+                <div class="service-preview-card">
+                    <div class="service-preview-icon">
+                        <i class="bi bi-camera"></i>
+                    </div>
+                    <h4>CBCT and Dental X-ray</h4>
+                    <p>Dental imaging plays a crucial role in accurate diagnosis and treatment planning.</p>
+                    <a href="#services" class="service-preview-link">Learn More <i class="bi bi-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -100,174 +132,255 @@
 <section id="services" class="services-section">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">Our Services</h2>
-            <p class="section-subtitle">Comprehensive dental care solutions for you and your family</p>
+            <h2 class="section-title">Our Specialized Dental Solutions</h2>
+            <p class="section-subtitle">From routine check-ups to advanced procedures, we provide a full range of dental services designed to meet your individual goals.</p>
         </div>
         <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="service-card">
-                    <div class="service-icon service-icon-teeth">
-                        <i class="bi bi-tooth"></i>
-                        <i class="bi bi-tooth"></i>
-                        <i class="bi bi-tooth"></i>
+                    <div class="service-icon">
+                        <i class="bi bi-clipboard-pulse"></i>
                     </div>
                     <h5 class="service-title">General Dentistry</h5>
-                    <p class="service-description">Regular checkups, cleanings, and preventive care to keep your smile healthy and bright.</p>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="bi bi-heart-pulse"></i>
                     </div>
                     <h5 class="service-title">Cosmetic Dentistry</h5>
-                    <p class="service-description">Transform your smile with our cosmetic procedures including whitening and veneers.</p>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="bi bi-shield-check"></i>
                     </div>
                     <h5 class="service-title">Orthodontics</h5>
-                    <p class="service-description">Straighten your teeth with our modern orthodontic solutions and braces options.</p>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="bi bi-droplet"></i>
                     </div>
                     <h5 class="service-title">Root Canal Treatment</h5>
-                    <p class="service-description">Comfortable and effective root canal therapy to save your natural teeth.</p>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="bi bi-stars"></i>
                     </div>
                     <h5 class="service-title">Dental Implants</h5>
-                    <p class="service-description">Restore your smile with permanent dental implants that look and feel natural.</p>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
+            <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="bi bi-emoji-smile"></i>
                     </div>
                     <h5 class="service-title">Emergency Care</h5>
-                    <p class="service-description">Urgent dental care when you need it most. We're here to help in emergencies.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="bi bi-hospital"></i>
+                    </div>
+                    <h5 class="service-title">Oral Surgery</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="bi bi-tooth"></i>
+                    </div>
+                    <h5 class="service-title">Teeth Whitening</h5>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Ratings/Reviews Section -->
-<section id="ratings" class="ratings-section">
+<!-- Why Choose Us Section -->
+<section id="about" class="why-choose-section">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">What Our Patients Say</h2>
-            <p class="section-subtitle">Real reviews from satisfied patients</p>
+            <h2 class="section-title">Why Choose Dental Care Clinic</h2>
+            <p class="section-subtitle">Extensive dental expertise, truly state-of-the-art technology, and the best locations. We guarantee you'll experience and enjoy every aspect of our world-class service.</p>
         </div>
         <div class="row g-4">
             <div class="col-lg-4 col-md-6">
-                <div class="rating-card">
-                    <div class="rating-stars">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h4>Skilled Dental Experts</h4>
+                    <p>Our experienced team provides top-quality care backed by advanced training and a passion for healthy smiles.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-clipboard-check"></i>
+                    </div>
+                    <h4>Personalized Treatment Plans</h4>
+                    <p>Every smile is unique. We create customized care plans to meet your individual dental needs and goals.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+                    <h4>State-of-the-Art Technology</h4>
+                    <p>We use the latest dental equipment for accurate diagnoses, safer procedures, and more comfortable visits.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-grid-3x3"></i>
+                    </div>
+                    <h4>Full Range of Services</h4>
+                    <p>From cleanings and fillings to cosmetic makeovers and implants—we offer dental care in one place.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-cash-coin"></i>
+                    </div>
+                    <h4>Transparent & Affordable</h4>
+                    <p>We offer honest pricing, flexible payment options, and no surprise fees—quality care within your reach.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-heart"></i>
+                    </div>
+                    <h4>Trusted by Families</h4>
+                    <p>We're proud to be the go-to dental provider for many families in our community, year after year.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="testimonials-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Happy Patients, Healthy Smiles</h2>
+            <p class="section-subtitle">Feel the difference—where expert care meets patient satisfaction.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                     </div>
-                    <p class="rating-text">"Excellent service and professional staff. The clinic is modern and clean, and the dentists are very knowledgeable. Highly recommend!"</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="rating-author">Sarah Johnson</span>
-                        <span class="rating-date">2 weeks ago</span>
+                    <p class="testimonial-text">"Together with his excellent team of doctors, they showed me the perfect combination of professionalism and compassion. They were patient, gentle and very polite."</p>
+                    <div class="testimonial-author">
+                        <strong>Rosana Castaneda</strong>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6">
-                <div class="rating-card">
-                    <div class="rating-stars">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                     </div>
-                    <p class="rating-text">"I've been coming here for years. The team is friendly, the facilities are top-notch, and I always feel comfortable during my visits."</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="rating-author">Michael Chen</span>
-                        <span class="rating-date">1 month ago</span>
+                    <p class="testimonial-text">"Excellent service and professional staff. The clinic is modern and clean, and the dentists are very knowledgeable. Highly recommend!"</p>
+                    <div class="testimonial-author">
+                        <strong>Sarah Johnson</strong>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6">
-                <div class="rating-card">
-                    <div class="rating-stars">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                         <i class="bi bi-star-fill"></i>
                     </div>
-                    <p class="rating-text">"Best dental experience I've ever had! The staff made me feel at ease, and the treatment was painless. Will definitely return!"</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="rating-author">Emily Rodriguez</span>
-                        <span class="rating-date">3 weeks ago</span>
+                    <p class="testimonial-text">"I've been coming here for years. The team is friendly, the facilities are top-notch, and I always feel comfortable during my visits."</p>
+                    <div class="testimonial-author">
+                        <strong>Michael Chen</strong>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content text-center">
+            <h2>Begin Your Journey to a Brighter, Healthier Smile Today!</h2>
+            <a href="#contact" class="btn btn-cta">Make an Appointment</a>
         </div>
     </div>
 </section>
 
 <!-- Contact Section -->
-<section id="contact" class="services-section" style="background: var(--grayish-white);">
+<section id="contact" class="contact-section">
     <div class="container">
         <div class="section-header">
-            <h2 class="section-title">Get In Touch</h2>
-            <p class="section-subtitle">Ready to schedule your appointment? Contact us today!</p>
+            <h2 class="section-title">Clinic Locations</h2>
         </div>
         <div class="row g-4">
-            <div class="col-md-4">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-telephone-fill"></i>
-                    </div>
-                    <h5 class="service-title">Phone</h5>
-                    <p class="service-description">Call us for appointments and inquiries</p>
+            <div class="col-lg-4 col-md-6">
+                <div class="location-card">
+                    <h5><i class="bi bi-geo-alt-fill"></i> Main Clinic</h5>
+                    <p>123 Main Street<br>Your City, State 12345<br>United States</p>
+                    <p class="location-phone"><i class="bi bi-telephone"></i> (123) 456-7890</p>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-envelope-fill"></i>
-                    </div>
-                    <h5 class="service-title">Email</h5>
-                    <p class="service-description">Send us a message anytime</p>
+            <div class="col-lg-4 col-md-6">
+                <div class="location-card">
+                    <h5><i class="bi bi-geo-alt-fill"></i> Branch Office</h5>
+                    <p>456 Second Avenue<br>Your City, State 12345<br>United States</p>
+                    <p class="location-phone"><i class="bi bi-telephone"></i> (123) 456-7891</p>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-clock-fill"></i>
-                    </div>
-                    <h5 class="service-title">Hours</h5>
-                    <p class="service-description">Mon-Fri: 9AM-6PM<br>Sat: 9AM-2PM</p>
+            <div class="col-lg-4 col-md-6">
+                <div class="location-card">
+                    <h5><i class="bi bi-info-circle-fill"></i> Patient Registration</h5>
+                    <p>To book an appointment, please use the registration link provided by our clinic staff.</p>
+                    <p class="location-hours"><i class="bi bi-clock"></i> Mon-Fri: 9AM-6PM<br>Sat: 9AM-2PM</p>
                 </div>
             </div>
         </div>
-        <div class="row mt-5">
-            <div class="col-lg-8 mx-auto">
-                <div class="service-card text-center">
-                    <i class="bi bi-info-circle" style="font-size: 2rem; color: var(--dental-teal); margin-bottom: 15px;"></i>
-                    <h5 class="service-title">Patient Registration</h5>
-                    <p class="service-description">To book an appointment, please use the registration link provided by our clinic staff.</p>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section">
+    <div class="container">
+        <div class="newsletter-content text-center">
+            <h3>Stay Updated</h3>
+            <p>Subscribe to our newsletter for dental care tips and special offers.</p>
+            <form class="newsletter-form">
+                <div class="input-group">
+                    <input type="email" class="form-control" placeholder="Enter your email address" required>
+                    <button class="btn btn-newsletter" type="submit">Subscribe</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </section>
@@ -275,16 +388,42 @@
 <!-- Footer -->
 <footer class="main-footer">
     <div class="container">
-        <div class="row">
-            <div class="col-md-6 footer-content">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
                 <h5 class="footer-title">
                     <i class="bi bi-tooth me-2"></i>Dental Care Clinic
                 </h5>
-                <p>Your trusted partner in dental health and wellness.</p>
+                <p>Your trusted partner in dental health and wellness. We provide comprehensive dental care solutions for you and your family.</p>
             </div>
-            <div class="col-md-6 text-md-end footer-content">
-                <p class="mb-0">&copy; {{ date('Y') }} Dental Care Clinic. All rights reserved.</p>
+            <div class="col-lg-2 col-md-6">
+                <h6 class="footer-heading">Navigation</h6>
+                <ul class="footer-links">
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
             </div>
+            <div class="col-lg-3 col-md-6">
+                <h6 class="footer-heading">Contact</h6>
+                <ul class="footer-links">
+                    <li><i class="bi bi-telephone"></i> (123) 456-7890</li>
+                    <li><i class="bi bi-envelope"></i> info@dentalcare.com</li>
+                    <li><i class="bi bi-clock"></i> Mon-Sun 9:00AM-6:00PM</li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h6 class="footer-heading">Social Media</h6>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="mb-0">&copy; {{ date('Y') }} Dental Care Clinic. All rights reserved.</p>
         </div>
     </div>
 </footer>
