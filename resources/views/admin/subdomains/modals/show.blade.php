@@ -14,7 +14,7 @@
                             <label class="text-muted small mb-1 d-block">
                                 <i class="bi bi-globe me-1"></i>Subdomain
                             </label>
-                            <strong class="d-block">{{ $subdomain->subdomain }}.yourdomain.com</strong>
+                            <strong class="d-block">{{ $subdomain->subdomain }}.helioho.st</strong>
                         </div>
                     </div>
                     <div class="col-md-6">

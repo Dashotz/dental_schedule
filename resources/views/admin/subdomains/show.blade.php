@@ -9,7 +9,7 @@
             <i class="bi bi-globe text-primary"></i> {{ $subdomain->name }}
         </h2>
         <p class="text-muted mb-0">
-            <i class="bi bi-link-45deg"></i> {{ $subdomain->subdomain }}.yourdomain.com
+            <i class="bi bi-link-45deg"></i> {{ $subdomain->subdomain }}.helioho.st
         </p>
     </div>
     <div class="d-flex gap-2">
@@ -35,7 +35,7 @@
                             <label class="text-muted small mb-1 d-block">
                                 <i class="bi bi-globe me-1"></i>Subdomain
                             </label>
-                            <strong class="d-block">{{ $subdomain->subdomain }}.yourdomain.com</strong>
+                            <strong class="d-block">{{ $subdomain->subdomain }}.helioho.st</strong>
                         </div>
                     </div>
                     <div class="col-md-6">

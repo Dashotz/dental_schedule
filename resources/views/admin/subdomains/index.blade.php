@@ -40,7 +40,7 @@
                                     </div>
                                     <div>
                                         <strong class="d-block">{{ $subdomain->subdomain }}</strong>
-                                        <small class="text-muted">.yourdomain.com</small>
+                                        <small class="text-muted">.helioho.st</small>
                                     </div>
                                 </div>
                             </td>

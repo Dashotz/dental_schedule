@@ -47,7 +47,7 @@
                                             {{ $subscription->subdomain->name }}
                                         </button>
                                         <br>
-                                        <small class="text-muted">{{ $subscription->subdomain->subdomain }}.yourdomain.com</small>
+                                        <small class="text-muted">{{ $subscription->subdomain->subdomain }}.helioho.st</small>
                                     </div>
                                 </div>
                             </td>

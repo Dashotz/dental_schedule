@@ -22,7 +22,7 @@
                                        name="subdomain" 
                                        placeholder="clinic-name" 
                                        required>
-                                <span class="input-group-text bg-light border-start-0">.yourdomain.com</span>
+                                <span class="input-group-text bg-light border-start-0">.helioho.st</span>
                             </div>
                             <small class="text-muted d-block mt-2">
                                 <i class="bi bi-info-circle"></i> Only lowercase letters, numbers, and hyphens allowed.
