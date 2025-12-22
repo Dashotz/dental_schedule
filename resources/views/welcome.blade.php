@@ -106,7 +106,9 @@
         <div class="row g-4">
             <div class="col-lg-4 col-md-6">
                 <div class="service-card">
-                    <div class="service-icon">
+                    <div class="service-icon" style="display: flex; align-items: center; justify-content: center; gap: 5px; flex-wrap: wrap;">
+                        <i class="bi bi-tooth"></i>
+                        <i class="bi bi-tooth"></i>
                         <i class="bi bi-tooth"></i>
                     </div>
                     <h5 class="service-title">General Dentistry</h5>
