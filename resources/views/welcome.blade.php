@@ -4,6 +4,16 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
+    <style>
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(32, 178, 170, 0.4) 0%, rgba(0, 139, 139, 0.4) 100%),
+                        url('{{ asset('images/bg.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -232,7 +242,7 @@
         <div class="row g-4 align-items-center mb-5">
             <div class="col-lg-6">
                 <div class="clinic-image-wrapper">
-                    <img src="https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                    <img src="{{ asset('images/choose1.jpg') }}" 
                          alt="Dental examination and patient care" 
                          class="clinic-facility-image"
                          loading="lazy">
