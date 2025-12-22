@@ -11,25 +11,20 @@
 <!-- Top Bar -->
 <div class="top-info-bar">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-6 col-lg-3">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-md-4 col-lg-4">
                 <span class="top-info-item">
                     <i class="bi bi-clock"></i> Mon-Sun 9:00AM-6:00PM
                 </span>
             </div>
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-4 col-lg-4">
                 <span class="top-info-item">
                     <i class="bi bi-telephone"></i> (123) 456-7890
                 </span>
             </div>
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-4 col-lg-4">
                 <span class="top-info-item">
                     <i class="bi bi-envelope"></i> info@dentalcare.com
-                </span>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <span class="top-info-item">
-                    <i class="bi bi-geo-alt"></i> Your City, Location
                 </span>
             </div>
         </div>
@@ -71,7 +66,7 @@
 <section class="hero-banner">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-8 mx-auto text-center">
+            <div class="col-lg-6">
                 <h1 class="hero-title">Your One-Stop Shop For Dental Treatment</h1>
                 <p class="hero-subtitle">
                     Advanced dental knowledge, cutting-edge technology, and world-class service make Dental Care Clinic 
@@ -81,9 +76,17 @@
                     <a href="#services" class="btn btn-primary-hero">
                         Learn More
                     </a>
-                    <a href="#contact" class="btn btn-secondary-hero">
+                    <a href="https://www.facebook.com/messages/t/28771958192418167" target="_blank" class="btn btn-secondary-hero">
                         Make an Appointment
                     </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="hero-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                         alt="Modern dental clinic with professional dentist" 
+                         class="hero-image"
+                         loading="lazy">
                 </div>
             </div>
         </div>
@@ -96,6 +99,11 @@
         <div class="row g-4">
             <div class="col-lg-4 col-md-6">
                 <div class="service-preview-card">
+                    <div class="service-preview-image">
+                        <img src="https://images.unsplash.com/photo-1609840114035-3c981b782dfe?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Cosmetic Dentistry" 
+                             loading="lazy">
+                    </div>
                     <div class="service-preview-icon">
                         <i class="bi bi-heart-pulse"></i>
                     </div>
@@ -106,6 +114,11 @@
             </div>
             <div class="col-lg-4 col-md-6">
                 <div class="service-preview-card">
+                    <div class="service-preview-image">
+                        <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="TMJ Therapy" 
+                             loading="lazy">
+                    </div>
                     <div class="service-preview-icon">
                         <i class="bi bi-shield-check"></i>
                     </div>
@@ -116,6 +129,11 @@
             </div>
             <div class="col-lg-4 col-md-6">
                 <div class="service-preview-card">
+                    <div class="service-preview-image">
+                        <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                             alt="Dental X-ray" 
+                             loading="lazy">
+                    </div>
                     <div class="service-preview-icon">
                         <i class="bi bi-camera"></i>
                     </div>
@@ -210,6 +228,24 @@
         <div class="section-header">
             <h2 class="section-title">Why Choose Dental Care Clinic</h2>
             <p class="section-subtitle">Extensive dental expertise, truly state-of-the-art technology, and the best locations. We guarantee you'll experience and enjoy every aspect of our world-class service.</p>
+        </div>
+        <div class="row g-4 align-items-center mb-5">
+            <div class="col-lg-6">
+                <div class="clinic-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                         alt="Modern dental clinic facility" 
+                         class="clinic-facility-image"
+                         loading="lazy">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="clinic-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                         alt="Dental equipment and technology" 
+                         class="clinic-facility-image"
+                         loading="lazy">
+                </div>
+            </div>
         </div>
         <div class="row g-4">
             <div class="col-lg-4 col-md-6">
@@ -332,7 +368,7 @@
     <div class="container">
         <div class="cta-content text-center">
             <h2>Begin Your Journey to a Brighter, Healthier Smile Today!</h2>
-            <a href="#contact" class="btn btn-cta">Make an Appointment</a>
+            <a href="https://www.facebook.com/messages/t/28771958192418167" target="_blank" class="btn btn-cta">Make an Appointment</a>
         </div>
     </div>
 </section>
