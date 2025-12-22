@@ -245,6 +245,15 @@
             $('#modal_end_date').val('');
         });
 
+        // Clean up view modal container when closed
+        $(document).on('hidden.bs.modal', '#viewSubdomainModal', function() {
+            $('#viewSubdomainModalContainer').empty();
+            // Remove any lingering modal backdrops
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+            $('body').css('padding-right', '');
+        });
+
         // View subdomain from subscriptions page
         $(document).on('click', '.view-subdomain-from-subscription', function() {
             const subdomainId = $(this).data('subdomain-id');

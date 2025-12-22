@@ -635,6 +635,39 @@
             $(this).find('.is-invalid').removeClass('is-invalid');
             $(this).find('.invalid-feedback').addClass('d-none');
         });
+
+        // Clean up view modal container when closed
+        $(document).on('hidden.bs.modal', '#viewSubdomainModal', function() {
+            $('#viewSubdomainModalContainer').empty();
+            // Remove any lingering modal backdrops
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+            $('body').css('padding-right', '');
+        });
+
+        // Clean up edit modal body when closed (remove skeleton if present)
+        $(document).on('hidden.bs.modal', '#editSubdomainModal', function() {
+            // Only clear if it's skeleton content (has .skeleton class)
+            if ($('#editSubdomainModalBody').find('.skeleton').length > 0) {
+                $('#editSubdomainModalBody').empty();
+            }
+            // Remove any lingering modal backdrops
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+            $('body').css('padding-right', '');
+        });
+
+        // Clean up create modal body when closed (remove skeleton if present)
+        $(document).on('hidden.bs.modal', '#createSubdomainModal', function() {
+            // Only clear if it's skeleton content (has .skeleton class)
+            if ($('#createSubdomainModal .modal-body').find('.skeleton').length > 0) {
+                $('#createSubdomainModal .modal-body').empty();
+            }
+            // Remove any lingering modal backdrops
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+            $('body').css('padding-right', '');
+        });
     });
 </script>
 @endpush
