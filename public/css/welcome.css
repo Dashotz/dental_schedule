@@ -363,11 +363,11 @@ body > main.container-fluid {
     padding: 100px 0;
     width: 100%;
     max-width: 100%;
-    overflow-x: hidden !important;
-    overflow-y: visible !important;
+    overflow: visible !important;
     scrollbar-width: none !important; /* Firefox */
     -ms-overflow-style: none !important; /* IE and Edge */
     position: relative;
+    overscroll-behavior: none !important;
 }
 
 .services-section::-webkit-scrollbar {
@@ -377,12 +377,12 @@ body > main.container-fluid {
 }
 
 .services-section .container {
-    overflow-x: hidden !important;
-    overflow-y: visible !important;
+    overflow: visible !important;
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
     max-width: 100%;
     width: 100%;
+    overscroll-behavior: none !important;
 }
 
 .services-section .container::-webkit-scrollbar {
@@ -392,13 +392,13 @@ body > main.container-fluid {
 }
 
 .services-section .row {
-    overflow-x: hidden !important;
-    overflow-y: visible !important;
+    overflow: visible !important;
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
     margin-left: 0;
     margin-right: 0;
     max-width: 100%;
+    overscroll-behavior: none !important;
 }
 
 .services-section .row::-webkit-scrollbar {
@@ -412,6 +412,7 @@ body > main.container-fluid {
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
     max-width: 100%;
+    overscroll-behavior: none !important;
 }
 
 .services-section [class*="col-"]::-webkit-scrollbar {
