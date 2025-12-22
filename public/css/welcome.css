@@ -364,13 +364,31 @@ body > main.container-fluid {
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;
-    overflow-y: hidden;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    overflow-y: visible;
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE and Edge */
 }
 
 .services-section::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none !important; /* Chrome, Safari, Opera */
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.services-section .container,
+.services-section .row,
+.services-section [class*="col-"] {
+    overflow: visible !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+
+.services-section .container::-webkit-scrollbar,
+.services-section .row::-webkit-scrollbar,
+.services-section [class*="col-"]::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
 
 .section-header {
