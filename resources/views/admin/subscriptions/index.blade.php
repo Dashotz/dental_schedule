@@ -2,6 +2,10 @@
 
 @section('title', 'Subscriptions Management')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/skeleton-loading.css') }}">
+@endpush
+
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
@@ -132,6 +136,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/skeleton-loading.js') }}"></script>
 <script>
     $(document).ready(function() {
         // Load create subscription modal content
@@ -243,6 +248,18 @@
         // View subdomain from subscriptions page
         $(document).on('click', '.view-subdomain-from-subscription', function() {
             const subdomainId = $(this).data('subdomain-id');
+            
+            // Create a temporary container if it doesn't exist
+            if ($('#viewSubdomainModalContainer').length === 0) {
+                $('body').append('<div id="viewSubdomainModalContainer"></div>');
+            }
+            
+            // Show modal immediately with skeleton loading
+            const loadingHtml = SkeletonLoading.getViewSubdomainModal();
+            $('#viewSubdomainModalContainer').html(loadingHtml);
+            $('#viewSubdomainModal').modal('show');
+            
+            // Load content asynchronously
             $.ajax({
                 url: `/admin/subdomains/${subdomainId}`,
                 method: 'GET',
@@ -250,11 +267,31 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 success: function(response) {
-                    // Create a temporary container if it doesn't exist
-                    if ($('#viewSubdomainModalContainer').length === 0) {
-                        $('body').append('<div id="viewSubdomainModalContainer"></div>');
-                    }
                     $('#viewSubdomainModalContainer').html(response.html);
+                    // Re-initialize modal if needed
+                    if (!$('#viewSubdomainModal').hasClass('show')) {
+                        $('#viewSubdomainModal').modal('show');
+                    }
+                },
+                error: function(xhr) {
+                    $('#viewSubdomainModalContainer').html(`
+                        <div class="modal fade" id="viewSubdomainModal" tabindex="-1" aria-labelledby="viewSubdomainModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title">Error</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="text-danger">Failed to load subdomain details. Please try again.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
                     $('#viewSubdomainModal').modal('show');
                 }
             });

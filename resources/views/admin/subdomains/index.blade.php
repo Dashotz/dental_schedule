@@ -2,6 +2,10 @@
 
 @section('title', 'Subdomains Management')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/skeleton-loading.css') }}">
+@endpush
+
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
@@ -146,11 +150,21 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/skeleton-loading.js') }}"></script>
 <script>
     $(document).ready(function() {
         // Load create modal content
-        $('#openCreateModal, #openCreateModalEmpty').on('click', function() {
+        $('#openCreateModal, #openCreateModalEmpty').on('click', function(e) {
+            e.preventDefault();
+            const modal = $('#createSubdomainModal');
+            
+            // Show modal immediately if form not loaded
             if ($('#createSubdomainModal .modal-body form').length === 0) {
+                // Show skeleton loading
+                modal.find('.modal-body').html(SkeletonLoading.getCreateSubdomainModalBody());
+                modal.modal('show');
+                
+                // Load content asynchronously
                 $.ajax({
                     url: '{{ route("admin.subdomains.create") }}',
                     method: 'GET',
@@ -158,9 +172,18 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(response) {
-                        $('#createSubdomainModal .modal-body').html($(response.html).find('.modal-body').html());
+                        modal.find('.modal-body').html($(response.html).find('.modal-body').html());
+                    },
+                    error: function(xhr) {
+                        modal.find('.modal-body').html(`
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle"></i> Failed to load form. Please try again.
+                            </div>
+                        `);
                     }
                 });
+            } else {
+                modal.modal('show');
             }
         });
 
@@ -213,6 +236,14 @@
         // View subdomain modal
         $(document).on('click', '.view-subdomain-btn', function() {
             const subdomainId = $(this).data('subdomain-id');
+            const btn = $(this);
+            
+            // Show modal immediately with skeleton loading
+            const loadingHtml = SkeletonLoading.getViewSubdomainModal();
+            $('#viewSubdomainModalContainer').html(loadingHtml);
+            $('#viewSubdomainModal').modal('show');
+            
+            // Load content asynchronously
             $.ajax({
                 url: `/admin/subdomains/${subdomainId}`,
                 method: 'GET',
@@ -221,6 +252,30 @@
                 },
                 success: function(response) {
                     $('#viewSubdomainModalContainer').html(response.html);
+                    // Re-initialize modal if needed
+                    if (!$('#viewSubdomainModal').hasClass('show')) {
+                        $('#viewSubdomainModal').modal('show');
+                    }
+                },
+                error: function(xhr) {
+                    $('#viewSubdomainModalContainer').html(`
+                        <div class="modal fade" id="viewSubdomainModal" tabindex="-1" aria-labelledby="viewSubdomainModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header bg-danger text-white">
+                                        <h5 class="modal-title">Error</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="text-danger">Failed to load subdomain details. Please try again.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
                     $('#viewSubdomainModal').modal('show');
                 }
             });
@@ -232,6 +287,11 @@
             window.currentEditSubdomainId = subdomainId;
             $('#edit_subdomain_id').val(subdomainId);
             
+            // Show modal immediately with skeleton loading
+            $('#editSubdomainModalBody').html(SkeletonLoading.getEditSubdomainModalBody());
+            $('#editSubdomainModal').modal('show');
+            
+            // Load content asynchronously
             $.ajax({
                 url: `/admin/subdomains/${subdomainId}/edit`,
                 method: 'GET',
@@ -240,7 +300,13 @@
                 },
                 success: function(response) {
                     $('#editSubdomainModalBody').html(response.html);
-                    $('#editSubdomainModal').modal('show');
+                },
+                error: function(xhr) {
+                    $('#editSubdomainModalBody').html(`
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle"></i> Failed to load edit form. Please try again.
+                        </div>
+                    `);
                 }
             });
         });
@@ -408,6 +474,11 @@
             window.currentEditSubdomainId = subdomainId;
             $('#edit_subdomain_id').val(subdomainId);
             
+            // Show modal immediately with skeleton loading
+            $('#editSubdomainModalBody').html(SkeletonLoading.getEditSubdomainModalBody());
+            $('#editSubdomainModal').modal('show');
+            
+            // Load content asynchronously
             $.ajax({
                 url: `/admin/subdomains/${subdomainId}/edit`,
                 method: 'GET',
@@ -416,7 +487,13 @@
                 },
                 success: function(response) {
                     $('#editSubdomainModalBody').html(response.html);
-                    $('#editSubdomainModal').modal('show');
+                },
+                error: function(xhr) {
+                    $('#editSubdomainModalBody').html(`
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle"></i> Failed to load edit form. Please try again.
+                        </div>
+                    `);
                 }
             });
         });
