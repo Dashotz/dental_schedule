@@ -418,11 +418,16 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Error checking availability:', error);
                     checkedDoctors++;
                     
                     if (checkedDoctors === doctorIds.length) {
                         if (!hasAvailableDoctor) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to check availability. Please try again.',
+                                confirmButtonColor: '#dc3545'
+                            });
                             dateStatus.html('<span class="text-danger"><i class="bi bi-x-circle"></i> Unable to check availability</span>');
                             timeSelect.html('<option value="">Error loading slots</option>').prop('disabled', true);
                         }
@@ -467,7 +472,6 @@
                     btn.prop('disabled', false).html('<i class="bi bi-arrow-clockwise"></i>');
                 },
                 error: function(xhr, status, error) {
-                    console.error('CAPTCHA reload error:', error, xhr.responseText);
                     btn.prop('disabled', false).html('<i class="bi bi-arrow-clockwise"></i>');
                     Swal.fire({
                         icon: 'error',

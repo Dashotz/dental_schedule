@@ -304,7 +304,7 @@
     }
 
     function loadDateAvailability(date) {
-        fetch(`/availability/date-availability?date=${date}`, {
+        return fetch(`/availability/date-availability?date=${date}`, {
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                 'Accept': 'application/json'
@@ -325,7 +325,11 @@
             // Check for error in response
             if (data.error) {
                 container.innerHTML = `<small class="text-danger">Error: ${data.message || data.error}</small>`;
-                console.error('Availability error:', data);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message || data.error || 'Failed to load availability'
+                });
                 return;
             }
             
@@ -334,6 +338,12 @@
                 // Handle both boolean and string values
                 const available = data.availabilities.filter(a => a.is_available === true || a.is_available === '1' || a.is_available === 1);
                 const blocked = data.availabilities.filter(a => a.is_available === false || a.is_available === '0' || a.is_available === 0);
+                
+                // Store blocked slots globally for filtering dropdowns
+                blockedSlots = blocked;
+                
+                // Store blocked slots globally for filtering dropdowns
+                blockedSlots = blocked;
                 
                 let html = '';
                 
@@ -371,7 +381,11 @@
             }
         })
         .catch(error => {
-            console.error('Error loading availability:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to load availability. Please try again.'
+            });
             document.getElementById('currentAvailability').innerHTML = '<small class="text-danger">Error loading availability. Please try again.</small>';
         });
     }
@@ -413,26 +427,39 @@
         return slots;
     }
 
-    // Populate time select dropdowns with 30-minute intervals
+    // Store blocked slots globally to filter dropdowns
+    let blockedSlots = [];
+
+    // Populate time select dropdowns with 30-minute intervals (excluding already blocked slots)
     function populateTimeSelects() {
         const slots = generateTimeSlots();
         const startSelect = document.getElementById('blockStartTime');
         const endSelect = document.getElementById('blockEndTime');
         
+        // Get blocked time ranges from current availability data
+        const blockedRanges = getBlockedTimeRanges();
+        
+        // Filter out slots that are already blocked
+        const availableSlots = slots.filter(slot => {
+            return !isSlotBlocked(slot.value, blockedRanges);
+        });
+        
         // Clear existing options (except first)
         startSelect.innerHTML = '<option value="">Select start time...</option>';
         endSelect.innerHTML = '<option value="">Select end time...</option>';
         
-        // Populate start time (exclude last slot as it's the end time)
-        slots.slice(0, -1).forEach(slot => {
+        // Populate start time (exclude last slot as it's the end time, and already blocked slots)
+        const startSlots = availableSlots.slice(0, -1);
+        startSlots.forEach(slot => {
             const option = document.createElement('option');
             option.value = slot.value;
             option.textContent = slot.display;
             startSelect.appendChild(option);
         });
         
-        // Populate end time (exclude first slot, start from second)
-        slots.slice(1).forEach(slot => {
+        // Populate end time (exclude first slot, start from second, and already blocked slots)
+        const endSlots = availableSlots.slice(1);
+        endSlots.forEach(slot => {
             const option = document.createElement('option');
             option.value = slot.value;
             option.textContent = slot.display;
@@ -440,8 +467,54 @@
         });
     }
 
+    // Get blocked time ranges from the availability data
+    function getBlockedTimeRanges() {
+        const ranges = [];
+        if (blockedSlots && blockedSlots.length > 0) {
+            blockedSlots.forEach(block => {
+                if (block.start_time && block.end_time) {
+                    ranges.push({
+                        start: block.start_time,
+                        end: block.end_time
+                    });
+                }
+            });
+        }
+        return ranges;
+    }
+
+    // Check if a time slot is blocked
+    function isSlotBlocked(slotTime, blockedRanges) {
+        if (!blockedRanges || blockedRanges.length === 0) return false;
+        
+        const slotMinutes = timeToMinutes(slotTime);
+        
+        return blockedRanges.some(range => {
+            const rangeStart = timeToMinutes(range.start);
+            const rangeEnd = timeToMinutes(range.end);
+            // Check if slot time falls within any blocked range
+            return slotMinutes >= rangeStart && slotMinutes < rangeEnd;
+        });
+    }
+
     function blockDay() {
-        if (!confirm('Are you sure you want to block the entire day?')) return;
+        Swal.fire({
+            icon: 'question',
+            title: 'Block Entire Day?',
+            text: 'Are you sure you want to block the entire day?',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, block it',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (!result.isConfirmed) return;
+            
+            performBlockDay();
+        });
+    }
+    
+    function performBlockDay() {
 
         fetch('/availability/quick-set', {
             method: 'POST',
@@ -476,18 +549,24 @@
             }
         })
         .catch(error => {
-            console.error('Error:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'An error occurred'
+                text: 'An error occurred while blocking the day. Please try again.'
             });
         });
     }
 
     function showBlockHours() {
         document.getElementById('blockHoursForm').style.display = 'block';
-        populateTimeSelects();
+        // Refresh availability data first, then populate selects
+        if (selectedDate) {
+            loadDateAvailability(selectedDate).then(() => {
+                populateTimeSelects();
+            });
+        } else {
+            populateTimeSelects();
+        }
     }
 
     function hideBlockHours() {
@@ -567,7 +646,9 @@
                     showConfirmButton: false
                 });
                 hideBlockHours();
-                loadDateAvailability(selectedDate);
+                loadDateAvailability(selectedDate).then(() => {
+                    populateTimeSelects(); // Refresh dropdowns to hide newly blocked slots
+                });
                 setTimeout(() => location.reload(), 2000);
             } else {
                 Swal.fire({
@@ -578,56 +659,67 @@
             }
         })
         .catch(error => {
-            console.error('Error:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'An error occurred'
+                text: 'An error occurred while blocking hours. Please try again.'
             });
         });
     }
 
     function unblockDay() {
-        if (!confirm('Are you sure you want to unblock this day?')) return;
+        Swal.fire({
+            icon: 'question',
+            title: 'Unblock Day?',
+            text: 'Are you sure you want to unblock this day?',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#dc3545',
+            confirmButtonText: 'Yes, unblock it',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (!result.isConfirmed) return;
 
-        fetch('/availability/quick-set', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                date: selectedDate,
-                action: 'unblock'
+            fetch('/availability/quick-set', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    date: selectedDate,
+                    action: 'unblock'
+                })
             })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: data.message,
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-                loadDateAvailability(selectedDate);
-                setTimeout(() => location.reload(), 2000);
-            } else {
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: data.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    loadDateAvailability(selectedDate);
+                    // Refresh time selects to show newly available slots
+                    populateTimeSelects();
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.error || 'Failed to unblock day'
+                    });
+                }
+            })
+            .catch(error => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: data.error || 'Failed to unblock day'
+                    text: 'An error occurred while unblocking the day. Please try again.'
                 });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'An error occurred'
             });
         });
     }
