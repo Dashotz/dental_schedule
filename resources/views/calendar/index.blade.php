@@ -259,11 +259,17 @@
                     <hr>
                     <div class="mb-3">
                         <label for="blockStartTime" class="form-label">Start Time</label>
-                        <input type="time" class="form-control" id="blockStartTime">
+                        <select class="form-select" id="blockStartTime">
+                            <option value="">Select start time...</option>
+                        </select>
+                        <small class="text-muted">Times are in 30-minute intervals to match appointment slots</small>
                     </div>
                     <div class="mb-3">
                         <label for="blockEndTime" class="form-label">End Time</label>
-                        <input type="time" class="form-control" id="blockEndTime">
+                        <select class="form-select" id="blockEndTime">
+                            <option value="">Select end time...</option>
+                        </select>
+                        <small class="text-muted">Select the end of the time range to block</small>
                     </div>
                     <button type="button" class="btn btn-primary" onclick="blockHours()">
                         <i class="bi bi-check"></i> Block Hours
@@ -379,6 +385,61 @@
         return `${displayHour}:${minutes} ${ampm}`;
     }
 
+    // Convert time string (HH:MM) to minutes for comparison
+    function timeToMinutes(timeString) {
+        const [hours, minutes] = timeString.split(':').map(Number);
+        return hours * 60 + minutes;
+    }
+
+    // Generate 30-minute time slots (matching registration form)
+    function generateTimeSlots() {
+        const slots = [];
+        const startHour = 9; // 9 AM
+        const endHour = 17; // 5 PM (17:00)
+        
+        for (let hour = startHour; hour < endHour; hour++) {
+            for (let minute = 0; minute < 60; minute += 30) {
+                const time24 = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+                const hour12 = hour % 12 || 12;
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                const time12 = `${hour12}:${String(minute).padStart(2, '0')} ${ampm}`;
+                slots.push({ value: time24, display: time12 });
+            }
+        }
+        
+        // Add the end time (5:00 PM)
+        slots.push({ value: '17:00', display: '5:00 PM' });
+        
+        return slots;
+    }
+
+    // Populate time select dropdowns with 30-minute intervals
+    function populateTimeSelects() {
+        const slots = generateTimeSlots();
+        const startSelect = document.getElementById('blockStartTime');
+        const endSelect = document.getElementById('blockEndTime');
+        
+        // Clear existing options (except first)
+        startSelect.innerHTML = '<option value="">Select start time...</option>';
+        endSelect.innerHTML = '<option value="">Select end time...</option>';
+        
+        // Populate start time (exclude last slot as it's the end time)
+        slots.slice(0, -1).forEach(slot => {
+            const option = document.createElement('option');
+            option.value = slot.value;
+            option.textContent = slot.display;
+            startSelect.appendChild(option);
+        });
+        
+        // Populate end time (exclude first slot, start from second)
+        slots.slice(1).forEach(slot => {
+            const option = document.createElement('option');
+            option.value = slot.value;
+            option.textContent = slot.display;
+            endSelect.appendChild(option);
+        });
+    }
+
     function blockDay() {
         if (!confirm('Are you sure you want to block the entire day?')) return;
 
@@ -426,6 +487,7 @@
 
     function showBlockHours() {
         document.getElementById('blockHoursForm').style.display = 'block';
+        populateTimeSelects();
     }
 
     function hideBlockHours() {
@@ -447,11 +509,35 @@
             return;
         }
 
-        if (startTime >= endTime) {
+        // Convert to comparable format
+        const startMinutes = timeToMinutes(startTime);
+        const endMinutes = timeToMinutes(endTime);
+
+        if (startMinutes >= endMinutes) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Validation Error',
                 text: 'End time must be after start time'
+            });
+            return;
+        }
+        
+        // Validate minimum block duration (at least 30 minutes)
+        if (endMinutes - startMinutes < 30) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Validation Error',
+                text: 'Minimum block duration is 30 minutes'
+            });
+            return;
+        }
+        
+        // Validate minimum block duration (at least 30 minutes)
+        if (endMinutes - startMinutes < 30) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Validation Error',
+                text: 'Minimum block duration is 30 minutes'
             });
             return;
         }
