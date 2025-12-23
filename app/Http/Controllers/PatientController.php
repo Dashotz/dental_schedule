@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Patient;
 use App\Models\Appointment;
 use App\Models\RegistrationLink;
+use App\Traits\SanitizesInput;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -12,66 +13,44 @@ use Illuminate\Validation\Rule;
 
 class PatientController extends Controller
 {
+    use SanitizesInput;
+
     public function showRegistrationForm()
     {
         return view('patient.register');
     }
 
-    /**
-     * Sanitize input data
-     */
-    private function sanitizeInput($data)
-    {
-        $sanitized = [];
-        
-        foreach ($data as $key => $value) {
-            if (is_string($value)) {
-                // Remove HTML tags and trim whitespace
-                $sanitized[$key] = strip_tags(trim($value));
-                // Remove null bytes
-                $sanitized[$key] = str_replace("\0", '', $sanitized[$key]);
-            } else {
-                $sanitized[$key] = $value;
-            }
-        }
-        
-        return $sanitized;
-    }
-
     public function store(Request $request, $token = null)
     {
-        // Guard: Validate registration link if token provided
-        if ($token) {
-            $registrationLink = RegistrationLink::where('token', $token)
-                ->where('is_active', true)
-                ->first();
-
-            if (!$registrationLink || !$registrationLink->isUsable()) {
-                return redirect()->route('home')
-                    ->with('error', 'Invalid or expired registration link.');
-            }
-
-            // Check subdomain status
-            if ($registrationLink->subdomain) {
-                if (!$registrationLink->subdomain->is_active) {
-                    return redirect()->route('home')
-                        ->with('error', 'This dental clinic website is currently disabled.');
-                }
-
-                $hasActiveSubscription = $registrationLink->subdomain->subscriptions()
-                    ->where('status', 'active')
-                    ->where('end_date', '>=', now())
-                    ->exists();
-                
-                if (!$hasActiveSubscription) {
-                    return redirect()->route('home')
-                        ->with('error', 'This dental clinic subscription has expired.');
-                }
-            }
-        } else {
-            // If no token, registration is not allowed
+        if (!$token) {
             return redirect()->route('home')
                 ->with('error', 'Registration is only available through a valid registration link.');
+        }
+
+        $registrationLink = RegistrationLink::where('token', $token)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$registrationLink || !$registrationLink->isUsable()) {
+            return redirect()->route('home')
+                ->with('error', 'Invalid or expired registration link.');
+        }
+
+        if ($registrationLink->subdomain) {
+            if (!$registrationLink->subdomain->is_active) {
+                return redirect()->route('home')
+                    ->with('error', 'This dental clinic website is currently disabled.');
+            }
+
+            $hasActiveSubscription = $registrationLink->subdomain->subscriptions()
+                ->where('status', 'active')
+                ->where('end_date', '>=', now())
+                ->exists();
+            
+            if (!$hasActiveSubscription) {
+                return redirect()->route('home')
+                    ->with('error', 'This dental clinic subscription has expired.');
+            }
         }
 
         // Validate CAPTCHA first

@@ -112,7 +112,6 @@ class SubscriptionController extends Controller
 
     public function sendPaymentReminder(Subscription $subscription)
     {
-        // TODO: Implement email/SMS notification
         // For now, log and return success
         \Log::info('Payment reminder sent for subscription ID: ' . $subscription->id . ' - Subdomain: ' . $subscription->subdomain->name);
         

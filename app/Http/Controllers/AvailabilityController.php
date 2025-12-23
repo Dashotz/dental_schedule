@@ -133,17 +133,10 @@ class AvailabilityController extends Controller
 
         $doctor = User::findOrFail($request->doctor_id);
         
-        // Verify doctor is actually a doctor (not admin)
-        if ($doctor->role !== 'doctor') {
+        if ($doctor->role !== 'doctor' || !$doctor->is_active) {
             return response()->json(['slots' => []], 200);
         }
         
-        // Security: Verify doctor is active
-        if (!$doctor->is_active) {
-            return response()->json(['slots' => []], 200);
-        }
-        
-        // Security: Limit date range to prevent abuse (max 1 year in advance)
         $maxDate = now()->addYear();
         $requestedDate = Carbon::parse($request->date);
         if ($requestedDate->gt($maxDate)) {
@@ -152,10 +145,10 @@ class AvailabilityController extends Controller
                 'message' => 'Appointments can only be booked up to 1 year in advance'
             ], 422);
         }
+        
         $date = Carbon::parse($request->date);
         $dayOfWeek = $date->dayOfWeek;
 
-        // Get weekly availability for this day
         $weeklyAvailability = DoctorAvailability::where('doctor_id', $doctor->id)
             ->where('type', 'weekly')
             ->where('day_of_week', $dayOfWeek)
@@ -169,7 +162,6 @@ class AvailabilityController extends Controller
             ->where('is_available', true)
             ->first();
 
-        // Get date range availability
         $rangeAvailability = DoctorAvailability::where('doctor_id', $doctor->id)
             ->where('type', 'date_range')
             ->where('start_date', '<=', $date)
@@ -177,8 +169,6 @@ class AvailabilityController extends Controller
             ->where('is_available', true)
             ->first();
 
-        // Check for full-day blocks (00:00 to 23:59) - only these make entire day unavailable
-        // Must check that start_time is exactly 00:00 and end_time is exactly 23:59
         $fullDayBlocked = DoctorAvailability::where('doctor_id', $doctor->id)
             ->where('is_available', false)
             ->where(function($query) use ($date) {
@@ -186,7 +176,6 @@ class AvailabilityController extends Controller
                     $q->where('type', 'specific_date')
                       ->where('specific_date', $date->format('Y-m-d'))
                       ->where(function($timeQ) {
-                          // Check for full day block: 00:00 to 23:59
                           $timeQ->where(function($t) {
                               $t->where('start_time', '00:00:00')
                                 ->where('end_time', '23:59:59');
@@ -194,7 +183,6 @@ class AvailabilityController extends Controller
                               $t->where('start_time', '00:00')
                                 ->where('end_time', '23:59');
                           })->orWhere(function($t) {
-                              // Also check for 00:00:00 to 23:59:00
                               $t->where('start_time', '<=', '00:00')
                                 ->where('end_time', '>=', '23:59');
                           });
@@ -223,47 +211,17 @@ class AvailabilityController extends Controller
             return response()->json(['slots' => []]);
         }
 
-        // Get blocked slots from the new blocked_slots table
         $blockedSlots = DB::table('blocked_slots')
             ->where('doctor_id', $doctor->id)
             ->where('slot_date', $date->format('Y-m-d'))
             ->get()
             ->map(function($block) {
-                $startTime = $block->slot_start_time;
-                $endTime = $block->slot_end_time;
-                
-                // Normalize time format
-                if (is_string($startTime)) {
-                    $startTime = strlen($startTime) > 5 ? substr($startTime, 0, 5) : $startTime;
-                } else {
-                    $startTime = (string) $startTime;
-                    $startTime = strlen($startTime) > 5 ? substr($startTime, 0, 5) : $startTime;
-                }
-                
-                if (is_string($endTime)) {
-                    $endTime = strlen($endTime) > 5 ? substr($endTime, 0, 5) : $endTime;
-                } else {
-                    $endTime = (string) $endTime;
-                    $endTime = strlen($endTime) > 5 ? substr($endTime, 0, 5) : $endTime;
-                }
-                
-                return [
-                    'start' => $startTime,
-                    'end' => $endTime,
-                ];
+                $startTime = $this->normalizeTime($block->slot_start_time);
+                $endTime = $this->normalizeTime($block->slot_end_time);
+                return ['start' => $startTime, 'end' => $endTime];
             })
             ->toArray();
         
-        // Debug logging (only in development)
-        if (config('app.debug')) {
-            \Log::info('getAvailableSlots - Doctor ID: ' . $doctor->id . ', Date: ' . $date->format('Y-m-d'));
-            \Log::info('getAvailableSlots - Found ' . count($blockedSlots) . ' blocked slots from blocked_slots table');
-            if (count($blockedSlots) > 0) {
-                \Log::info('getAvailableSlots - Blocked slots: ' . json_encode($blockedSlots));
-            }
-        }
-        
-        // Also check old availability entries for backward compatibility
         $oldBlocks = DoctorAvailability::where('doctor_id', $doctor->id)
             ->where('is_available', false)
             ->where(function($query) use ($date) {
@@ -278,36 +236,27 @@ class AvailabilityController extends Controller
             })
             ->get();
         
-        // Convert old blocks to slot format (generate individual slots)
         foreach ($oldBlocks as $block) {
             $blockStart = Carbon::createFromFormat('H:i', substr($block->start_time, 0, 5));
             $blockEnd = Carbon::createFromFormat('H:i', substr($block->end_time, 0, 5));
             
-            // Skip full-day blocks (00:00 to 23:59)
             if ($blockStart->format('H:i') === '00:00' && $blockEnd->format('H:i') === '23:59') {
                 continue;
             }
             
             $current = $blockStart->copy();
             while ($current->copy()->addMinutes(30)->lte($blockEnd)) {
-                $slotStart = $current->format('H:i');
-                $slotEnd = $current->copy()->addMinutes(30)->format('H:i');
-                
                 $blockedSlots[] = [
-                    'start' => $slotStart,
-                    'end' => $slotEnd,
+                    'start' => $current->format('H:i'),
+                    'end' => $current->copy()->addMinutes(30)->format('H:i'),
                 ];
-                
                 $current->addMinutes(30);
             }
         }
         
         $hourBlocks = $blockedSlots;
-
-        // Use specific date override if exists, otherwise use weekly or range
         $availability = $specificAvailability ?? $rangeAvailability ?? $weeklyAvailability;
 
-        // If no availability schedule is set, use default working hours (9 AM - 5 PM, 30 min slots)
         if (!$availability) {
             $availability = (object)[
                 'start_time' => '09:00',
@@ -317,7 +266,6 @@ class AvailabilityController extends Controller
             ];
         }
 
-        // Get existing appointments for this date
         $existingAppointments = \App\Models\Appointment::where('doctor_id', $doctor->id)
             ->whereDate('appointment_date', $date)
             ->whereIn('status', ['scheduled', 'confirmed', 'in_progress'])
@@ -330,59 +278,55 @@ class AvailabilityController extends Controller
             })
             ->toArray();
 
-        // Generate all possible slots
         if (is_object($availability) && method_exists($availability, 'getTimeSlots')) {
             $allSlots = $availability->getTimeSlots();
-        } else {
-            // Default availability - generate slots manually
-            $allSlots = [];
-            $start = Carbon::createFromFormat('H:i', $availability->start_time);
-            $end = Carbon::createFromFormat('H:i', $availability->end_time);
-            $duration = $availability->slot_duration ?? 30;
-            
-            $current = $start->copy();
-            while ($current->copy()->addMinutes($duration)->lte($end)) {
-                $allSlots[] = [
-                    'start' => $current->format('H:i'),
-                    'end' => $current->copy()->addMinutes($duration)->format('H:i'),
-                ];
-                $current->addMinutes($duration);
-            }
+            return $this->processSlots($allSlots, $hourBlocks, $existingAppointments, $availability);
         }
 
-        // Process all slots and mark availability status (show all slots, mark blocked/booked ones)
+        $allSlots = [];
+        $start = Carbon::createFromFormat('H:i', $availability->start_time);
+        $end = Carbon::createFromFormat('H:i', $availability->end_time);
+        $duration = $availability->slot_duration ?? 30;
+        
+        $current = $start->copy();
+        while ($current->copy()->addMinutes($duration)->lte($end)) {
+            $allSlots[] = [
+                'start' => $current->format('H:i'),
+                'end' => $current->copy()->addMinutes($duration)->format('H:i'),
+            ];
+            $current->addMinutes($duration);
+        }
+
+        return $this->processSlots($allSlots, $hourBlocks, $existingAppointments, $availability);
+    }
+
+    private function processSlots($allSlots, $hourBlocks, $existingAppointments, $availability)
+    {
         $processedSlots = [];
         foreach ($allSlots as $slot) {
             $isBlocked = false;
             $isBooked = false;
-            
-            // Check against blocked slots using overlap detection
             $slotStartMinutes = $this->timeToMinutes($slot['start']);
             $slotEndMinutes = $this->timeToMinutes($slot['end']);
             
             foreach ($hourBlocks as $block) {
                 $blockStartMinutes = $this->timeToMinutes($block['start']);
                 $blockEndMinutes = $this->timeToMinutes($block['end']);
-                
-                // Check if slot overlaps with blocked time
                 if ($slotStartMinutes < $blockEndMinutes && $slotEndMinutes > $blockStartMinutes) {
                     $isBlocked = true;
                     break;
                 }
             }
             
-            // Check against existing appointments
             foreach ($existingAppointments as $booked) {
                 $bookedStartMinutes = $this->timeToMinutes($booked['start']);
                 $bookedEndMinutes = $this->timeToMinutes($booked['end']);
-                
                 if ($slotStartMinutes < $bookedEndMinutes && $slotEndMinutes > $bookedStartMinutes) {
                     $isBooked = true;
                     break;
                 }
             }
             
-            // Add slot with availability status
             $slot['is_available'] = !$isBlocked && !$isBooked;
             $slot['is_blocked'] = $isBlocked;
             $slot['is_booked'] = $isBooked;
@@ -390,9 +334,10 @@ class AvailabilityController extends Controller
         }
 
         return response()->json([
-            'slots' => array_values($processedSlots), // All slots with is_available flag
+            'slots' => array_values($processedSlots),
             'slot_duration' => is_object($availability) && isset($availability->slot_duration) ? $availability->slot_duration : 30,
         ]);
+
     }
 
     public function quickSetAvailability(Request $request)
@@ -413,7 +358,6 @@ class AvailabilityController extends Controller
         $date = Carbon::parse($validated['date']);
         
         if ($validated['action'] === 'unblock') {
-            // Security: Only allow unblocking future dates or today
             if ($date->lt(now()->startOfDay())) {
                 return response()->json([
                     'error' => 'Invalid date',
@@ -421,13 +365,11 @@ class AvailabilityController extends Controller
                 ], 422);
             }
             
-            // Delete all blocked slots for this specific date (only for this doctor)
             $deletedCount = DB::table('blocked_slots')
-                ->where('doctor_id', $doctor->id) // Security: Ensure doctor can only unblock their own slots
+                ->where('doctor_id', $doctor->id)
                 ->where('slot_date', $date->format('Y-m-d'))
                 ->delete();
             
-            // Also delete old availability entries for backward compatibility
             DoctorAvailability::where('doctor_id', $doctor->id)
                 ->where('is_available', false)
                 ->where(function($query) use ($date) {
@@ -449,7 +391,6 @@ class AvailabilityController extends Controller
         }
         
         if ($validated['action'] === 'block_day') {
-            // Check if already exists
             $existing = DoctorAvailability::where('doctor_id', $doctor->id)
                 ->where('type', 'specific_date')
                 ->where('specific_date', $date->format('Y-m-d'))
@@ -460,7 +401,6 @@ class AvailabilityController extends Controller
                 return response()->json(['success' => true, 'message' => 'Day already blocked']);
             }
             
-            // Create block for entire day (9 AM to 5 PM as default, but marked as unavailable)
             DoctorAvailability::create([
                 'doctor_id' => $doctor->id,
                 'type' => 'specific_date',
@@ -476,29 +416,23 @@ class AvailabilityController extends Controller
         }
         
         if ($validated['action'] === 'block_hours') {
-            // Generate all 30-minute slots within the blocked time range
             $startTime = Carbon::createFromFormat('H:i', $validated['start_time']);
             $endTime = Carbon::createFromFormat('H:i', $validated['end_time']);
             $slotDate = $date->format('Y-m-d');
-            
             $blockedCount = 0;
             $current = $startTime->copy();
             
-            // Generate slots in 30-minute intervals
             while ($current->copy()->addMinutes(30)->lte($endTime)) {
                 $slotStart = $current->format('H:i');
                 $slotEnd = $current->copy()->addMinutes(30)->format('H:i');
                 
-                // Check if slot already exists
-                $exists = \DB::table('blocked_slots')
+                if (!DB::table('blocked_slots')
                     ->where('doctor_id', $doctor->id)
                     ->where('slot_date', $slotDate)
                     ->where('slot_start_time', $slotStart)
                     ->where('slot_end_time', $slotEnd)
-                    ->exists();
-                
-                if (!$exists) {
-                    \DB::table('blocked_slots')->insert([
+                    ->exists()) {
+                    DB::table('blocked_slots')->insert([
                         'doctor_id' => $doctor->id,
                         'slot_date' => $slotDate,
                         'slot_start_time' => $slotStart,
@@ -509,7 +443,6 @@ class AvailabilityController extends Controller
                     ]);
                     $blockedCount++;
                 }
-                
                 $current->addMinutes(30);
             }
             
@@ -528,19 +461,14 @@ class AvailabilityController extends Controller
             $doctor = auth()->user();
             
             if (!$doctor) {
-                \Log::error('getDateAvailability: No authenticated user');
                 return response()->json(['error' => 'Unauthorized', 'message' => 'Please log in'], 401);
             }
             
-            // Check if user is a doctor
             if (!method_exists($doctor, 'isDoctor')) {
-                \Log::error('getDateAvailability: isDoctor method does not exist on User model');
-                // Fallback: check role directly
                 if ($doctor->role !== 'doctor') {
                     return response()->json(['error' => 'Unauthorized', 'message' => 'Only doctors can access this'], 403);
                 }
             } elseif (!$doctor->isDoctor()) {
-                \Log::error('getDateAvailability: User is not a doctor. Role: ' . ($doctor->role ?? 'null'));
                 return response()->json(['error' => 'Unauthorized', 'message' => 'Only doctors can access this'], 403);
             }
 
@@ -548,22 +476,19 @@ class AvailabilityController extends Controller
                 'date' => ['required', 'date'],
             ]);
 
-            // Parse date safely
             try {
                 $date = Carbon::parse($request->date);
             } catch (\Exception $e) {
-                \Log::error('Invalid date format: ' . $request->date);
                 return response()->json([
                     'error' => 'Invalid date format',
                     'message' => 'Please provide a valid date'
                 ], 422);
             }
+            
             $dayOfWeek = $date->dayOfWeek;
             $dateString = $date->format('Y-m-d');
 
-            // Check if table exists (for deployment safety)
             if (!Schema::hasTable('doctor_availabilities')) {
-                \Log::error('doctor_availabilities table does not exist');
                 return response()->json([
                     'error' => 'Database table not found',
                     'message' => 'Please run migrations: php artisan migrate'
@@ -576,36 +501,17 @@ class AvailabilityController extends Controller
                 ->where('slot_date', $dateString)
                 ->get()
                 ->map(function($block) {
-                    $startTime = $block->slot_start_time;
-                    $endTime = $block->slot_end_time;
-                    
-                    // Normalize time format
-                    if (is_string($startTime)) {
-                        $startTime = strlen($startTime) > 5 ? substr($startTime, 0, 5) : $startTime;
-                    } else {
-                        $startTime = (string) $startTime;
-                        $startTime = strlen($startTime) > 5 ? substr($startTime, 0, 5) : $startTime;
-                    }
-                    
-                    if (is_string($endTime)) {
-                        $endTime = strlen($endTime) > 5 ? substr($endTime, 0, 5) : $endTime;
-                    } else {
-                        $endTime = (string) $endTime;
-                        $endTime = strlen($endTime) > 5 ? substr($endTime, 0, 5) : $endTime;
-                    }
-                    
                     return [
                         'id' => $block->id,
                         'type' => 'blocked_slot',
-                        'start_time' => $startTime,
-                        'end_time' => $endTime,
+                        'start_time' => $this->normalizeTime($block->slot_start_time),
+                        'end_time' => $this->normalizeTime($block->slot_end_time),
                         'is_available' => false,
                         'notes' => $block->notes ?? 'Blocked',
                     ];
                 })
                 ->values();
             
-            // Also get old availability entries for backward compatibility
             try {
                 $specificDateEntries = DoctorAvailability::where('doctor_id', $doctor->id)
                     ->where('type', 'specific_date')
@@ -637,74 +543,44 @@ class AvailabilityController extends Controller
                 $weeklyEntries = collect([]);
             }
             
-            // Combine all entries (blocked slots first, then availability entries)
             $availabilities = $blockedSlots
                 ->merge($specificDateEntries)
                 ->merge($dateRangeEntries)
                 ->merge($weeklyEntries)
                 ->map(function($avail) {
                     try {
-                        // Handle both arrays (from blocked_slots) and objects (from DoctorAvailability)
-                        $isArray = is_array($avail);
-                        
-                        // Safely extract time, handling null or different formats
-                        $startTime = null;
-                        $endTime = null;
-                        
-                        $startTimeValue = $isArray ? ($avail['start_time'] ?? null) : ($avail->start_time ?? null);
-                        $endTimeValue = $isArray ? ($avail['end_time'] ?? null) : ($avail->end_time ?? null);
-                        
-                        if ($startTimeValue) {
-                            $timeStr = (string) $startTimeValue;
-                            if (strlen($timeStr) >= 5) {
-                                $startTime = substr($timeStr, 0, 5);
-                            } else {
-                                $startTime = $timeStr;
-                            }
+                        if (is_array($avail)) {
+                            return [
+                                'id' => $avail['id'] ?? null,
+                                'type' => $avail['type'] ?? 'blocked_slot',
+                                'start_time' => $this->normalizeTime($avail['start_time'] ?? null),
+                                'end_time' => $this->normalizeTime($avail['end_time'] ?? null),
+                                'is_available' => (bool) ($avail['is_available'] ?? false),
+                                'notes' => $avail['notes'] ?? null,
+                            ];
                         }
                         
-                        if ($endTimeValue) {
-                            $timeStr = (string) $endTimeValue;
-                            if (strlen($timeStr) >= 5) {
-                                $endTime = substr($timeStr, 0, 5);
-                            } else {
-                                $endTime = $timeStr;
-                            }
-                        }
-                        
-                        $result = [
-                            'id' => $isArray ? ($avail['id'] ?? null) : ($avail->id ?? null),
-                            'type' => $isArray ? ($avail['type'] ?? 'blocked_slot') : ($avail->type ?? 'unknown'),
-                            'start_time' => $startTime,
-                            'end_time' => $endTime,
-                            'is_available' => (bool) ($isArray ? ($avail['is_available'] ?? false) : ($avail->is_available ?? true)),
-                            'notes' => $isArray ? ($avail['notes'] ?? null) : ($avail->notes ?? null),
+                        /** @var \App\Models\DoctorAvailability $avail */
+                        return [
+                            'id' => $avail->id ?? null,
+                            'type' => $avail->type ?? 'unknown',
+                            'start_time' => $this->normalizeTime($avail->start_time ?? null),
+                            'end_time' => $this->normalizeTime($avail->end_time ?? null),
+                            'is_available' => (bool) ($avail->is_available ?? true),
+                            'notes' => $avail->notes ?? null,
                         ];
-                        
-                        return $result;
                     } catch (\Exception $e) {
-                        $availId = is_array($avail) ? ($avail['id'] ?? 'unknown') : ($avail->id ?? 'unknown');
-                        \Log::error('Error mapping availability ID ' . $availId . ': ' . $e->getMessage());
+                        \Log::error('Error mapping availability: ' . $e->getMessage());
                         return null;
                     }
                 })
                 ->filter(function($avail) {
-                    // Only return entries with valid times
                     return $avail !== null && $avail['start_time'] !== null && $avail['end_time'] !== null;
                 })
                 ->values();
 
-            // Convert to array to ensure proper JSON encoding
-            $availabilitiesArray = $availabilities->toArray();
-            
-            // Debug logging (only in development)
-            if (config('app.debug')) {
-                \Log::info('getDateAvailability - Date: ' . $dateString . ', Doctor ID: ' . $doctor->id);
-                \Log::info('getDateAvailability - Found ' . count($availabilitiesArray) . ' entries');
-            }
-
             return response()->json([
-                'availabilities' => $availabilitiesArray
+                'availabilities' => $availabilities->toArray()
             ], 200, [], JSON_UNESCAPED_UNICODE);
         } catch (\Illuminate\Validation\ValidationException $e) {
             \Log::error('getDateAvailability validation error: ' . $e->getMessage());
@@ -734,9 +610,24 @@ class AvailabilityController extends Controller
      */
     private function timeToMinutes($timeString)
     {
+        if (!is_string($timeString)) {
+            return 0;
+        }
         $parts = explode(':', $timeString);
-        $hours = (int) $parts[0];
-        $minutes = (int) ($parts[1] ?? 0);
-        return $hours * 60 + $minutes;
+        return (int)$parts[0] * 60 + (int)($parts[1] ?? 0);
+    }
+
+    private function normalizeTime($time)
+    {
+        if (!$time) {
+            return null;
+        }
+        
+        if (is_string($time)) {
+            return strlen($time) > 5 ? substr($time, 0, 5) : $time;
+        }
+        
+        $timeStr = (string) $time;
+        return strlen($timeStr) > 5 ? substr($timeStr, 0, 5) : $timeStr;
     }
 }

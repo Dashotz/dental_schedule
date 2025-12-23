@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
+use App\Traits\SanitizesInput;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
+    use SanitizesInput;
+
     public function index()
     {
         $appointments = Appointment::with(['patient', 'doctor'])
@@ -23,29 +26,9 @@ class AppointmentController extends Controller
         $patients = Patient::orderBy('first_name')->get();
         $doctors = User::where('role', 'doctor')->where('is_active', true)->get();
         
-        // Check if patient_id is passed in query string
         $selectedPatientId = request('patient_id');
         
         return view('appointment.create', compact('patients', 'doctors', 'selectedPatientId'));
-    }
-
-    /**
-     * Sanitize input data
-     */
-    private function sanitizeInput($data)
-    {
-        $sanitized = [];
-        
-        foreach ($data as $key => $value) {
-            if (is_string($value)) {
-                $sanitized[$key] = strip_tags(trim($value));
-                $sanitized[$key] = str_replace("\0", '', $sanitized[$key]);
-            } else {
-                $sanitized[$key] = $value;
-            }
-        }
-        
-        return $sanitized;
     }
 
     public function store(Request $request)
