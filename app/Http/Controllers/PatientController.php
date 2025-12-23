@@ -248,29 +248,65 @@ class PatientController extends Controller
             ->where('is_available', true)
             ->first();
 
-        // Check for blocked dates (only explicit blocks)
-        $blocked = \App\Models\DoctorAvailability::where('doctor_id', $doctorId)
+        // Check for full-day blocks (00:00 to 23:59) - only these make entire day unavailable
+        $fullDayBlocked = \App\Models\DoctorAvailability::where('doctor_id', $doctorId)
             ->where(function($query) use ($date, $dayOfWeek) {
                 $query->where(function($q) use ($date) {
                     $q->where('type', 'specific_date')
                       ->where('specific_date', $date->format('Y-m-d'))
-                      ->where('is_available', false);
+                      ->where('is_available', false)
+                      ->where(function($subQ) {
+                          $subQ->where(function($timeQ) {
+                              $timeQ->where('start_time', '<=', '00:00')
+                                    ->where('end_time', '>=', '23:59');
+                          })->orWhere(function($timeQ) {
+                              $timeQ->where('start_time', '00:00')
+                                    ->where('end_time', '23:59');
+                          });
+                      });
                 })->orWhere(function($q) use ($date) {
                     $q->where('type', 'date_range')
                       ->where('start_date', '<=', $date)
                       ->where('end_date', '>=', $date)
-                      ->where('is_available', false);
-                })->orWhere(function($q) use ($dayOfWeek) {
-                    $q->where('type', 'weekly')
-                      ->where('day_of_week', $dayOfWeek)
-                      ->where('is_available', false);
+                      ->where('is_available', false)
+                      ->where(function($subQ) {
+                          $subQ->where(function($timeQ) {
+                              $timeQ->where('start_time', '<=', '00:00')
+                                    ->where('end_time', '>=', '23:59');
+                          })->orWhere(function($timeQ) {
+                              $timeQ->where('start_time', '00:00')
+                                    ->where('end_time', '23:59');
+                          });
+                      });
                 });
             })
             ->exists();
 
-        if ($blocked) {
+        if ($fullDayBlocked) {
             return [];
         }
+
+        // Get partial hour blocks (to exclude from available slots)
+        $hourBlocks = \App\Models\DoctorAvailability::where('doctor_id', $doctorId)
+            ->where('is_available', false)
+            ->where(function($query) use ($date) {
+                $query->where(function($q) use ($date) {
+                    $q->where('type', 'specific_date')
+                      ->where('specific_date', $date->format('Y-m-d'));
+                })->orWhere(function($q) use ($date) {
+                    $q->where('type', 'date_range')
+                      ->where('start_date', '<=', $date)
+                      ->where('end_date', '>=', $date);
+                });
+            })
+            ->get()
+            ->map(function($block) {
+                return [
+                    'start' => substr($block->start_time, 0, 5),
+                    'end' => substr($block->end_time, 0, 5),
+                ];
+            })
+            ->toArray();
 
         // Use specific date override if exists, otherwise use weekly or range
         $availability = $specificAvailability ?? $rangeAvailability ?? $weeklyAvailability;
@@ -313,8 +349,9 @@ class PatientController extends Controller
             }
         }
 
-        // Filter out booked slots
-        $availableSlots = array_filter($allSlots, function($slot) use ($existingAppointments) {
+        // Filter out booked slots and blocked hours
+        $availableSlots = array_filter($allSlots, function($slot) use ($existingAppointments, $hourBlocks) {
+            // Check against existing appointments
             foreach ($existingAppointments as $apt) {
                 $aptStart = \Carbon\Carbon::parse($apt->appointment_date)->format('H:i');
                 $aptEnd = \Carbon\Carbon::parse($apt->appointment_date)->addMinutes($apt->duration)->format('H:i');
@@ -325,6 +362,16 @@ class PatientController extends Controller
                     return false;
                 }
             }
+            
+            // Check against blocked hours
+            foreach ($hourBlocks as $block) {
+                if (($slot['start'] >= $block['start'] && $slot['start'] < $block['end']) ||
+                    ($slot['end'] > $block['start'] && $slot['end'] <= $block['end']) ||
+                    ($slot['start'] <= $block['start'] && $slot['end'] >= $block['end'])) {
+                    return false;
+                }
+            }
+            
             return true;
         });
 

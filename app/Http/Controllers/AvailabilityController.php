@@ -153,29 +153,65 @@ class AvailabilityController extends Controller
             ->where('is_available', true)
             ->first();
 
-        // Check for blocked dates (only blocks, not lack of availability)
-        $blocked = DoctorAvailability::where('doctor_id', $doctor->id)
+        // Check for full-day blocks (00:00 to 23:59) - only these make entire day unavailable
+        $fullDayBlocked = DoctorAvailability::where('doctor_id', $doctor->id)
             ->where(function($query) use ($date, $dayOfWeek) {
                 $query->where(function($q) use ($date) {
                     $q->where('type', 'specific_date')
                       ->where('specific_date', $date->format('Y-m-d'))
-                      ->where('is_available', false);
+                      ->where('is_available', false)
+                      ->where(function($subQ) {
+                          $subQ->where(function($timeQ) {
+                              $timeQ->where('start_time', '<=', '00:00')
+                                    ->where('end_time', '>=', '23:59');
+                          })->orWhere(function($timeQ) {
+                              $timeQ->where('start_time', '00:00')
+                                    ->where('end_time', '23:59');
+                          });
+                      });
                 })->orWhere(function($q) use ($date) {
                     $q->where('type', 'date_range')
                       ->where('start_date', '<=', $date)
                       ->where('end_date', '>=', $date)
-                      ->where('is_available', false);
-                })->orWhere(function($q) use ($dayOfWeek) {
-                    $q->where('type', 'weekly')
-                      ->where('day_of_week', $dayOfWeek)
-                      ->where('is_available', false);
+                      ->where('is_available', false)
+                      ->where(function($subQ) {
+                          $subQ->where(function($timeQ) {
+                              $timeQ->where('start_time', '<=', '00:00')
+                                    ->where('end_time', '>=', '23:59');
+                          })->orWhere(function($timeQ) {
+                              $timeQ->where('start_time', '00:00')
+                                    ->where('end_time', '23:59');
+                          });
+                      });
                 });
             })
             ->exists();
 
-        if ($blocked) {
+        if ($fullDayBlocked) {
             return response()->json(['slots' => []]);
         }
+
+        // Get partial hour blocks (to exclude from available slots)
+        $hourBlocks = DoctorAvailability::where('doctor_id', $doctor->id)
+            ->where('is_available', false)
+            ->where(function($query) use ($date, $dayOfWeek) {
+                $query->where(function($q) use ($date) {
+                    $q->where('type', 'specific_date')
+                      ->where('specific_date', $date->format('Y-m-d'));
+                })->orWhere(function($q) use ($date) {
+                    $q->where('type', 'date_range')
+                      ->where('start_date', '<=', $date)
+                      ->where('end_date', '>=', $date);
+                });
+            })
+            ->get()
+            ->map(function($block) {
+                return [
+                    'start' => substr($block->start_time, 0, 5),
+                    'end' => substr($block->end_time, 0, 5),
+                ];
+            })
+            ->toArray();
 
         // Use specific date override if exists, otherwise use weekly or range
         $availability = $specificAvailability ?? $rangeAvailability ?? $weeklyAvailability;
@@ -223,8 +259,9 @@ class AvailabilityController extends Controller
             }
         }
 
-        // Filter out booked slots
-        $availableSlots = array_filter($allSlots, function($slot) use ($existingAppointments) {
+        // Filter out booked slots and blocked hours
+        $availableSlots = array_filter($allSlots, function($slot) use ($existingAppointments, $hourBlocks) {
+            // Check against existing appointments
             foreach ($existingAppointments as $booked) {
                 if (($slot['start'] >= $booked['start'] && $slot['start'] < $booked['end']) ||
                     ($slot['end'] > $booked['start'] && $slot['end'] <= $booked['end']) ||
@@ -232,6 +269,16 @@ class AvailabilityController extends Controller
                     return false;
                 }
             }
+            
+            // Check against blocked hours
+            foreach ($hourBlocks as $block) {
+                if (($slot['start'] >= $block['start'] && $slot['start'] < $block['end']) ||
+                    ($slot['end'] > $block['start'] && $slot['end'] <= $block['end']) ||
+                    ($slot['start'] <= $block['start'] && $slot['end'] >= $block['end'])) {
+                    return false;
+                }
+            }
+            
             return true;
         });
 
@@ -259,8 +306,9 @@ class AvailabilityController extends Controller
         $date = Carbon::parse($validated['date']);
         
         if ($validated['action'] === 'unblock') {
-            // Delete all availability entries for this specific date
+            // Delete all blocked availability entries for this specific date (both full day and hour blocks)
             DoctorAvailability::where('doctor_id', $doctor->id)
+                ->where('is_available', false)
                 ->where(function($query) use ($date) {
                     $query->where(function($q) use ($date) {
                         $q->where('type', 'specific_date')
@@ -268,8 +316,7 @@ class AvailabilityController extends Controller
                     })->orWhere(function($q) use ($date) {
                         $q->where('type', 'date_range')
                           ->where('start_date', '<=', $date)
-                          ->where('end_date', '>=', $date)
-                          ->where('is_available', false);
+                          ->where('end_date', '>=', $date);
                     });
                 })
                 ->delete();
