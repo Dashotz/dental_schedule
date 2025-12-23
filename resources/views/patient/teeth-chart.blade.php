@@ -18,30 +18,30 @@
             </div>
             <div class="card-body">
                 <!-- Upper Jaw (Maxilla) -->
-                <div class="jaw-section mb-5">
-                    <h6 class="text-center mb-3"><i class="bi bi-arrow-up"></i> Upper Jaw (Maxilla)</h6>
+                <div class="jaw-section mb-4">
+                    <h6 class="text-center mb-4"><i class="bi bi-arrow-up"></i> Upper Jaw (Maxilla)</h6>
                     <div class="d-flex justify-content-center">
-                        <svg width="700" height="200" viewBox="0 0 700 200" class="jaw-svg">
-                            <!-- Upper jaw arch path (curved like real jaw) -->
-                            <path d="M 50,150 Q 175,80 350,70 Q 525,80 650,150" 
+                        <svg width="800" height="180" viewBox="0 0 800 180" class="jaw-svg">
+                            <!-- Upper jaw arch path -->
+                            <path d="M 80,140 Q 200,60 400,50 Q 600,60 720,140" 
                                   fill="none" 
-                                  stroke="#d0d0d0" 
+                                  stroke="#e0e0e0" 
                                   stroke-width="2" 
-                                  stroke-dasharray="5,5" 
-                                  opacity="0.4"/>
+                                  stroke-dasharray="4,4" 
+                                  opacity="0.5"/>
                             
-                            <!-- Right side teeth (18-11) - positioned along curved arch -->
+                            <!-- Right side teeth (18-11) -->
                             @php
                                 $rightUpperTeeth = [18, 17, 16, 15, 14, 13, 12, 11];
+                                $spacing = 85;
+                                $startX = 80;
+                                $baseY = 140;
                             @endphp
                             @foreach($rightUpperTeeth as $index => $toothNum)
                                 @php
-                                    // Calculate position along the arch curve
-                                    $t = $index / 7; // 0 to 1
-                                    $archX = 50 + ($t * 300); // 50 to 350
-                                    $archY = 150 - (80 * (1 - pow($t - 0.5, 2) * 4)); // Curved
-                                    $x = $archX;
-                                    $y = $archY;
+                                    $x = $startX + ($index * $spacing);
+                                    $curveOffset = abs($index - 3.5) * 8;
+                                    $y = $baseY - $curveOffset;
                                 @endphp
                                 @include('patient.partials.tooth-svg', [
                                     'toothNumber' => $toothNum,
@@ -51,18 +51,16 @@
                                 ])
                             @endforeach
                             
-                            <!-- Left side teeth (21-28) - positioned along curved arch -->
+                            <!-- Left side teeth (21-28) -->
                             @php
                                 $leftUpperTeeth = [21, 22, 23, 24, 25, 26, 27, 28];
+                                $startX = 400;
                             @endphp
                             @foreach($leftUpperTeeth as $index => $toothNum)
                                 @php
-                                    // Calculate position along the arch curve
-                                    $t = $index / 7; // 0 to 1
-                                    $archX = 350 + ($t * 300); // 350 to 650
-                                    $archY = 70 + (80 * (1 - pow($t - 0.5, 2) * 4)); // Curved
-                                    $x = $archX;
-                                    $y = $archY;
+                                    $x = $startX + ($index * $spacing);
+                                    $curveOffset = abs($index - 3.5) * 8;
+                                    $y = 50 + $curveOffset;
                                 @endphp
                                 @include('patient.partials.tooth-svg', [
                                     'toothNumber' => $toothNum,
@@ -77,29 +75,29 @@
 
                 <!-- Lower Jaw (Mandible) -->
                 <div class="jaw-section">
-                    <h6 class="text-center mb-3"><i class="bi bi-arrow-down"></i> Lower Jaw (Mandible)</h6>
+                    <h6 class="text-center mb-4"><i class="bi bi-arrow-down"></i> Lower Jaw (Mandible)</h6>
                     <div class="d-flex justify-content-center">
-                        <svg width="700" height="200" viewBox="0 0 700 200" class="jaw-svg">
-                            <!-- Lower jaw arch path (curved like real jaw) -->
-                            <path d="M 50,50 Q 175,120 350,130 Q 525,120 650,50" 
+                        <svg width="800" height="180" viewBox="0 0 800 180" class="jaw-svg">
+                            <!-- Lower jaw arch path -->
+                            <path d="M 80,40 Q 200,120 400,130 Q 600,120 720,40" 
                                   fill="none" 
-                                  stroke="#d0d0d0" 
+                                  stroke="#e0e0e0" 
                                   stroke-width="2" 
-                                  stroke-dasharray="5,5" 
-                                  opacity="0.4"/>
+                                  stroke-dasharray="4,4" 
+                                  opacity="0.5"/>
                             
-                            <!-- Right side teeth (48-41) - positioned along curved arch -->
+                            <!-- Right side teeth (48-41) -->
                             @php
                                 $rightLowerTeeth = [48, 47, 46, 45, 44, 43, 42, 41];
+                                $spacing = 85;
+                                $startX = 80;
+                                $baseY = 40;
                             @endphp
                             @foreach($rightLowerTeeth as $index => $toothNum)
                                 @php
-                                    // Calculate position along the arch curve
-                                    $t = $index / 7; // 0 to 1
-                                    $archX = 50 + ($t * 300); // 50 to 350
-                                    $archY = 50 + (80 * (1 - pow($t - 0.5, 2) * 4)); // Curved
-                                    $x = $archX;
-                                    $y = $archY;
+                                    $x = $startX + ($index * $spacing);
+                                    $curveOffset = abs($index - 3.5) * 8;
+                                    $y = $baseY + $curveOffset;
                                 @endphp
                                 @include('patient.partials.tooth-svg', [
                                     'toothNumber' => $toothNum,
@@ -109,18 +107,16 @@
                                 ])
                             @endforeach
                             
-                            <!-- Left side teeth (31-38) - positioned along curved arch -->
+                            <!-- Left side teeth (31-38) -->
                             @php
                                 $leftLowerTeeth = [31, 32, 33, 34, 35, 36, 37, 38];
+                                $startX = 400;
                             @endphp
                             @foreach($leftLowerTeeth as $index => $toothNum)
                                 @php
-                                    // Calculate position along the arch curve
-                                    $t = $index / 7; // 0 to 1
-                                    $archX = 350 + ($t * 300); // 350 to 650
-                                    $archY = 130 - (80 * (1 - pow($t - 0.5, 2) * 4)); // Curved
-                                    $x = $archX;
-                                    $y = $archY;
+                                    $x = $startX + ($index * $spacing);
+                                    $curveOffset = abs($index - 3.5) * 8;
+                                    $y = 130 - $curveOffset;
                                 @endphp
                                 @include('patient.partials.tooth-svg', [
                                     'toothNumber' => $toothNum,
@@ -130,6 +126,61 @@
                                 ])
                             @endforeach
                         </svg>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="mt-4">
+                    <h6 class="mb-3">Condition Legend</h6>
+                    <div class="row g-2">
+                        <div class="col-md-3 col-6">
+                            <div class="legend-item">
+                                <div class="legend-color healthy"></div>
+                                <span>Healthy</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="legend-item">
+                                <div class="legend-color cavity"></div>
+                                <span>Cavity</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="legend-item">
+                                <div class="legend-color filling"></div>
+                                <span>Filling</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="legend-item">
+                                <div class="legend-color crown"></div>
+                                <span>Crown</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="legend-item">
+                                <div class="legend-color extracted"></div>
+                                <span>Extracted/Missing</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="legend-item">
+                                <div class="legend-color impacted"></div>
+                                <span>Impacted</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="legend-item">
+                                <div class="legend-color root_canal"></div>
+                                <span>Root Canal</span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="legend-item">
+                                <div class="legend-color other"></div>
+                                <span>Other</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -182,10 +233,11 @@
 @push('styles')
 <style>
     .jaw-section {
-        background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
-        padding: 30px 20px;
-        border-radius: 15px;
+        background: #f8f9fa;
+        padding: 40px 20px;
+        border-radius: 12px;
         margin-bottom: 30px;
+        border: 1px solid #e9ecef;
     }
 
     .jaw-svg {
@@ -195,33 +247,76 @@
     }
 
     .tooth-svg {
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
 
     .tooth-svg:hover {
-        transform: scale(1.15);
-        filter: brightness(1.1);
+        transform: scale(1.1);
+        filter: brightness(1.05);
     }
 
-    .tooth-svg path,
-    .tooth-svg rect {
-        transition: all 0.3s ease;
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px;
     }
 
-    .tooth-svg:hover path,
-    .tooth-svg:hover rect {
-        stroke-width: 2.5;
-        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    .legend-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        border: 2px solid #333;
+    }
+
+    .legend-color.healthy {
+        background: #d4edda;
+        border-color: #28a745;
+    }
+
+    .legend-color.cavity {
+        background: #f8d7da;
+        border-color: #dc3545;
+    }
+
+    .legend-color.filling {
+        background: #cfe2ff;
+        border-color: #0d6efd;
+    }
+
+    .legend-color.crown {
+        background: #e7d4f8;
+        border-color: #6f42c1;
+    }
+
+    .legend-color.extracted {
+        background: #6c757d;
+        border-color: #495057;
+    }
+
+    .legend-color.impacted {
+        background: #ffebcd;
+        border-color: #ff8c00;
+    }
+
+    .legend-color.root_canal {
+        background: #d1ecf1;
+        border-color: #17a2b8;
+    }
+
+    .legend-color.other {
+        background: #fff3cd;
+        border-color: #ffc107;
     }
 
     @media (max-width: 768px) {
         .jaw-svg {
             width: 100%;
-            height: 150px;
+            height: 140px;
         }
         
         .jaw-section {
-            padding: 20px 10px;
+            padding: 25px 10px;
         }
     }
 </style>
@@ -234,13 +329,11 @@
         const form = $('#teethRecordForm');
         const patientId = {{ $patient->id }};
 
-        // Handle tooth click
         $('.tooth-svg').on('click', function() {
             const toothNumber = $(this).data('tooth');
             $('#modalToothNumber').text(toothNumber);
             $('#tooth_number').val(toothNumber);
             
-            // Load existing record
             $.ajax({
                 url: `/patients/${patientId}/teeth-records/${toothNumber}`,
                 method: 'GET',
@@ -262,7 +355,6 @@
             });
         });
 
-        // Handle form submission
         form.on('submit', function(e) {
             e.preventDefault();
             
@@ -286,7 +378,6 @@
                         showConfirmButton: false
                     });
                     
-                    // Reload page to show updated tooth with new styling
                     modal.hide();
                     setTimeout(() => {
                         window.location.reload();
