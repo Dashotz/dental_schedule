@@ -32,8 +32,8 @@ class LoginController extends Controller
             
             $user = Auth::user();
             
-            // Only allow admin, doctor and staff to login
-            if (!in_array($user->role, ['admin', 'doctor', 'staff'])) {
+            // Only allow admin and doctor to login
+            if (!in_array($user->role, ['admin', 'doctor'])) {
                 Auth::logout();
                 throw ValidationException::withMessages([
                     'email' => ['Invalid user role.'],

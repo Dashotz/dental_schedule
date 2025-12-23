@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\TeethRecordController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\AvailabilityController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication routes (accessible from all domains)
@@ -72,7 +73,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/insights', [ReportsController::class, 'insights'])->name('insights.index');
     });
     
-    // Doctor/Staff Dashboard (with subdomain check)
+    // Doctor Dashboard (with subdomain check)
     Route::middleware('subdomain.check')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         
@@ -88,12 +89,9 @@ Route::middleware('auth')->group(function () {
     });
     
     // Doctor only routes
-    Route::middleware('role:doctor')->group(function () {
-        // Add doctor-specific routes here
-    });
-    
-    // Staff only routes (if needed)
-    Route::middleware('role:staff')->group(function () {
-        // Add staff-specific routes here
+    Route::middleware(['subdomain.check', 'role:doctor'])->group(function () {
+        // Availability management
+        Route::resource('availability', AvailabilityController::class);
+        Route::get('/availability/slots', [AvailabilityController::class, 'getAvailableSlots'])->name('availability.slots');
     });
 });
