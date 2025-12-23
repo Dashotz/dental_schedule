@@ -153,7 +153,7 @@ class AvailabilityController extends Controller
             ->where('is_available', true)
             ->first();
 
-        // Check for blocked dates
+        // Check for blocked dates (only blocks, not lack of availability)
         $blocked = DoctorAvailability::where('doctor_id', $doctor->id)
             ->where(function($query) use ($date, $dayOfWeek) {
                 $query->where(function($q) use ($date) {
@@ -180,8 +180,14 @@ class AvailabilityController extends Controller
         // Use specific date override if exists, otherwise use weekly or range
         $availability = $specificAvailability ?? $rangeAvailability ?? $weeklyAvailability;
 
+        // If no availability schedule is set, use default working hours (9 AM - 5 PM, 30 min slots)
         if (!$availability) {
-            return response()->json(['slots' => []]);
+            $availability = (object)[
+                'start_time' => '09:00',
+                'end_time' => '17:00',
+                'slot_duration' => 30,
+                'is_available' => true,
+            ];
         }
 
         // Get existing appointments for this date
@@ -198,7 +204,24 @@ class AvailabilityController extends Controller
             ->toArray();
 
         // Generate all possible slots
-        $allSlots = $availability->getTimeSlots();
+        if (is_object($availability) && method_exists($availability, 'getTimeSlots')) {
+            $allSlots = $availability->getTimeSlots();
+        } else {
+            // Default availability - generate slots manually
+            $allSlots = [];
+            $start = Carbon::createFromFormat('H:i', $availability->start_time);
+            $end = Carbon::createFromFormat('H:i', $availability->end_time);
+            $duration = $availability->slot_duration ?? 30;
+            
+            $current = $start->copy();
+            while ($current->copy()->addMinutes($duration)->lte($end)) {
+                $allSlots[] = [
+                    'start' => $current->format('H:i'),
+                    'end' => $current->copy()->addMinutes($duration)->format('H:i'),
+                ];
+                $current->addMinutes($duration);
+            }
+        }
 
         // Filter out booked slots
         $availableSlots = array_filter($allSlots, function($slot) use ($existingAppointments) {
@@ -214,7 +237,7 @@ class AvailabilityController extends Controller
 
         return response()->json([
             'slots' => array_values($availableSlots),
-            'slot_duration' => $availability->slot_duration,
+            'slot_duration' => is_object($availability) && isset($availability->slot_duration) ? $availability->slot_duration : 30,
         ]);
     }
 
