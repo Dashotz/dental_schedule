@@ -48,6 +48,9 @@ Route::middleware('subdomain.check')->group(function () {
     // Patient registration via special link only
     Route::get('/register/{token}', [RegistrationLinkController::class, 'showRegistrationForm'])->name('patient.register');
     Route::post('/register/{token}', [PatientController::class, 'store'])->name('patient.store');
+    
+    // Public availability endpoint for registration form (no auth required)
+    Route::get('/availability/slots', [AvailabilityController::class, 'getAvailableSlots'])->name('availability.slots.public');
 });
 
 // Protected routes (require authentication)
@@ -92,7 +95,6 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['subdomain.check', 'role:doctor'])->group(function () {
         // Availability management - specific routes must come BEFORE resource route
         Route::get('/availability/date-availability', [AvailabilityController::class, 'getDateAvailability'])->name('availability.date-availability');
-        Route::get('/availability/slots', [AvailabilityController::class, 'getAvailableSlots'])->name('availability.slots');
         Route::post('/availability/quick-set', [AvailabilityController::class, 'quickSetAvailability'])->name('availability.quick-set');
         // Resource route (exclude 'show' since we don't need individual availability view)
         Route::resource('availability', AvailabilityController::class)->except(['show']);

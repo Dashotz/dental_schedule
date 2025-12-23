@@ -131,6 +131,11 @@ class AvailabilityController extends Controller
         ]);
 
         $doctor = User::findOrFail($request->doctor_id);
+        
+        // Verify doctor is actually a doctor (not admin)
+        if ($doctor->role !== 'doctor') {
+            return response()->json(['slots' => []], 200);
+        }
         $date = Carbon::parse($request->date);
         $dayOfWeek = $date->dayOfWeek;
 
