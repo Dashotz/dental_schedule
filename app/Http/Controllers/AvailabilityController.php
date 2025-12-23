@@ -413,22 +413,34 @@ class AvailabilityController extends Controller
 
             $date = Carbon::parse($request->date);
             $dayOfWeek = $date->dayOfWeek;
+            $dateString = $date->format('Y-m-d');
 
-            // Get all availability entries for this date
+            // Get all availability entries for this specific date
+            // Priority: specific_date > date_range > weekly
             $availabilities = DoctorAvailability::where('doctor_id', $doctor->id)
-                ->where(function($query) use ($date, $dayOfWeek) {
-                    $query->where(function($q) use ($date) {
+                ->where(function($query) use ($date, $dateString, $dayOfWeek) {
+                    // Specific date entries (highest priority) - includes blocked hours
+                    $query->where(function($q) use ($dateString) {
                         $q->where('type', 'specific_date')
-                          ->where('specific_date', $date->format('Y-m-d'));
-                    })->orWhere(function($q) use ($date) {
+                          ->where('specific_date', $dateString);
+                    })
+                    // Date range entries
+                    ->orWhere(function($q) use ($date) {
                         $q->where('type', 'date_range')
                           ->where('start_date', '<=', $date)
                           ->where('end_date', '>=', $date);
-                    })->orWhere(function($q) use ($dayOfWeek) {
+                    })
+                    // Weekly entries
+                    ->orWhere(function($q) use ($dayOfWeek) {
                         $q->where('type', 'weekly')
                           ->where('day_of_week', $dayOfWeek);
                     });
                 })
+                ->orderByRaw("CASE type 
+                    WHEN 'specific_date' THEN 1 
+                    WHEN 'date_range' THEN 2 
+                    WHEN 'weekly' THEN 3 
+                    END")
                 ->get()
                 ->map(function($avail) {
                     try {
@@ -466,6 +478,11 @@ class AvailabilityController extends Controller
                     return $avail !== null && $avail['start_time'] !== null && $avail['end_time'] !== null;
                 })
                 ->values();
+
+            // Debug logging
+            \Log::info('getDateAvailability - Date: ' . $dateString . ', Doctor ID: ' . $doctor->id);
+            \Log::info('getDateAvailability - Found ' . $availabilities->count() . ' entries');
+            \Log::info('getDateAvailability - Entries: ' . json_encode($availabilities->toArray()));
 
             return response()->json(['availabilities' => $availabilities]);
         } catch (\Exception $e) {

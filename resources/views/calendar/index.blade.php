@@ -309,17 +309,20 @@
             const container = document.getElementById('currentAvailability');
             if (data.availabilities && data.availabilities.length > 0) {
                 // Separate available and blocked entries
-                const available = data.availabilities.filter(a => a.is_available);
-                const blocked = data.availabilities.filter(a => !a.is_available);
+                // Handle both boolean and string values
+                const available = data.availabilities.filter(a => a.is_available === true || a.is_available === '1' || a.is_available === 1);
+                const blocked = data.availabilities.filter(a => a.is_available === false || a.is_available === '0' || a.is_available === 0);
                 
                 let html = '';
                 
                 if (blocked.length > 0) {
                     html += '<strong class="text-danger">Blocked Hours:</strong><ul class="list-unstyled mt-2 mb-3">';
                     blocked.forEach(avail => {
-                        const startTime = formatTimeForDisplay(avail.start_time);
-                        const endTime = formatTimeForDisplay(avail.end_time);
-                        html += `<li class="mb-1"><i class="bi bi-x-circle text-danger"></i> <strong>${startTime} - ${endTime}</strong> <span class="badge bg-danger">Blocked</span></li>`;
+                        if (avail.start_time && avail.end_time) {
+                            const startTime = formatTimeForDisplay(avail.start_time);
+                            const endTime = formatTimeForDisplay(avail.end_time);
+                            html += `<li class="mb-1"><i class="bi bi-x-circle text-danger"></i> <strong>${startTime} - ${endTime}</strong> <span class="badge bg-danger">Blocked</span></li>`;
+                        }
                     });
                     html += '</ul>';
                 }
@@ -327,9 +330,11 @@
                 if (available.length > 0) {
                     html += '<strong class="text-success">Available Hours:</strong><ul class="list-unstyled mt-2">';
                     available.forEach(avail => {
-                        const startTime = formatTimeForDisplay(avail.start_time);
-                        const endTime = formatTimeForDisplay(avail.end_time);
-                        html += `<li class="mb-1"><i class="bi bi-check-circle text-success"></i> ${startTime} - ${endTime} <span class="badge bg-success">Available</span></li>`;
+                        if (avail.start_time && avail.end_time) {
+                            const startTime = formatTimeForDisplay(avail.start_time);
+                            const endTime = formatTimeForDisplay(avail.end_time);
+                            html += `<li class="mb-1"><i class="bi bi-check-circle text-success"></i> ${startTime} - ${endTime} <span class="badge bg-success">Available</span></li>`;
+                        }
                     });
                     html += '</ul>';
                 }
@@ -344,8 +349,8 @@
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            document.getElementById('currentAvailability').innerHTML = '<small class="text-danger">Error loading availability</small>';
+            console.error('Error loading availability:', error);
+            document.getElementById('currentAvailability').innerHTML = '<small class="text-danger">Error loading availability. Please try again.</small>';
         });
     }
 
