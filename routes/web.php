@@ -90,10 +90,11 @@ Route::middleware('auth')->group(function () {
     
     // Doctor only routes
     Route::middleware(['subdomain.check', 'role:doctor'])->group(function () {
-        // Availability management
-        Route::resource('availability', AvailabilityController::class);
+        // Availability management - specific routes must come BEFORE resource route
+        Route::get('/availability/date-availability', [AvailabilityController::class, 'getDateAvailability'])->name('availability.date-availability');
         Route::get('/availability/slots', [AvailabilityController::class, 'getAvailableSlots'])->name('availability.slots');
         Route::post('/availability/quick-set', [AvailabilityController::class, 'quickSetAvailability'])->name('availability.quick-set');
-        Route::get('/availability/date-availability', [AvailabilityController::class, 'getDateAvailability'])->name('availability.date-availability');
+        // Resource route (exclude 'show' since we don't need individual availability view)
+        Route::resource('availability', AvailabilityController::class)->except(['show']);
     });
 });
