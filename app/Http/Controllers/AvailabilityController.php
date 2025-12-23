@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DoctorAvailability;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 
 class AvailabilityController extends Controller
@@ -417,31 +418,29 @@ class AvailabilityController extends Controller
 
             // Get all availability entries for this specific date
             // Priority: specific_date > date_range > weekly
-            $availabilities = DoctorAvailability::where('doctor_id', $doctor->id)
-                ->where(function($query) use ($date, $dateString, $dayOfWeek) {
-                    // Specific date entries (highest priority) - includes blocked hours
-                    $query->where(function($q) use ($dateString) {
-                        $q->where('type', 'specific_date')
-                          ->where('specific_date', $dateString);
-                    })
-                    // Date range entries
-                    ->orWhere(function($q) use ($date) {
-                        $q->where('type', 'date_range')
-                          ->where('start_date', '<=', $date)
-                          ->where('end_date', '>=', $date);
-                    })
-                    // Weekly entries
-                    ->orWhere(function($q) use ($dayOfWeek) {
-                        $q->where('type', 'weekly')
-                          ->where('day_of_week', $dayOfWeek);
-                    });
-                })
-                ->orderByRaw("CASE type 
-                    WHEN 'specific_date' THEN 1 
-                    WHEN 'date_range' THEN 2 
-                    WHEN 'weekly' THEN 3 
-                    END")
-                ->get()
+            // First, get specific date entries (most specific - includes blocked hours)
+            $specificDateEntries = DoctorAvailability::where('doctor_id', $doctor->id)
+                ->where('type', 'specific_date')
+                ->where('specific_date', $dateString)
+                ->get();
+            
+            // Get date range entries that include this date
+            $dateRangeEntries = DoctorAvailability::where('doctor_id', $doctor->id)
+                ->where('type', 'date_range')
+                ->where('start_date', '<=', $dateString)
+                ->where('end_date', '>=', $dateString)
+                ->get();
+            
+            // Get weekly entries for this day of week
+            $weeklyEntries = DoctorAvailability::where('doctor_id', $doctor->id)
+                ->where('type', 'weekly')
+                ->where('day_of_week', $dayOfWeek)
+                ->get();
+            
+            // Combine all entries (specific_date takes priority, then date_range, then weekly)
+            $availabilities = $specificDateEntries
+                ->merge($dateRangeEntries)
+                ->merge($weeklyEntries)
                 ->map(function($avail) {
                     try {
                         // Safely extract time, handling null or different formats
@@ -479,17 +478,25 @@ class AvailabilityController extends Controller
                 })
                 ->values();
 
-            // Debug logging
-            \Log::info('getDateAvailability - Date: ' . $dateString . ', Doctor ID: ' . $doctor->id);
-            \Log::info('getDateAvailability - Found ' . $availabilities->count() . ' entries');
-            \Log::info('getDateAvailability - Entries: ' . json_encode($availabilities->toArray()));
+            // Debug logging (only in development)
+            if (config('app.debug')) {
+                \Log::info('getDateAvailability - Date: ' . $dateString . ', Doctor ID: ' . $doctor->id);
+                \Log::info('getDateAvailability - Found ' . $availabilities->count() . ' entries');
+            }
 
             return response()->json(['availabilities' => $availabilities]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('getDateAvailability validation error: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Invalid request',
+                'message' => $e->getMessage()
+            ], 422);
         } catch (\Exception $e) {
-            \Log::error('getDateAvailability error: ' . $e->getMessage() . ' | Trace: ' . $e->getTraceAsString());
+            \Log::error('getDateAvailability error: ' . $e->getMessage());
+            \Log::error('getDateAvailability trace: ' . $e->getTraceAsString());
             return response()->json([
                 'error' => 'Failed to load availability',
-                'message' => $e->getMessage()
+                'message' => config('app.debug') ? $e->getMessage() : 'An error occurred while loading availability'
             ], 500);
         }
     }
