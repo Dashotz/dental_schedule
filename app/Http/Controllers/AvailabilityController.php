@@ -223,9 +223,48 @@ class AvailabilityController extends Controller
             return response()->json(['slots' => []]);
         }
 
-        // Get partial hour blocks (to exclude from available slots)
-        // Exclude full-day blocks (00:00 to 23:59) from hour blocks
-        $allBlocks = DoctorAvailability::where('doctor_id', $doctor->id)
+        // Get blocked slots from the new blocked_slots table
+        $blockedSlots = DB::table('blocked_slots')
+            ->where('doctor_id', $doctor->id)
+            ->where('slot_date', $date->format('Y-m-d'))
+            ->get()
+            ->map(function($block) {
+                $startTime = $block->slot_start_time;
+                $endTime = $block->slot_end_time;
+                
+                // Normalize time format
+                if (is_string($startTime)) {
+                    $startTime = strlen($startTime) > 5 ? substr($startTime, 0, 5) : $startTime;
+                } else {
+                    $startTime = (string) $startTime;
+                    $startTime = strlen($startTime) > 5 ? substr($startTime, 0, 5) : $startTime;
+                }
+                
+                if (is_string($endTime)) {
+                    $endTime = strlen($endTime) > 5 ? substr($endTime, 0, 5) : $endTime;
+                } else {
+                    $endTime = (string) $endTime;
+                    $endTime = strlen($endTime) > 5 ? substr($endTime, 0, 5) : $endTime;
+                }
+                
+                return [
+                    'start' => $startTime,
+                    'end' => $endTime,
+                ];
+            })
+            ->toArray();
+        
+        // Debug logging (only in development)
+        if (config('app.debug')) {
+            \Log::info('getAvailableSlots - Doctor ID: ' . $doctor->id . ', Date: ' . $date->format('Y-m-d'));
+            \Log::info('getAvailableSlots - Found ' . count($blockedSlots) . ' blocked slots from blocked_slots table');
+            if (count($blockedSlots) > 0) {
+                \Log::info('getAvailableSlots - Blocked slots: ' . json_encode($blockedSlots));
+            }
+        }
+        
+        // Also check old availability entries for backward compatibility
+        $oldBlocks = DoctorAvailability::where('doctor_id', $doctor->id)
             ->where('is_available', false)
             ->where(function($query) use ($date) {
                 $query->where(function($q) use ($date) {
@@ -239,31 +278,31 @@ class AvailabilityController extends Controller
             })
             ->get();
         
-        // Filter out full-day blocks in PHP (simpler and more reliable)
-        $hourBlocks = $allBlocks
-            ->map(function($block) {
-                $startTime = $block->start_time;
-                $endTime = $block->end_time;
+        // Convert old blocks to slot format (generate individual slots)
+        foreach ($oldBlocks as $block) {
+            $blockStart = Carbon::createFromFormat('H:i', substr($block->start_time, 0, 5));
+            $blockEnd = Carbon::createFromFormat('H:i', substr($block->end_time, 0, 5));
+            
+            // Skip full-day blocks (00:00 to 23:59)
+            if ($blockStart->format('H:i') === '00:00' && $blockEnd->format('H:i') === '23:59') {
+                continue;
+            }
+            
+            $current = $blockStart->copy();
+            while ($current->copy()->addMinutes(30)->lte($blockEnd)) {
+                $slotStart = $current->format('H:i');
+                $slotEnd = $current->copy()->addMinutes(30)->format('H:i');
                 
-                // Normalize time format
-                if (strlen($startTime) > 5) {
-                    $startTime = substr($startTime, 0, 5);
-                }
-                if (strlen($endTime) > 5) {
-                    $endTime = substr($endTime, 0, 5);
-                }
-                
-                return [
-                    'start' => $startTime,
-                    'end' => $endTime,
+                $blockedSlots[] = [
+                    'start' => $slotStart,
+                    'end' => $slotEnd,
                 ];
-            })
-            ->filter(function($block) {
-                // Filter out full-day blocks (00:00 to 23:59)
-                return !($block['start'] === '00:00' && $block['end'] === '23:59');
-            })
-            ->values()
-            ->toArray();
+                
+                $current->addMinutes(30);
+            }
+        }
+        
+        $hourBlocks = $blockedSlots;
 
         // Use specific date override if exists, otherwise use weekly or range
         $availability = $specificAvailability ?? $rangeAvailability ?? $weeklyAvailability;
@@ -311,25 +350,31 @@ class AvailabilityController extends Controller
             }
         }
 
-        // Get blocked slot keys for quick lookup
-        $blockedSlotKeys = [];
-        foreach ($hourBlocks as $block) {
-            $blockedSlotKeys[] = $block['start'] . '-' . $block['end'];
-        }
-        
         // Process all slots and mark availability status (show all slots, mark blocked/booked ones)
         $processedSlots = [];
         foreach ($allSlots as $slot) {
-            $slotKey = $slot['start'] . '-' . $slot['end'];
-            $isBlocked = in_array($slotKey, $blockedSlotKeys);
+            $isBlocked = false;
             $isBooked = false;
+            
+            // Check against blocked slots using overlap detection
+            $slotStartMinutes = $this->timeToMinutes($slot['start']);
+            $slotEndMinutes = $this->timeToMinutes($slot['end']);
+            
+            foreach ($hourBlocks as $block) {
+                $blockStartMinutes = $this->timeToMinutes($block['start']);
+                $blockEndMinutes = $this->timeToMinutes($block['end']);
+                
+                // Check if slot overlaps with blocked time
+                if ($slotStartMinutes < $blockEndMinutes && $slotEndMinutes > $blockStartMinutes) {
+                    $isBlocked = true;
+                    break;
+                }
+            }
             
             // Check against existing appointments
             foreach ($existingAppointments as $booked) {
                 $bookedStartMinutes = $this->timeToMinutes($booked['start']);
                 $bookedEndMinutes = $this->timeToMinutes($booked['end']);
-                $slotStartMinutes = $this->timeToMinutes($slot['start']);
-                $slotEndMinutes = $this->timeToMinutes($slot['end']);
                 
                 if ($slotStartMinutes < $bookedEndMinutes && $slotEndMinutes > $bookedStartMinutes) {
                     $isBooked = true;
