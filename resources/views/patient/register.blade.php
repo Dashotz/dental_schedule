@@ -301,17 +301,21 @@
 <script src="/js/form-validation.js"></script>
 <script>
     $(document).ready(function() {
-        // Set minimum date to tomorrow
+        // Set minimum date to tomorrow (using local date to avoid timezone issues)
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
-        $('#appointment_date').attr('min', tomorrow.toISOString().split('T')[0]);
+        // Format as YYYY-MM-DD using local timezone (not UTC)
+        const year = tomorrow.getFullYear();
+        const month = String(tomorrow.getMonth() + 1).padStart(2, '0');
+        const day = String(tomorrow.getDate()).padStart(2, '0');
+        $('#appointment_date').attr('min', `${year}-${month}-${day}`);
 
         // Doctor IDs for availability checking
         const doctorIds = @json($doctors->pluck('id')->toArray());
 
         // Load available time slots when date is selected
         $('#appointment_date').on('change', function() {
-            const selectedDate = $(this).val();
+            let selectedDate = $(this).val();
             const timeSelect = $('#appointment_time');
             const dateStatus = $('#dateStatus');
             const timeStatus = $('#timeStatus');
@@ -320,6 +324,16 @@
                 timeSelect.html('<option value="">Select date first</option>').prop('disabled', true);
                 dateStatus.text('');
                 return;
+            }
+
+            // Ensure date is in YYYY-MM-DD format (date input should already provide this)
+            // Parse and reformat to avoid any timezone issues
+            const dateParts = selectedDate.split('-');
+            if (dateParts.length === 3) {
+                // Reconstruct to ensure proper format (YYYY-MM-DD)
+                selectedDate = `${dateParts[0]}-${dateParts[1].padStart(2, '0')}-${dateParts[2].padStart(2, '0')}`;
+                // Update the input value to ensure consistency
+                $(this).val(selectedDate);
             }
 
             // Check if date is blocked for all doctors
