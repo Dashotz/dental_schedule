@@ -382,12 +382,12 @@
                                     timeSelect.append(`<option value="${slot.start}">${startTime} - ${endTime}</option>`);
                                 } else {
                                     // Show blocked/booked slots but disable them
-                                    const reason = isBlocked ? ' (Blocked)' : isBooked ? ' (Booked)' : ' (Unavailable)';
+                                    const reason = isBlocked ? ' (Unavailable)' : isBooked ? ' (Booked)' : ' (Unavailable)';
                                     timeSelect.append(`<option value="${slot.start}" disabled style="color: #999; background-color: #f5f5f5;">${startTime} - ${endTime}${reason}</option>`);
                                 }
                             });
                             
-                            // Update available count
+                            // Update available count (only count actually available slots)
                             if (availableCount > 0) {
                                 timeStatus.text(`${availableCount} time slot(s) available`);
                             } else {
@@ -396,7 +396,6 @@
                             
                             timeSelect.prop('disabled', false);
                             dateStatus.html('<span class="text-success"><i class="bi bi-check-circle"></i> Available</span>');
-                            timeStatus.text(`${allSlots.length} time slot(s) available`);
                         } else {
                             dateStatus.html('<span class="text-danger"><i class="bi bi-x-circle"></i> No available time slots for this date</span>');
                             timeSelect.html('<option value="">No available slots</option>').prop('disabled', true);
