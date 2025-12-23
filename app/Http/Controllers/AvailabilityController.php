@@ -296,7 +296,7 @@ class AvailabilityController extends Controller
         }
 
         // Filter out booked slots and blocked hours
-        $availableSlots = array_filter($allSlots, function($slot) use ($existingAppointments, $hourBlocks) {
+        $availableSlots = array_filter($allSlots, function($slot) use ($existingAppointments, $hourBlocks, $date, $doctor) {
             // Check against existing appointments
             foreach ($existingAppointments as $booked) {
                 if (($slot['start'] >= $booked['start'] && $slot['start'] < $booked['end']) ||
@@ -315,7 +315,14 @@ class AvailabilityController extends Controller
                 
                 // Check if slot overlaps with blocked time
                 // Slot is blocked if it starts before block ends AND ends after block starts
-                if ($slotStart < $blockEnd && $slotEnd > $blockStart) {
+                // Use string comparison for HH:MM format (works correctly for 24-hour format)
+                $overlaps = (strcmp($slotStart, $blockEnd) < 0 && strcmp($slotEnd, $blockStart) > 0);
+                
+                if (config('app.debug') && $overlaps) {
+                    \Log::info("Slot {$slotStart}-{$slotEnd} overlaps with block {$blockStart}-{$blockEnd}");
+                }
+                
+                if ($overlaps) {
                     return false;
                 }
             }
@@ -569,5 +576,16 @@ class AvailabilityController extends Controller
                 'message' => $errorMessage
             ], 500);
         }
+    }
+    
+    /**
+     * Convert time string (HH:MM) to minutes for comparison
+     */
+    private function timeToMinutes($timeString)
+    {
+        $parts = explode(':', $timeString);
+        $hours = (int) $parts[0];
+        $minutes = (int) ($parts[1] ?? 0);
+        return $hours * 60 + $minutes;
     }
 }

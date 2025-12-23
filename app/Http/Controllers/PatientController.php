@@ -414,9 +414,18 @@ class PatientController extends Controller
                 $slotStart = $slot['start'];
                 $slotEnd = $slot['end'];
                 
+                // Convert times to minutes for reliable comparison
+                $blockStartMinutes = $this->timeToMinutes($blockStart);
+                $blockEndMinutes = $this->timeToMinutes($blockEnd);
+                $slotStartMinutes = $this->timeToMinutes($slotStart);
+                $slotEndMinutes = $this->timeToMinutes($slotEnd);
+                
                 // Check if slot overlaps with blocked time
                 // Slot is blocked if it starts before block ends AND ends after block starts
-                if ($slotStart < $blockEnd && $slotEnd > $blockStart) {
+                if ($slotStartMinutes < $blockEndMinutes && $slotEndMinutes > $blockStartMinutes) {
+                    if (config('app.debug')) {
+                        \Log::info("PatientController - Slot {$slotStart}-{$slotEnd} (minutes: {$slotStartMinutes}-{$slotEndMinutes}) overlaps with block {$blockStart}-{$blockEnd} (minutes: {$blockStartMinutes}-{$blockEndMinutes})");
+                    }
                     return false;
                 }
             }
@@ -425,6 +434,17 @@ class PatientController extends Controller
         });
 
         return array_values($availableSlots);
+    }
+    
+    /**
+     * Convert time string (HH:MM) to minutes for comparison
+     */
+    private function timeToMinutes($timeString)
+    {
+        $parts = explode(':', $timeString);
+        $hours = (int) $parts[0];
+        $minutes = (int) ($parts[1] ?? 0);
+        return $hours * 60 + $minutes;
     }
 
     public function index()
