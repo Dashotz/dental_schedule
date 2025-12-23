@@ -372,46 +372,80 @@ class AvailabilityController extends Controller
 
     public function getDateAvailability(Request $request)
     {
-        $doctor = auth()->user();
-        
-        if (!$doctor->isDoctor()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+        try {
+            $doctor = auth()->user();
+            
+            if (!$doctor || !$doctor->isDoctor()) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $request->validate([
+                'date' => ['required', 'date'],
+            ]);
+
+            $date = Carbon::parse($request->date);
+            $dayOfWeek = $date->dayOfWeek;
+
+            // Get all availability entries for this date
+            $availabilities = DoctorAvailability::where('doctor_id', $doctor->id)
+                ->where(function($query) use ($date, $dayOfWeek) {
+                    $query->where(function($q) use ($date) {
+                        $q->where('type', 'specific_date')
+                          ->where('specific_date', $date->format('Y-m-d'));
+                    })->orWhere(function($q) use ($date) {
+                        $q->where('type', 'date_range')
+                          ->where('start_date', '<=', $date)
+                          ->where('end_date', '>=', $date);
+                    })->orWhere(function($q) use ($dayOfWeek) {
+                        $q->where('type', 'weekly')
+                          ->where('day_of_week', $dayOfWeek);
+                    });
+                })
+                ->get()
+                ->map(function($avail) {
+                    try {
+                        // Safely extract time, handling null or different formats
+                        $startTime = null;
+                        $endTime = null;
+                        
+                        if ($avail->start_time) {
+                            $startTime = is_string($avail->start_time) && strlen($avail->start_time) >= 5 
+                                ? substr($avail->start_time, 0, 5) 
+                                : $avail->start_time;
+                        }
+                        
+                        if ($avail->end_time) {
+                            $endTime = is_string($avail->end_time) && strlen($avail->end_time) >= 5 
+                                ? substr($avail->end_time, 0, 5) 
+                                : $avail->end_time;
+                        }
+                        
+                        return [
+                            'id' => $avail->id,
+                            'type' => $avail->type,
+                            'start_time' => $startTime,
+                            'end_time' => $endTime,
+                            'is_available' => (bool) $avail->is_available,
+                            'notes' => $avail->notes,
+                        ];
+                    } catch (\Exception $e) {
+                        \Log::error('Error mapping availability: ' . $e->getMessage());
+                        return null;
+                    }
+                })
+                ->filter(function($avail) {
+                    // Only return entries with valid times
+                    return $avail !== null && $avail['start_time'] !== null && $avail['end_time'] !== null;
+                })
+                ->values();
+
+            return response()->json(['availabilities' => $availabilities]);
+        } catch (\Exception $e) {
+            \Log::error('getDateAvailability error: ' . $e->getMessage() . ' | Trace: ' . $e->getTraceAsString());
+            return response()->json([
+                'error' => 'Failed to load availability',
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-        $request->validate([
-            'date' => ['required', 'date'],
-        ]);
-
-        $date = Carbon::parse($request->date);
-        $dayOfWeek = $date->dayOfWeek;
-
-        // Get all availability entries for this date
-        $availabilities = DoctorAvailability::where('doctor_id', $doctor->id)
-            ->where(function($query) use ($date, $dayOfWeek) {
-                $query->where(function($q) use ($date) {
-                    $q->where('type', 'specific_date')
-                      ->where('specific_date', $date->format('Y-m-d'));
-                })->orWhere(function($q) use ($date) {
-                    $q->where('type', 'date_range')
-                      ->where('start_date', '<=', $date)
-                      ->where('end_date', '>=', $date);
-                })->orWhere(function($q) use ($dayOfWeek) {
-                    $q->where('type', 'weekly')
-                      ->where('day_of_week', $dayOfWeek);
-                });
-            })
-            ->get()
-            ->map(function($avail) {
-                return [
-                    'id' => $avail->id,
-                    'type' => $avail->type,
-                    'start_time' => substr($avail->start_time, 0, 5),
-                    'end_time' => substr($avail->end_time, 0, 5),
-                    'is_available' => $avail->is_available,
-                    'notes' => $avail->notes,
-                ];
-            });
-
-        return response()->json(['availabilities' => $availabilities]);
     }
 }
