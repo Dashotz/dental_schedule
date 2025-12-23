@@ -6,6 +6,7 @@ use App\Models\DoctorAvailability;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Schema;
 use Carbon\Carbon;
 
 class AvailabilityController extends Controller
@@ -412,30 +413,63 @@ class AvailabilityController extends Controller
                 'date' => ['required', 'date'],
             ]);
 
-            $date = Carbon::parse($request->date);
+            // Parse date safely
+            try {
+                $date = Carbon::parse($request->date);
+            } catch (\Exception $e) {
+                \Log::error('Invalid date format: ' . $request->date);
+                return response()->json([
+                    'error' => 'Invalid date format',
+                    'message' => 'Please provide a valid date'
+                ], 422);
+            }
             $dayOfWeek = $date->dayOfWeek;
             $dateString = $date->format('Y-m-d');
+
+            // Check if table exists (for deployment safety)
+            if (!Schema::hasTable('doctor_availabilities')) {
+                \Log::error('doctor_availabilities table does not exist');
+                return response()->json([
+                    'error' => 'Database table not found',
+                    'message' => 'Please run migrations: php artisan migrate'
+                ], 500);
+            }
 
             // Get all availability entries for this specific date
             // Priority: specific_date > date_range > weekly
             // First, get specific date entries (most specific - includes blocked hours)
-            $specificDateEntries = DoctorAvailability::where('doctor_id', $doctor->id)
-                ->where('type', 'specific_date')
-                ->where('specific_date', $dateString)
-                ->get();
+            try {
+                $specificDateEntries = DoctorAvailability::where('doctor_id', $doctor->id)
+                    ->where('type', 'specific_date')
+                    ->where('specific_date', $dateString)
+                    ->get();
+            } catch (\Exception $e) {
+                \Log::error('Error fetching specific_date entries: ' . $e->getMessage());
+                $specificDateEntries = collect([]);
+            }
             
             // Get date range entries that include this date
-            $dateRangeEntries = DoctorAvailability::where('doctor_id', $doctor->id)
-                ->where('type', 'date_range')
-                ->where('start_date', '<=', $dateString)
-                ->where('end_date', '>=', $dateString)
-                ->get();
+            try {
+                $dateRangeEntries = DoctorAvailability::where('doctor_id', $doctor->id)
+                    ->where('type', 'date_range')
+                    ->where('start_date', '<=', $dateString)
+                    ->where('end_date', '>=', $dateString)
+                    ->get();
+            } catch (\Exception $e) {
+                \Log::error('Error fetching date_range entries: ' . $e->getMessage());
+                $dateRangeEntries = collect([]);
+            }
             
             // Get weekly entries for this day of week
-            $weeklyEntries = DoctorAvailability::where('doctor_id', $doctor->id)
-                ->where('type', 'weekly')
-                ->where('day_of_week', $dayOfWeek)
-                ->get();
+            try {
+                $weeklyEntries = DoctorAvailability::where('doctor_id', $doctor->id)
+                    ->where('type', 'weekly')
+                    ->where('day_of_week', $dayOfWeek)
+                    ->get();
+            } catch (\Exception $e) {
+                \Log::error('Error fetching weekly entries: ' . $e->getMessage());
+                $weeklyEntries = collect([]);
+            }
             
             // Combine all entries (specific_date takes priority, then date_range, then weekly)
             $availabilities = $specificDateEntries
