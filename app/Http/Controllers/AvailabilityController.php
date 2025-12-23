@@ -141,10 +141,11 @@ class AvailabilityController extends Controller
             ->where('is_available', true)
             ->first();
 
-        // Get specific date overrides
+        // Get specific date overrides (only available ones, not blocked)
         $specificAvailability = DoctorAvailability::where('doctor_id', $doctor->id)
             ->where('type', 'specific_date')
             ->where('specific_date', $date->format('Y-m-d'))
+            ->where('is_available', true)
             ->first();
 
         // Get date range availability
