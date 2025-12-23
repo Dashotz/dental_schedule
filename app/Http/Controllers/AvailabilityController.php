@@ -127,8 +127,8 @@ class AvailabilityController extends Controller
     public function getAvailableSlots(Request $request)
     {
         $request->validate([
-            'doctor_id' => ['required', 'exists:users,id'],
-            'date' => ['required', 'date'],
+            'doctor_id' => ['required', 'integer', 'exists:users,id'],
+            'date' => ['required', 'date', 'after_or_equal:today'],
         ]);
 
         $doctor = User::findOrFail($request->doctor_id);
@@ -136,6 +136,21 @@ class AvailabilityController extends Controller
         // Verify doctor is actually a doctor (not admin)
         if ($doctor->role !== 'doctor') {
             return response()->json(['slots' => []], 200);
+        }
+        
+        // Security: Verify doctor is active
+        if (!$doctor->is_active) {
+            return response()->json(['slots' => []], 200);
+        }
+        
+        // Security: Limit date range to prevent abuse (max 1 year in advance)
+        $maxDate = now()->addYear();
+        $requestedDate = Carbon::parse($request->date);
+        if ($requestedDate->gt($maxDate)) {
+            return response()->json([
+                'error' => 'Date too far in advance',
+                'message' => 'Appointments can only be booked up to 1 year in advance'
+            ], 422);
         }
         $date = Carbon::parse($request->date);
         $dayOfWeek = $date->dayOfWeek;
@@ -353,9 +368,17 @@ class AvailabilityController extends Controller
         $date = Carbon::parse($validated['date']);
         
         if ($validated['action'] === 'unblock') {
-            // Delete all blocked slots for this specific date
-            $deletedCount = \DB::table('blocked_slots')
-                ->where('doctor_id', $doctor->id)
+            // Security: Only allow unblocking future dates or today
+            if ($date->lt(now()->startOfDay())) {
+                return response()->json([
+                    'error' => 'Invalid date',
+                    'message' => 'Cannot unblock time slots in the past'
+                ], 422);
+            }
+            
+            // Delete all blocked slots for this specific date (only for this doctor)
+            $deletedCount = DB::table('blocked_slots')
+                ->where('doctor_id', $doctor->id) // Security: Ensure doctor can only unblock their own slots
                 ->where('slot_date', $date->format('Y-m-d'))
                 ->delete();
             
