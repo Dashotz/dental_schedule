@@ -21,15 +21,15 @@
                 <div class="jaw-section mb-4">
                     <h6 class="text-center mb-4"><i class="bi bi-arrow-up"></i> Upper Jaw (Maxilla)</h6>
                     <div class="d-flex justify-content-center">
-                        <svg width="900" height="120" viewBox="0 0 900 120" class="jaw-svg">
-                            <!-- Right side teeth (18-11) -->
+                        <svg width="1000" height="140" viewBox="0 0 1000 140" class="jaw-svg">
+                            <!-- Upper Right Quadrant (18-11) - from patient's right to center -->
                             @php
-                                $rightUpperTeeth = [18, 17, 16, 15, 14, 13, 12, 11];
-                                $spacing = 100;
-                                $startX = 50;
-                                $y = 60;
+                                $upperRightTeeth = [18, 17, 16, 15, 14, 13, 12, 11];
+                                $spacing = 110;
+                                $startX = 30;
+                                $y = 70;
                             @endphp
-                            @foreach($rightUpperTeeth as $index => $toothNum)
+                            @foreach($upperRightTeeth as $index => $toothNum)
                                 @php
                                     $x = $startX + ($index * $spacing);
                                 @endphp
@@ -41,14 +41,13 @@
                                 ])
                             @endforeach
                             
-                            <!-- Left side teeth (21-28) -->
+                            <!-- Upper Left Quadrant (21-28) - from center to patient's left -->
                             @php
-                                $leftUpperTeeth = [21, 22, 23, 24, 25, 26, 27, 28];
-                                $startX = 50;
+                                $upperLeftTeeth = [21, 22, 23, 24, 25, 26, 27, 28];
                             @endphp
-                            @foreach($leftUpperTeeth as $index => $toothNum)
+                            @foreach($upperLeftTeeth as $index => $toothNum)
                                 @php
-                                    $x = $startX + ($index * $spacing);
+                                    $x = $startX + (($index + 8) * $spacing);
                                 @endphp
                                 @include('patient.partials.tooth-svg', [
                                     'toothNumber' => $toothNum,
@@ -65,15 +64,15 @@
                 <div class="jaw-section">
                     <h6 class="text-center mb-4"><i class="bi bi-arrow-down"></i> Lower Jaw (Mandible)</h6>
                     <div class="d-flex justify-content-center">
-                        <svg width="900" height="120" viewBox="0 0 900 120" class="jaw-svg">
-                            <!-- Right side teeth (48-41) -->
+                        <svg width="1000" height="140" viewBox="0 0 1000 140" class="jaw-svg">
+                            <!-- Lower Right Quadrant (48-41) - from patient's right to center -->
                             @php
-                                $rightLowerTeeth = [48, 47, 46, 45, 44, 43, 42, 41];
-                                $spacing = 100;
-                                $startX = 50;
-                                $y = 60;
+                                $lowerRightTeeth = [48, 47, 46, 45, 44, 43, 42, 41];
+                                $spacing = 110;
+                                $startX = 30;
+                                $y = 70;
                             @endphp
-                            @foreach($rightLowerTeeth as $index => $toothNum)
+                            @foreach($lowerRightTeeth as $index => $toothNum)
                                 @php
                                     $x = $startX + ($index * $spacing);
                                 @endphp
@@ -85,14 +84,13 @@
                                 ])
                             @endforeach
                             
-                            <!-- Left side teeth (31-38) -->
+                            <!-- Lower Left Quadrant (31-38) - from center to patient's left -->
                             @php
-                                $leftLowerTeeth = [31, 32, 33, 34, 35, 36, 37, 38];
-                                $startX = 50;
+                                $lowerLeftTeeth = [31, 32, 33, 34, 35, 36, 37, 38];
                             @endphp
-                            @foreach($leftLowerTeeth as $index => $toothNum)
+                            @foreach($lowerLeftTeeth as $index => $toothNum)
                                 @php
-                                    $x = $startX + ($index * $spacing);
+                                    $x = $startX + (($index + 8) * $spacing);
                                 @endphp
                                 @include('patient.partials.tooth-svg', [
                                     'toothNumber' => $toothNum,
@@ -152,111 +150,13 @@
 </div>
 
 @push('styles')
-<style>
-    .jaw-section {
-        background: #fff;
-        padding: 40px 20px;
-        margin-bottom: 30px;
-    }
-
-    .jaw-svg {
-        max-width: 100%;
-        height: auto;
-        background: transparent;
-    }
-
-    .tooth-svg {
-        transition: opacity 0.2s ease;
-    }
-
-    .tooth-svg:hover {
-        opacity: 0.7;
-    }
-
-    @media (max-width: 768px) {
-        .jaw-svg {
-            width: 100%;
-            height: 100px;
-        }
-        
-        .jaw-section {
-            padding: 25px 10px;
-        }
-    }
-</style>
+<link rel="stylesheet" href="{{ asset('css/teeth-chart.css') }}">
 @endpush
 
 @push('scripts')
 <script>
-    $(document).ready(function() {
-        const modal = new bootstrap.Modal(document.getElementById('teethRecordModal'));
-        const form = $('#teethRecordForm');
-        const patientId = {{ $patient->id }};
-
-        $('.tooth-svg').on('click', function() {
-            const toothNumber = $(this).data('tooth');
-            $('#modalToothNumber').text(toothNumber);
-            $('#tooth_number').val(toothNumber);
-            
-            $.ajax({
-                url: `/patients/${patientId}/teeth-records/${toothNumber}`,
-                method: 'GET',
-                success: function(response) {
-                    if (response.record) {
-                        $('#condition').val(response.record.condition || '');
-                        $('#remarks').val(response.record.remarks || '');
-                    } else {
-                        $('#condition').val('');
-                        $('#remarks').val('');
-                    }
-                    modal.show();
-                },
-                error: function() {
-                    $('#condition').val('');
-                    $('#remarks').val('');
-                    modal.show();
-                }
-            });
-        });
-
-        form.on('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                tooth_number: $('#tooth_number').val(),
-                condition: $('#condition').val(),
-                remarks: $('#remarks').val(),
-                _token: '{{ csrf_token() }}'
-            };
-
-            $.ajax({
-                url: `/patients/${patientId}/teeth-records`,
-                method: 'POST',
-                data: formData,
-                success: function(response) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: response.message,
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                    
-                    modal.hide();
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 500);
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: xhr.responseJSON?.message || 'Failed to save record.'
-                    });
-                }
-            });
-        });
-    });
+    window.patientId = {{ $patient->id }};
 </script>
+<script src="{{ asset('js/teeth-chart.js') }}"></script>
 @endpush
 @endsection

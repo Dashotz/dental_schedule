@@ -1,0 +1,36 @@
+.jaw-section {
+    background: #fff;
+    padding: 40px 20px;
+    margin-bottom: 30px;
+}
+
+.jaw-svg {
+    max-width: 100%;
+    height: auto;
+    background: transparent;
+}
+
+.tooth-svg {
+    transition: all 0.2s ease;
+}
+
+.tooth-svg:hover image {
+    opacity: 0.8;
+    filter: brightness(1.1);
+}
+
+.tooth-svg:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .jaw-svg {
+        width: 100%;
+        height: 120px;
+    }
+    
+    .jaw-section {
+        padding: 25px 10px;
+    }
+}
+
