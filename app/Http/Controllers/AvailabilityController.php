@@ -308,9 +308,14 @@ class AvailabilityController extends Controller
             
             // Check against blocked hours
             foreach ($hourBlocks as $block) {
-                if (($slot['start'] >= $block['start'] && $slot['start'] < $block['end']) ||
-                    ($slot['end'] > $block['start'] && $slot['end'] <= $block['end']) ||
-                    ($slot['start'] <= $block['start'] && $slot['end'] >= $block['end'])) {
+                $blockStart = $block['start'];
+                $blockEnd = $block['end'];
+                $slotStart = $slot['start'];
+                $slotEnd = $slot['end'];
+                
+                // Check if slot overlaps with blocked time
+                // Slot is blocked if it starts before block ends AND ends after block starts
+                if ($slotStart < $blockEnd && $slotEnd > $blockStart) {
                     return false;
                 }
             }

@@ -320,12 +320,19 @@ class PatientController extends Controller
                 $startTime = $block->start_time;
                 $endTime = $block->end_time;
                 
-                // Normalize time format
-                if (strlen($startTime) > 5) {
-                    $startTime = substr($startTime, 0, 5);
+                // Normalize time format - handle both HH:MM:SS and HH:MM
+                if (is_string($startTime)) {
+                    $startTime = strlen($startTime) > 5 ? substr($startTime, 0, 5) : $startTime;
+                } else {
+                    $startTime = (string) $startTime;
+                    $startTime = strlen($startTime) > 5 ? substr($startTime, 0, 5) : $startTime;
                 }
-                if (strlen($endTime) > 5) {
-                    $endTime = substr($endTime, 0, 5);
+                
+                if (is_string($endTime)) {
+                    $endTime = strlen($endTime) > 5 ? substr($endTime, 0, 5) : $endTime;
+                } else {
+                    $endTime = (string) $endTime;
+                    $endTime = strlen($endTime) > 5 ? substr($endTime, 0, 5) : $endTime;
                 }
                 
                 return [
@@ -339,6 +346,11 @@ class PatientController extends Controller
             })
             ->values()
             ->toArray();
+        
+        // Debug logging (only in development)
+        if (config('app.debug')) {
+            \Log::info('PatientController - Hour blocks for date ' . $date->format('Y-m-d') . ', doctor ' . $doctorId . ': ' . json_encode($hourBlocks));
+        }
 
         // Use specific date override if exists, otherwise use weekly or range
         $availability = $specificAvailability ?? $rangeAvailability ?? $weeklyAvailability;
@@ -397,9 +409,14 @@ class PatientController extends Controller
             
             // Check against blocked hours
             foreach ($hourBlocks as $block) {
-                if (($slot['start'] >= $block['start'] && $slot['start'] < $block['end']) ||
-                    ($slot['end'] > $block['start'] && $slot['end'] <= $block['end']) ||
-                    ($slot['start'] <= $block['start'] && $slot['end'] >= $block['end'])) {
+                $blockStart = $block['start'];
+                $blockEnd = $block['end'];
+                $slotStart = $slot['start'];
+                $slotEnd = $slot['end'];
+                
+                // Check if slot overlaps with blocked time
+                // Slot is blocked if it starts before block ends AND ends after block starts
+                if ($slotStart < $blockEnd && $slotEnd > $blockStart) {
                     return false;
                 }
             }
