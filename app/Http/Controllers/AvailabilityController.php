@@ -405,8 +405,21 @@ class AvailabilityController extends Controller
         try {
             $doctor = auth()->user();
             
-            if (!$doctor || !$doctor->isDoctor()) {
-                return response()->json(['error' => 'Unauthorized'], 403);
+            if (!$doctor) {
+                \Log::error('getDateAvailability: No authenticated user');
+                return response()->json(['error' => 'Unauthorized', 'message' => 'Please log in'], 401);
+            }
+            
+            // Check if user is a doctor
+            if (!method_exists($doctor, 'isDoctor')) {
+                \Log::error('getDateAvailability: isDoctor method does not exist on User model');
+                // Fallback: check role directly
+                if ($doctor->role !== 'doctor') {
+                    return response()->json(['error' => 'Unauthorized', 'message' => 'Only doctors can access this'], 403);
+                }
+            } elseif (!$doctor->isDoctor()) {
+                \Log::error('getDateAvailability: User is not a doctor. Role: ' . ($doctor->role ?? 'null'));
+                return response()->json(['error' => 'Unauthorized', 'message' => 'Only doctors can access this'], 403);
             }
 
             $request->validate([
@@ -512,13 +525,18 @@ class AvailabilityController extends Controller
                 })
                 ->values();
 
+            // Convert to array to ensure proper JSON encoding
+            $availabilitiesArray = $availabilities->toArray();
+            
             // Debug logging (only in development)
             if (config('app.debug')) {
                 \Log::info('getDateAvailability - Date: ' . $dateString . ', Doctor ID: ' . $doctor->id);
-                \Log::info('getDateAvailability - Found ' . $availabilities->count() . ' entries');
+                \Log::info('getDateAvailability - Found ' . count($availabilitiesArray) . ' entries');
             }
 
-            return response()->json(['availabilities' => $availabilities]);
+            return response()->json([
+                'availabilities' => $availabilitiesArray
+            ], 200, [], JSON_UNESCAPED_UNICODE);
         } catch (\Illuminate\Validation\ValidationException $e) {
             \Log::error('getDateAvailability validation error: ' . $e->getMessage());
             return response()->json([
@@ -527,10 +545,17 @@ class AvailabilityController extends Controller
             ], 422);
         } catch (\Exception $e) {
             \Log::error('getDateAvailability error: ' . $e->getMessage());
-            \Log::error('getDateAvailability trace: ' . $e->getTraceAsString());
+            \Log::error('getDateAvailability file: ' . $e->getFile() . ':' . $e->getLine());
+            \Log::error('getDateAvailability trace: ' . substr($e->getTraceAsString(), 0, 1000)); // Limit trace length
+            
+            $errorMessage = 'An error occurred while loading availability';
+            if (config('app.debug')) {
+                $errorMessage = $e->getMessage() . ' in ' . basename($e->getFile()) . ':' . $e->getLine();
+            }
+            
             return response()->json([
                 'error' => 'Failed to load availability',
-                'message' => config('app.debug') ? $e->getMessage() : 'An error occurred while loading availability'
+                'message' => $errorMessage
             ], 500);
         }
     }
