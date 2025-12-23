@@ -304,9 +304,25 @@
                 'Accept': 'application/json'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                // If response is not ok, try to parse error
+                return response.json().then(err => {
+                    throw new Error(err.message || err.error || `HTTP error! status: ${response.status}`);
+                });
+            }
+            return response.json();
+        })
         .then(data => {
             const container = document.getElementById('currentAvailability');
+            
+            // Check for error in response
+            if (data.error) {
+                container.innerHTML = `<small class="text-danger">Error: ${data.message || data.error}</small>`;
+                console.error('Availability error:', data);
+                return;
+            }
+            
             if (data.availabilities && data.availabilities.length > 0) {
                 // Separate available and blocked entries
                 // Handle both boolean and string values
