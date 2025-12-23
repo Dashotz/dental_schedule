@@ -21,27 +21,17 @@
                 <div class="jaw-section mb-4">
                     <h6 class="text-center mb-4"><i class="bi bi-arrow-up"></i> Upper Jaw (Maxilla)</h6>
                     <div class="d-flex justify-content-center">
-                        <svg width="800" height="180" viewBox="0 0 800 180" class="jaw-svg">
-                            <!-- Upper jaw arch path -->
-                            <path d="M 80,140 Q 200,60 400,50 Q 600,60 720,140" 
-                                  fill="none" 
-                                  stroke="#e0e0e0" 
-                                  stroke-width="2" 
-                                  stroke-dasharray="4,4" 
-                                  opacity="0.5"/>
-                            
+                        <svg width="900" height="120" viewBox="0 0 900 120" class="jaw-svg">
                             <!-- Right side teeth (18-11) -->
                             @php
                                 $rightUpperTeeth = [18, 17, 16, 15, 14, 13, 12, 11];
-                                $spacing = 85;
-                                $startX = 80;
-                                $baseY = 140;
+                                $spacing = 100;
+                                $startX = 50;
+                                $y = 60;
                             @endphp
                             @foreach($rightUpperTeeth as $index => $toothNum)
                                 @php
                                     $x = $startX + ($index * $spacing);
-                                    $curveOffset = abs($index - 3.5) * 8;
-                                    $y = $baseY - $curveOffset;
                                 @endphp
                                 @include('patient.partials.tooth-svg', [
                                     'toothNumber' => $toothNum,
@@ -54,13 +44,11 @@
                             <!-- Left side teeth (21-28) -->
                             @php
                                 $leftUpperTeeth = [21, 22, 23, 24, 25, 26, 27, 28];
-                                $startX = 400;
+                                $startX = 50;
                             @endphp
                             @foreach($leftUpperTeeth as $index => $toothNum)
                                 @php
                                     $x = $startX + ($index * $spacing);
-                                    $curveOffset = abs($index - 3.5) * 8;
-                                    $y = 50 + $curveOffset;
                                 @endphp
                                 @include('patient.partials.tooth-svg', [
                                     'toothNumber' => $toothNum,
@@ -77,27 +65,17 @@
                 <div class="jaw-section">
                     <h6 class="text-center mb-4"><i class="bi bi-arrow-down"></i> Lower Jaw (Mandible)</h6>
                     <div class="d-flex justify-content-center">
-                        <svg width="800" height="180" viewBox="0 0 800 180" class="jaw-svg">
-                            <!-- Lower jaw arch path -->
-                            <path d="M 80,40 Q 200,120 400,130 Q 600,120 720,40" 
-                                  fill="none" 
-                                  stroke="#e0e0e0" 
-                                  stroke-width="2" 
-                                  stroke-dasharray="4,4" 
-                                  opacity="0.5"/>
-                            
+                        <svg width="900" height="120" viewBox="0 0 900 120" class="jaw-svg">
                             <!-- Right side teeth (48-41) -->
                             @php
                                 $rightLowerTeeth = [48, 47, 46, 45, 44, 43, 42, 41];
-                                $spacing = 85;
-                                $startX = 80;
-                                $baseY = 40;
+                                $spacing = 100;
+                                $startX = 50;
+                                $y = 60;
                             @endphp
                             @foreach($rightLowerTeeth as $index => $toothNum)
                                 @php
                                     $x = $startX + ($index * $spacing);
-                                    $curveOffset = abs($index - 3.5) * 8;
-                                    $y = $baseY + $curveOffset;
                                 @endphp
                                 @include('patient.partials.tooth-svg', [
                                     'toothNumber' => $toothNum,
@@ -110,13 +88,11 @@
                             <!-- Left side teeth (31-38) -->
                             @php
                                 $leftLowerTeeth = [31, 32, 33, 34, 35, 36, 37, 38];
-                                $startX = 400;
+                                $startX = 50;
                             @endphp
                             @foreach($leftLowerTeeth as $index => $toothNum)
                                 @php
                                     $x = $startX + ($index * $spacing);
-                                    $curveOffset = abs($index - 3.5) * 8;
-                                    $y = 130 - $curveOffset;
                                 @endphp
                                 @include('patient.partials.tooth-svg', [
                                     'toothNumber' => $toothNum,
@@ -128,7 +104,6 @@
                         </svg>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -195,13 +170,13 @@
     }
 
     .tooth-svg:hover {
-        opacity: 0.8;
+        opacity: 0.7;
     }
 
     @media (max-width: 768px) {
         .jaw-svg {
             width: 100%;
-            height: 140px;
+            height: 100px;
         }
         
         .jaw-section {

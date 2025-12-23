@@ -60,26 +60,61 @@
         $strokeColor = '#ffc107';
     }
     
-    $opacity = ($condition === 'extracted' || $condition === 'missing') ? '0.6' : '1';
+    $opacity = ($condition === 'extracted' || $condition === 'missing') ? '0.5' : '1';
 @endphp
 
 <g class="{{ $classes }}" data-tooth="{{ $toothNumber }}" transform="translate({{ $x }}, {{ $y }})" style="cursor: pointer;">
     <title>{{ $title }}</title>
     
-    <!-- SVG icon only -->
-    <g transform="translate(-20, -20)">
-        <image href="{{ asset('dental/dental.svg') }}" 
-               x="0" 
-               y="0" 
-               width="40" 
-               height="40"
-               opacity="{{ $opacity }}"
-               preserveAspectRatio="xMidYMid meet"/>
-    </g>
+    @if($isMolar)
+        <!-- Molar - wide square with X -->
+        <g transform="translate(-20, -25)">
+            <rect x="0" y="0" width="40" height="50" rx="3" ry="3" 
+                  fill="{{ $fillColor }}" 
+                  stroke="{{ $strokeColor }}" 
+                  stroke-width="2"
+                  opacity="{{ $opacity }}"/>
+            <path d="M 8,15 L 32,35 M 32,15 L 8,35" 
+                  stroke="{{ $strokeColor }}" 
+                  stroke-width="2"
+                  opacity="{{ $opacity }}"/>
+        </g>
+    @elseif($isIncisor)
+        <!-- Incisor - narrow rectangle -->
+        <g transform="translate(-12, -25)">
+            <rect x="0" y="0" width="24" height="50" rx="2" ry="2" 
+                  fill="{{ $fillColor }}" 
+                  stroke="{{ $strokeColor }}" 
+                  stroke-width="2"
+                  opacity="{{ $opacity }}"/>
+        </g>
+    @elseif($isCanine)
+        <!-- Canine - pointed shape -->
+        <g transform="translate(-12, -25)">
+            <path d="M 12,0 L 0,8 L 0,42 L 12,50 L 24,42 L 24,8 Z" 
+                  fill="{{ $fillColor }}" 
+                  stroke="{{ $strokeColor }}" 
+                  stroke-width="2"
+                  opacity="{{ $opacity }}"/>
+        </g>
+    @elseif($isPremolar)
+        <!-- Premolar - medium square with X -->
+        <g transform="translate(-16, -25)">
+            <rect x="0" y="0" width="32" height="50" rx="3" ry="3" 
+                  fill="{{ $fillColor }}" 
+                  stroke="{{ $strokeColor }}" 
+                  stroke-width="2"
+                  opacity="{{ $opacity }}"/>
+            <path d="M 6,15 L 26,35 M 26,15 L 6,35" 
+                  stroke="{{ $strokeColor }}" 
+                  stroke-width="2"
+                  opacity="{{ $opacity }}"/>
+        </g>
+    @endif
     
-    <!-- Tooth number only -->
-    <text x="0" y="8" text-anchor="middle" dominant-baseline="central" 
-          font-size="11" font-weight="bold" 
+    <!-- Tooth number -->
+    <text x="0" y="35" text-anchor="middle" dominant-baseline="central" 
+          font-size="12" font-weight="bold" 
           fill="#333333"
           style="pointer-events: none;">
         {{ $toothNumber }}
