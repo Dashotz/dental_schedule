@@ -63,171 +63,66 @@
     $opacity = ($condition === 'extracted' || $condition === 'missing') ? '0.5' : '1';
 @endphp
 
-<g class="{{ $classes }}" data-tooth="{{ $toothNumber }}" transform="translate({{ $x }}, {{ $y }}) scale(0.9)" style="cursor: pointer;">
+<g class="{{ $classes }}" data-tooth="{{ $toothNumber }}" transform="translate({{ $x }}, {{ $y }})" style="cursor: pointer;">
     <title>{{ $title }}</title>
     
     @if($isMolar)
-        <!-- Molar SVG - larger, multi-cusped tooth with realistic shape -->
-        <g transform="translate(-15, -14)">
-            <!-- Main body -->
-            <path d="M 0,0 
-                     C 3,0 5,1 6,3
-                     L 6,9
-                     C 6,11 5,12 3,12
-                     L 0,12
-                     C -2,12 -3,11 -3,9
-                     L -3,3
-                     C -2,1 0,0 0,0 Z" 
+        <!-- Molar icon - simple square with X mark -->
+        <g transform="translate(-12, -14)">
+            <rect x="0" y="0" width="24" height="28" rx="3" ry="3" 
                   fill="{{ $fillColor }}" 
+                  stroke="{{ $strokeColor }}" 
+                  stroke-width="2"
+                  opacity="{{ $opacity }}"/>
+            <path d="M 4,8 L 20,20 M 20,8 L 4,20" 
                   stroke="{{ $strokeColor }}" 
                   stroke-width="1.5"
                   opacity="{{ $opacity }}"/>
-            <!-- Second cusp -->
-            <path d="M 6,3 
-                     C 7,1 9,0 12,0
-                     L 15,0
-                     C 17,0 18,1 18,3
-                     L 18,9
-                     C 18,11 17,12 15,12
-                     L 12,12
-                     C 10,12 9,11 9,9
-                     L 9,3
-                     C 8,2 7,2.5 6,3 Z" 
-                  fill="{{ $fillColor }}" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="1.5"
-                  opacity="{{ $opacity }}"/>
-            <!-- Third cusp (back) -->
-            <path d="M 0,12 
-                     C 1,12 2,13 2,14
-                     L 2,16
-                     C 2,17 1,18 0,18
-                     L -2,18
-                     C -3,18 -4,17 -4,16
-                     L -4,14
-                     C -4,13 -3,12 -2,12
-                     Z" 
-                  fill="{{ $fillColor }}" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="1.5"
-                  opacity="{{ $opacity }}"/>
-            <path d="M 15,12 
-                     C 16,12 17,13 17,14
-                     L 17,16
-                     C 17,17 16,18 15,18
-                     L 13,18
-                     C 12,18 11,17 11,16
-                     L 11,14
-                     C 11,13 12,12 13,12
-                     Z" 
-                  fill="{{ $fillColor }}" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="1.5"
-                  opacity="{{ $opacity }}"/>
-            <!-- Groove line -->
-            <path d="M 3,6 L 12,6" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="0.8"
-                  opacity="0.5"/>
         </g>
     @elseif($isIncisor)
-        <!-- Incisor SVG - narrow, rectangular with rounded edges -->
-        <g transform="translate(-6, -14)">
-            <path d="M 0,0 
-                     C 1.5,0 2.5,0.5 3,1.5
-                     L 3,10
-                     C 3,11 2.5,11.5 1.5,11.5
-                     L -1.5,11.5
-                     C -2.5,11.5 -3,11 -3,10
-                     L -3,1.5
-                     C -2.5,0.5 -1.5,0 0,0 Z" 
+        <!-- Incisor icon - simple rectangle -->
+        <g transform="translate(-8, -14)">
+            <rect x="0" y="0" width="16" height="28" rx="2" ry="2" 
                   fill="{{ $fillColor }}" 
                   stroke="{{ $strokeColor }}" 
-                  stroke-width="1.5"
+                  stroke-width="2"
                   opacity="{{ $opacity }}"/>
-            <!-- Central line -->
-            <path d="M 0,2 L 0,9" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="0.8"
-                  opacity="0.4"/>
         </g>
     @elseif($isCanine)
-        <!-- Canine SVG - pointed, sharp tooth -->
-        <g transform="translate(-7, -14)">
-            <path d="M 0,0 
-                     L 3,2
-                     L 3.5,4
-                     L 3.5,10
-                     C 3.5,11 3,11.5 2,11.5
-                     L -2,11.5
-                     C -3,11.5 -3.5,11 -3.5,10
-                     L -3.5,4
-                     L -3,2
-                     Z" 
+        <!-- Canine icon - pointed shape -->
+        <g transform="translate(-8, -14)">
+            <path d="M 8,0 L 0,6 L 0,22 L 8,28 L 16,22 L 16,6 Z" 
                   fill="{{ $fillColor }}" 
                   stroke="{{ $strokeColor }}" 
-                  stroke-width="1.5"
+                  stroke-width="2"
                   opacity="{{ $opacity }}"/>
-            <!-- Central line -->
-            <path d="M 0,2 L 0,9" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="0.8"
-                  opacity="0.4"/>
         </g>
     @elseif($isPremolar)
-        <!-- Premolar SVG - between incisor and molar -->
+        <!-- Premolar icon - rounded square with X mark -->
         <g transform="translate(-10, -14)">
-            <!-- Main body -->
-            <path d="M 0,0 
-                     C 2,0 3.5,0.5 4.5,2
-                     L 4.5,10
-                     C 4.5,11 3.5,11.5 2,11.5
-                     L -2,11.5
-                     C -3.5,11.5 -4.5,11 -4.5,10
-                     L -4.5,2
-                     C -3.5,0.5 -2,0 0,0 Z" 
+            <rect x="0" y="0" width="20" height="28" rx="3" ry="3" 
                   fill="{{ $fillColor }}" 
+                  stroke="{{ $strokeColor }}" 
+                  stroke-width="2"
+                  opacity="{{ $opacity }}"/>
+            <path d="M 4,8 L 16,20 M 16,8 L 4,20" 
                   stroke="{{ $strokeColor }}" 
                   stroke-width="1.5"
                   opacity="{{ $opacity }}"/>
-            <!-- Second cusp -->
-            <path d="M 4.5,2 
-                     C 5.5,0.5 7,0 9,0
-                     L 12,0
-                     C 13.5,0 14.5,0.5 14.5,2
-                     L 14.5,10
-                     C 14.5,11 13.5,11.5 12,11.5
-                     L 9,11.5
-                     C 7,11.5 6,11 6,10
-                     L 6,2
-                     C 5.5,1.5 5,2 4.5,2 Z" 
-                  fill="{{ $fillColor }}" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="1.5"
-                  opacity="{{ $opacity }}"/>
-            <!-- Groove line -->
-            <path d="M 2,6 L 12,6" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="0.8"
-                  opacity="0.5"/>
         </g>
     @endif
     
-    <!-- Tooth number -->
-    <text x="0" y="4" text-anchor="middle" dominant-baseline="central" 
-          font-size="10" font-weight="bold" 
-          fill="{{ ($condition === 'extracted' || $condition === 'missing') ? '#ffffff' : '#333333' }}"
+    <!-- Tooth number badge -->
+    <circle cx="0" cy="-2" r="8" fill="#dc3545" stroke="#fff" stroke-width="1.5"/>
+    <text x="0" y="0" text-anchor="middle" dominant-baseline="central" 
+          font-size="9" font-weight="bold" 
+          fill="#ffffff"
           style="pointer-events: none;">
         {{ $toothNumber }}
     </text>
     
     <!-- Badge indicator for records -->
     @if($hasRecord)
-        <circle cx="10" cy="-8" r="3.5" fill="#ffc107" stroke="#fff" stroke-width="1.5"/>
-    @endif
-    
-    <!-- Highlight effect (light reflection) -->
-    @if($condition !== 'extracted' && $condition !== 'missing')
-        <ellipse cx="0" cy="-8" rx="7" ry="4" fill="rgba(255,255,255,0.3)" opacity="0.6"/>
+        <circle cx="12" cy="-10" r="4" fill="#ffc107" stroke="#fff" stroke-width="1.5"/>
     @endif
 </g>
