@@ -367,13 +367,32 @@
                             // Sort slots by time
                             allSlots.sort((a, b) => a.start.localeCompare(b.start));
                             
-                            // Populate time select
+                            // Populate time select (show all slots, but gray out blocked/unavailable ones)
                             timeSelect.html('<option value="">Select time...</option>');
+                            let availableCount = 0;
                             allSlots.forEach(slot => {
                                 const startTime = formatTime(slot.start);
                                 const endTime = formatTime(slot.end);
-                                timeSelect.append(`<option value="${slot.start}">${startTime} - ${endTime}</option>`);
+                                const isAvailable = slot.is_available !== false; // Default to true if not specified
+                                const isBlocked = slot.is_blocked === true;
+                                const isBooked = slot.is_booked === true;
+                                
+                                if (isAvailable && !isBlocked && !isBooked) {
+                                    availableCount++;
+                                    timeSelect.append(`<option value="${slot.start}">${startTime} - ${endTime}</option>`);
+                                } else {
+                                    // Show blocked/booked slots but disable them
+                                    const reason = isBlocked ? ' (Blocked)' : isBooked ? ' (Booked)' : ' (Unavailable)';
+                                    timeSelect.append(`<option value="${slot.start}" disabled style="color: #999; background-color: #f5f5f5;">${startTime} - ${endTime}${reason}</option>`);
+                                }
                             });
+                            
+                            // Update available count
+                            if (availableCount > 0) {
+                                timeStatus.text(`${availableCount} time slot(s) available`);
+                            } else {
+                                timeStatus.text('No available slots');
+                            }
                             
                             timeSelect.prop('disabled', false);
                             dateStatus.html('<span class="text-success"><i class="bi bi-check-circle"></i> Available</span>');

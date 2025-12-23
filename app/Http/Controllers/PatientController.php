@@ -298,29 +298,16 @@ class PatientController extends Controller
             return [];
         }
 
-        // Get partial hour blocks (to exclude from available slots)
-        // Exclude full-day blocks (00:00 to 23:59) from hour blocks
-        $allBlocks = \App\Models\DoctorAvailability::where('doctor_id', $doctorId)
-            ->where('is_available', false)
-            ->where(function($query) use ($date) {
-                $query->where(function($q) use ($date) {
-                    $q->where('type', 'specific_date')
-                      ->where('specific_date', $date->format('Y-m-d'));
-                })->orWhere(function($q) use ($date) {
-                    $q->where('type', 'date_range')
-                      ->where('start_date', '<=', $date)
-                      ->where('end_date', '>=', $date);
-                });
-            })
-            ->get();
-        
-        // Filter out full-day blocks in PHP (simpler and more reliable)
-        $hourBlocks = $allBlocks
+        // Get blocked slots from the new blocked_slots table
+        $blockedSlots = \DB::table('blocked_slots')
+            ->where('doctor_id', $doctorId)
+            ->where('slot_date', $date->format('Y-m-d'))
+            ->get()
             ->map(function($block) {
-                $startTime = $block->start_time;
-                $endTime = $block->end_time;
+                $startTime = $block->slot_start_time;
+                $endTime = $block->slot_end_time;
                 
-                // Normalize time format - handle both HH:MM:SS and HH:MM
+                // Normalize time format
                 if (is_string($startTime)) {
                     $startTime = strlen($startTime) > 5 ? substr($startTime, 0, 5) : $startTime;
                 } else {
@@ -340,12 +327,48 @@ class PatientController extends Controller
                     'end' => $endTime,
                 ];
             })
-            ->filter(function($block) {
-                // Filter out full-day blocks (00:00 to 23:59)
-                return !($block['start'] === '00:00' && $block['end'] === '23:59');
-            })
-            ->values()
             ->toArray();
+        
+        // Also check old availability entries for backward compatibility
+        $oldBlocks = \App\Models\DoctorAvailability::where('doctor_id', $doctorId)
+            ->where('is_available', false)
+            ->where(function($query) use ($date) {
+                $query->where(function($q) use ($date) {
+                    $q->where('type', 'specific_date')
+                      ->where('specific_date', $date->format('Y-m-d'));
+                })->orWhere(function($q) use ($date) {
+                    $q->where('type', 'date_range')
+                      ->where('start_date', '<=', $date)
+                      ->where('end_date', '>=', $date);
+                });
+            })
+            ->get();
+        
+        // Convert old blocks to slot format (generate individual slots)
+        foreach ($oldBlocks as $block) {
+            $blockStart = \Carbon\Carbon::createFromFormat('H:i', substr($block->start_time, 0, 5));
+            $blockEnd = \Carbon\Carbon::createFromFormat('H:i', substr($block->end_time, 0, 5));
+            
+            // Skip full-day blocks (00:00 to 23:59)
+            if ($blockStart->format('H:i') === '00:00' && $blockEnd->format('H:i') === '23:59') {
+                continue;
+            }
+            
+            $current = $blockStart->copy();
+            while ($current->copy()->addMinutes(30)->lte($blockEnd)) {
+                $slotStart = $current->format('H:i');
+                $slotEnd = $current->copy()->addMinutes(30)->format('H:i');
+                
+                $blockedSlots[] = [
+                    'start' => $slotStart,
+                    'end' => $slotEnd,
+                ];
+                
+                $current->addMinutes(30);
+            }
+        }
+        
+        $hourBlocks = $blockedSlots;
         
         // Debug logging (only in development)
         if (config('app.debug')) {
