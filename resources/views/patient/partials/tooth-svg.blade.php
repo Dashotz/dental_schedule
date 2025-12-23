@@ -66,51 +66,30 @@
 <g class="{{ $classes }}" data-tooth="{{ $toothNumber }}" transform="translate({{ $x }}, {{ $y }})" style="cursor: pointer;">
     <title>{{ $title }}</title>
     
-    @if($isMolar)
-        <!-- Molar - square with X -->
-        <g transform="translate(-15, -16)">
-            <rect x="0" y="0" width="30" height="32" rx="4" ry="4" 
-                  fill="{{ $fillColor }}" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="2"
-                  opacity="{{ $opacity }}"/>
-            <path d="M 6,10 L 24,22 M 24,10 L 6,22" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="2"
-                  opacity="{{ $opacity }}"/>
-        </g>
-    @elseif($isIncisor)
-        <!-- Incisor - rectangle -->
-        <g transform="translate(-10, -16)">
-            <rect x="0" y="0" width="20" height="32" rx="3" ry="3" 
-                  fill="{{ $fillColor }}" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="2"
-                  opacity="{{ $opacity }}"/>
-        </g>
-    @elseif($isCanine)
-        <!-- Canine - pointed -->
-        <g transform="translate(-10, -16)">
-            <path d="M 10,0 L 0,8 L 0,24 L 10,32 L 20,24 L 20,8 Z" 
-                  fill="{{ $fillColor }}" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="2"
-                  opacity="{{ $opacity }}"/>
-        </g>
-    @elseif($isPremolar)
-        <!-- Premolar - rounded square with X -->
-        <g transform="translate(-12, -16)">
-            <rect x="0" y="0" width="24" height="32" rx="4" ry="4" 
-                  fill="{{ $fillColor }}" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="2"
-                  opacity="{{ $opacity }}"/>
-            <path d="M 5,10 L 19,22 M 19,10 L 5,22" 
-                  stroke="{{ $strokeColor }}" 
-                  stroke-width="1.8"
-                  opacity="{{ $opacity }}"/>
-        </g>
-    @endif
+    <!-- Use teeth.svg icon for all teeth -->
+    <g transform="translate(-16, -16) scale(0.4)">
+        <image href="{{ asset('dental/dental.svg') }}" 
+               x="0" 
+               y="0" 
+               width="80" 
+               height="80"
+               opacity="{{ $opacity }}"
+               preserveAspectRatio="xMidYMid meet">
+            <title>{{ $title }}</title>
+        </image>
+        <!-- Overlay with condition color -->
+        <rect x="0" y="0" width="80" height="80" 
+              fill="{{ $fillColor }}" 
+              opacity="0.4"
+              rx="4"/>
+        <!-- Border based on condition -->
+        <rect x="0" y="0" width="80" height="80" 
+              fill="none" 
+              stroke="{{ $strokeColor }}" 
+              stroke-width="3"
+              opacity="{{ $opacity }}"
+              rx="4"/>
+    </g>
     
     <!-- Tooth number badge -->
     <circle cx="0" cy="-4" r="10" fill="#dc3545" stroke="#fff" stroke-width="2"/>
