@@ -96,9 +96,25 @@ class CalendarController extends Controller
             $dayAppointments = $appointments->get($dateKey, collect());
             $dayAvailabilities = $availabilityData[$dateKey] ?? collect();
             
-            // Check if day is blocked
+            // Check if day is blocked (only full-day blocks, not partial hour blocks)
             $isBlocked = $dayAvailabilities->contains(function($avail) {
-                return $avail->is_available === false;
+                if ($avail->is_available === false) {
+                    // Only consider it a full-day block if it's 00:00 to 23:59
+                    $startTime = $avail->start_time;
+                    $endTime = $avail->end_time;
+                    
+                    // Normalize time format
+                    if (strlen($startTime) > 5) {
+                        $startTime = substr($startTime, 0, 5);
+                    }
+                    if (strlen($endTime) > 5) {
+                        $endTime = substr($endTime, 0, 5);
+                    }
+                    
+                    // Only full-day blocks (00:00 to 23:59) mark the entire day as blocked
+                    return ($startTime === '00:00' && $endTime === '23:59');
+                }
+                return false;
             });
             
             $calendar[] = [

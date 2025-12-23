@@ -250,32 +250,37 @@ class PatientController extends Controller
 
         // Check for full-day blocks (00:00 to 23:59) - only these make entire day unavailable
         $fullDayBlocked = \App\Models\DoctorAvailability::where('doctor_id', $doctorId)
-            ->where(function($query) use ($date, $dayOfWeek) {
+            ->where('is_available', false)
+            ->where(function($query) use ($date) {
                 $query->where(function($q) use ($date) {
                     $q->where('type', 'specific_date')
                       ->where('specific_date', $date->format('Y-m-d'))
-                      ->where('is_available', false)
-                      ->where(function($subQ) {
-                          $subQ->where(function($timeQ) {
-                              $timeQ->where('start_time', '<=', '00:00')
-                                    ->where('end_time', '>=', '23:59');
-                          })->orWhere(function($timeQ) {
-                              $timeQ->where('start_time', '00:00')
-                                    ->where('end_time', '23:59');
+                      ->where(function($timeQ) {
+                          $timeQ->where(function($t) {
+                              $t->where('start_time', '00:00:00')
+                                ->where('end_time', '23:59:59');
+                          })->orWhere(function($t) {
+                              $t->where('start_time', '00:00')
+                                ->where('end_time', '23:59');
+                          })->orWhere(function($t) {
+                              $t->where('start_time', '<=', '00:00')
+                                ->where('end_time', '>=', '23:59');
                           });
                       });
                 })->orWhere(function($q) use ($date) {
                     $q->where('type', 'date_range')
                       ->where('start_date', '<=', $date)
                       ->where('end_date', '>=', $date)
-                      ->where('is_available', false)
-                      ->where(function($subQ) {
-                          $subQ->where(function($timeQ) {
-                              $timeQ->where('start_time', '<=', '00:00')
-                                    ->where('end_time', '>=', '23:59');
-                          })->orWhere(function($timeQ) {
-                              $timeQ->where('start_time', '00:00')
-                                    ->where('end_time', '23:59');
+                      ->where(function($timeQ) {
+                          $timeQ->where(function($t) {
+                              $t->where('start_time', '00:00:00')
+                                ->where('end_time', '23:59:59');
+                          })->orWhere(function($t) {
+                              $t->where('start_time', '00:00')
+                                ->where('end_time', '23:59');
+                          })->orWhere(function($t) {
+                              $t->where('start_time', '<=', '00:00')
+                                ->where('end_time', '>=', '23:59');
                           });
                       });
                 });
@@ -287,6 +292,7 @@ class PatientController extends Controller
         }
 
         // Get partial hour blocks (to exclude from available slots)
+        // Exclude full-day blocks (00:00 to 23:59) from hour blocks
         $hourBlocks = \App\Models\DoctorAvailability::where('doctor_id', $doctorId)
             ->where('is_available', false)
             ->where(function($query) use ($date) {
@@ -299,12 +305,38 @@ class PatientController extends Controller
                       ->where('end_date', '>=', $date);
                 });
             })
+            ->where(function($timeQ) {
+                // Exclude full-day blocks - only get partial hour blocks
+                $timeQ->where(function($t) {
+                    $t->where(function($notFull) {
+                        $notFull->where('start_time', '!=', '00:00')
+                                ->orWhere('end_time', '!=', '23:59')
+                                ->orWhere('start_time', '!=', '00:00:00')
+                                ->orWhere('end_time', '!=', '23:59:59');
+                    });
+                });
+            })
             ->get()
             ->map(function($block) {
+                $startTime = $block->start_time;
+                $endTime = $block->end_time;
+                
+                // Normalize time format
+                if (strlen($startTime) > 5) {
+                    $startTime = substr($startTime, 0, 5);
+                }
+                if (strlen($endTime) > 5) {
+                    $endTime = substr($endTime, 0, 5);
+                }
+                
                 return [
-                    'start' => substr($block->start_time, 0, 5),
-                    'end' => substr($block->end_time, 0, 5),
+                    'start' => $startTime,
+                    'end' => $endTime,
                 ];
+            })
+            ->filter(function($block) {
+                // Filter out any full-day blocks that might have slipped through
+                return !($block['start'] === '00:00' && $block['end'] === '23:59');
             })
             ->toArray();
 
