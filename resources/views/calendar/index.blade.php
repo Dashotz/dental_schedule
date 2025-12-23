@@ -308,23 +308,54 @@
         .then(data => {
             const container = document.getElementById('currentAvailability');
             if (data.availabilities && data.availabilities.length > 0) {
-                let html = '<strong>Current Availability:</strong><ul class="list-unstyled mt-2">';
-                data.availabilities.forEach(avail => {
-                    const status = avail.is_available ? 
-                        '<span class="badge bg-success">Available</span>' : 
-                        '<span class="badge bg-danger">Blocked</span>';
-                    html += `<li class="mb-1">${avail.start_time} - ${avail.end_time} ${status}</li>`;
-                });
-                html += '</ul>';
+                // Separate available and blocked entries
+                const available = data.availabilities.filter(a => a.is_available);
+                const blocked = data.availabilities.filter(a => !a.is_available);
+                
+                let html = '';
+                
+                if (blocked.length > 0) {
+                    html += '<strong class="text-danger">Blocked Hours:</strong><ul class="list-unstyled mt-2 mb-3">';
+                    blocked.forEach(avail => {
+                        const startTime = formatTimeForDisplay(avail.start_time);
+                        const endTime = formatTimeForDisplay(avail.end_time);
+                        html += `<li class="mb-1"><i class="bi bi-x-circle text-danger"></i> <strong>${startTime} - ${endTime}</strong> <span class="badge bg-danger">Blocked</span></li>`;
+                    });
+                    html += '</ul>';
+                }
+                
+                if (available.length > 0) {
+                    html += '<strong class="text-success">Available Hours:</strong><ul class="list-unstyled mt-2">';
+                    available.forEach(avail => {
+                        const startTime = formatTimeForDisplay(avail.start_time);
+                        const endTime = formatTimeForDisplay(avail.end_time);
+                        html += `<li class="mb-1"><i class="bi bi-check-circle text-success"></i> ${startTime} - ${endTime} <span class="badge bg-success">Available</span></li>`;
+                    });
+                    html += '</ul>';
+                }
+                
+                if (blocked.length === 0 && available.length === 0) {
+                    html = '<small class="text-muted">No specific availability set for this date. Default hours (9 AM - 5 PM) apply.</small>';
+                }
+                
                 container.innerHTML = html;
             } else {
-                container.innerHTML = '<small class="text-muted">No specific availability set for this date.</small>';
+                container.innerHTML = '<small class="text-muted">No specific availability set for this date. Default hours (9 AM - 5 PM) apply.</small>';
             }
         })
         .catch(error => {
             console.error('Error:', error);
             document.getElementById('currentAvailability').innerHTML = '<small class="text-danger">Error loading availability</small>';
         });
+    }
+
+    function formatTimeForDisplay(timeString) {
+        if (!timeString) return '';
+        const [hours, minutes] = timeString.split(':');
+        const hour = parseInt(hours);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour % 12 || 12;
+        return `${displayHour}:${minutes} ${ampm}`;
     }
 
     function blockDay() {

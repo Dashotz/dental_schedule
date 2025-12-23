@@ -201,7 +201,7 @@ class AvailabilityController extends Controller
 
         // Get partial hour blocks (to exclude from available slots)
         // Exclude full-day blocks (00:00 to 23:59) from hour blocks
-        $hourBlocks = DoctorAvailability::where('doctor_id', $doctor->id)
+        $allBlocks = DoctorAvailability::where('doctor_id', $doctor->id)
             ->where('is_available', false)
             ->where(function($query) use ($date) {
                 $query->where(function($q) use ($date) {
@@ -213,19 +213,10 @@ class AvailabilityController extends Controller
                       ->where('end_date', '>=', $date);
                 });
             })
-            ->where(function($timeQ) {
-                // Exclude full-day blocks - only get partial hour blocks
-                $timeQ->where(function($t) {
-                    // Not a full day block
-                    $t->where(function($notFull) {
-                        $notFull->where('start_time', '!=', '00:00')
-                                ->orWhere('end_time', '!=', '23:59')
-                                ->orWhere('start_time', '!=', '00:00:00')
-                                ->orWhere('end_time', '!=', '23:59:59');
-                    });
-                });
-            })
-            ->get()
+            ->get();
+        
+        // Filter out full-day blocks in PHP (simpler and more reliable)
+        $hourBlocks = $allBlocks
             ->map(function($block) {
                 $startTime = $block->start_time;
                 $endTime = $block->end_time;
@@ -244,9 +235,10 @@ class AvailabilityController extends Controller
                 ];
             })
             ->filter(function($block) {
-                // Filter out any full-day blocks that might have slipped through
+                // Filter out full-day blocks (00:00 to 23:59)
                 return !($block['start'] === '00:00' && $block['end'] === '23:59');
             })
+            ->values()
             ->toArray();
 
         // Use specific date override if exists, otherwise use weekly or range
