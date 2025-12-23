@@ -66,42 +66,22 @@
 <g class="{{ $classes }}" data-tooth="{{ $toothNumber }}" transform="translate({{ $x }}, {{ $y }})" style="cursor: pointer;">
     <title>{{ $title }}</title>
     
-    <!-- Use teeth.svg icon for all teeth -->
-    <g transform="translate(-16, -16) scale(0.4)">
+    <!-- SVG icon only -->
+    <g transform="translate(-20, -20)">
         <image href="{{ asset('dental/dental.svg') }}" 
                x="0" 
                y="0" 
-               width="80" 
-               height="80"
+               width="40" 
+               height="40"
                opacity="{{ $opacity }}"
-               preserveAspectRatio="xMidYMid meet">
-            <title>{{ $title }}</title>
-        </image>
-        <!-- Overlay with condition color -->
-        <rect x="0" y="0" width="80" height="80" 
-              fill="{{ $fillColor }}" 
-              opacity="0.4"
-              rx="4"/>
-        <!-- Border based on condition -->
-        <rect x="0" y="0" width="80" height="80" 
-              fill="none" 
-              stroke="{{ $strokeColor }}" 
-              stroke-width="3"
-              opacity="{{ $opacity }}"
-              rx="4"/>
+               preserveAspectRatio="xMidYMid meet"/>
     </g>
     
-    <!-- Tooth number badge -->
-    <circle cx="0" cy="-4" r="10" fill="#dc3545" stroke="#fff" stroke-width="2"/>
-    <text x="0" y="0" text-anchor="middle" dominant-baseline="central" 
-          font-size="10" font-weight="bold" 
-          fill="#ffffff"
+    <!-- Tooth number only -->
+    <text x="0" y="8" text-anchor="middle" dominant-baseline="central" 
+          font-size="11" font-weight="bold" 
+          fill="#333333"
           style="pointer-events: none;">
         {{ $toothNumber }}
     </text>
-    
-    <!-- Record indicator badge -->
-    @if($hasRecord)
-        <circle cx="14" cy="-12" r="5" fill="#ffc107" stroke="#fff" stroke-width="2"/>
-    @endif
 </g>

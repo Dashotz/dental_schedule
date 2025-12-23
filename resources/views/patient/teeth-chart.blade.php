@@ -129,60 +129,6 @@
                     </div>
                 </div>
 
-                <!-- Legend -->
-                <div class="mt-4">
-                    <h6 class="mb-3">Condition Legend</h6>
-                    <div class="row g-2">
-                        <div class="col-md-3 col-6">
-                            <div class="legend-item">
-                                <div class="legend-color healthy"></div>
-                                <span>Healthy</span>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div class="legend-item">
-                                <div class="legend-color cavity"></div>
-                                <span>Cavity</span>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div class="legend-item">
-                                <div class="legend-color filling"></div>
-                                <span>Filling</span>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div class="legend-item">
-                                <div class="legend-color crown"></div>
-                                <span>Crown</span>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div class="legend-item">
-                                <div class="legend-color extracted"></div>
-                                <span>Extracted/Missing</span>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div class="legend-item">
-                                <div class="legend-color impacted"></div>
-                                <span>Impacted</span>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div class="legend-item">
-                                <div class="legend-color root_canal"></div>
-                                <span>Root Canal</span>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-6">
-                            <div class="legend-item">
-                                <div class="legend-color other"></div>
-                                <span>Other</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -233,11 +179,9 @@
 @push('styles')
 <style>
     .jaw-section {
-        background: #f8f9fa;
+        background: #fff;
         padding: 40px 20px;
-        border-radius: 12px;
         margin-bottom: 30px;
-        border: 1px solid #e9ecef;
     }
 
     .jaw-svg {
@@ -247,66 +191,11 @@
     }
 
     .tooth-svg {
-        transition: all 0.2s ease;
+        transition: opacity 0.2s ease;
     }
 
     .tooth-svg:hover {
-        transform: scale(1.1);
-        filter: brightness(1.05);
-    }
-
-    .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 5px;
-    }
-
-    .legend-color {
-        width: 20px;
-        height: 20px;
-        border-radius: 4px;
-        border: 2px solid #333;
-    }
-
-    .legend-color.healthy {
-        background: #d4edda;
-        border-color: #28a745;
-    }
-
-    .legend-color.cavity {
-        background: #f8d7da;
-        border-color: #dc3545;
-    }
-
-    .legend-color.filling {
-        background: #cfe2ff;
-        border-color: #0d6efd;
-    }
-
-    .legend-color.crown {
-        background: #e7d4f8;
-        border-color: #6f42c1;
-    }
-
-    .legend-color.extracted {
-        background: #6c757d;
-        border-color: #495057;
-    }
-
-    .legend-color.impacted {
-        background: #ffebcd;
-        border-color: #ff8c00;
-    }
-
-    .legend-color.root_canal {
-        background: #d1ecf1;
-        border-color: #17a2b8;
-    }
-
-    .legend-color.other {
-        background: #fff3cd;
-        border-color: #ffc107;
+        opacity: 0.8;
     }
 
     @media (max-width: 768px) {
