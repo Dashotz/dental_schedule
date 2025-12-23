@@ -56,10 +56,17 @@
                     @if($day === null)
                         <div class="calendar-day empty"></div>
                     @else
-                        <div class="calendar-day {{ $day['isToday'] ? 'today' : '' }} {{ $day['count'] > 0 ? 'has-appointments' : '' }}">
-                            <div class="calendar-day-number">{{ $day['date']->format('j') }}</div>
+                        <div class="calendar-day {{ $day['isToday'] ? 'today' : '' }} {{ $day['count'] > 0 ? 'has-appointments' : '' }} {{ isset($day['isBlocked']) && $day['isBlocked'] ? 'blocked' : '' }}"
+                             data-date="{{ $day['date']->format('Y-m-d') }}"
+                             onclick="openAvailabilityModal('{{ $day['date']->format('Y-m-d') }}', '{{ $day['date']->format('M d, Y') }}')">
+                            <div class="calendar-day-number">
+                                {{ $day['date']->format('j') }}
+                                @if(isset($day['isBlocked']) && $day['isBlocked'])
+                                    <i class="bi bi-x-circle-fill text-danger ms-1" title="Blocked"></i>
+                                @endif
+                            </div>
                             @if($day['count'] > 0)
-                                <div class="calendar-appointments">
+                                <div class="calendar-appointments" onclick="event.stopPropagation();">
                                     @foreach($day['appointments']->take(3) as $appointment)
                                         <div class="calendar-appointment" 
                                              onclick="window.location='{{ route('appointments.show', $appointment) }}'"
@@ -140,6 +147,15 @@
         background-color: #fff3cd;
     }
 
+    .calendar-day.blocked {
+        background-color: #f8d7da;
+        opacity: 0.7;
+    }
+
+    .calendar-day.blocked:hover {
+        background-color: #f5c2c7;
+    }
+
     .calendar-day.empty {
         background-color: #f8f9fa;
         cursor: default;
@@ -203,5 +219,282 @@
     }
 </style>
 @endpush
+
+@if(auth()->check() && auth()->user()->isDoctor())
+<!-- Availability Modal -->
+<div class="modal fade" id="availabilityModal" tabindex="-1" aria-labelledby="availabilityModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="availabilityModalLabel">Manage Availability</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <strong>Date:</strong> <span id="modalDate"></span>
+                </div>
+                
+                <div id="currentAvailability" class="mb-3">
+                    <small class="text-muted">Loading...</small>
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+                    <label class="form-label">Quick Actions:</label>
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-danger" onclick="blockDay()">
+                            <i class="bi bi-x-circle"></i> Block Entire Day
+                        </button>
+                        <button type="button" class="btn btn-warning" onclick="showBlockHours()">
+                            <i class="bi bi-clock"></i> Block Specific Hours
+                        </button>
+                        <button type="button" class="btn btn-success" onclick="unblockDay()">
+                            <i class="bi bi-check-circle"></i> Unblock Day
+                        </button>
+                    </div>
+                </div>
+
+                <div id="blockHoursForm" style="display: none;">
+                    <hr>
+                    <div class="mb-3">
+                        <label for="blockStartTime" class="form-label">Start Time</label>
+                        <input type="time" class="form-control" id="blockStartTime">
+                    </div>
+                    <div class="mb-3">
+                        <label for="blockEndTime" class="form-label">End Time</label>
+                        <input type="time" class="form-control" id="blockEndTime">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="blockHours()">
+                        <i class="bi bi-check"></i> Block Hours
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="hideBlockHours()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    let selectedDate = '';
+
+    function openAvailabilityModal(date, dateDisplay) {
+        selectedDate = date;
+        document.getElementById('modalDate').textContent = dateDisplay;
+        document.getElementById('blockHoursForm').style.display = 'none';
+        
+        // Load current availability
+        loadDateAvailability(date);
+        
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('availabilityModal'));
+        modal.show();
+    }
+
+    function loadDateAvailability(date) {
+        fetch(`/availability/date-availability?date=${date}`, {
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('currentAvailability');
+            if (data.availabilities && data.availabilities.length > 0) {
+                let html = '<strong>Current Availability:</strong><ul class="list-unstyled mt-2">';
+                data.availabilities.forEach(avail => {
+                    const status = avail.is_available ? 
+                        '<span class="badge bg-success">Available</span>' : 
+                        '<span class="badge bg-danger">Blocked</span>';
+                    html += `<li class="mb-1">${avail.start_time} - ${avail.end_time} ${status}</li>`;
+                });
+                html += '</ul>';
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<small class="text-muted">No specific availability set for this date.</small>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('currentAvailability').innerHTML = '<small class="text-danger">Error loading availability</small>';
+        });
+    }
+
+    function blockDay() {
+        if (!confirm('Are you sure you want to block the entire day?')) return;
+
+        fetch('/availability/quick-set', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                date: selectedDate,
+                action: 'block_day'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: data.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                loadDateAvailability(selectedDate);
+                setTimeout(() => location.reload(), 2000);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error || 'Failed to block day'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred'
+            });
+        });
+    }
+
+    function showBlockHours() {
+        document.getElementById('blockHoursForm').style.display = 'block';
+    }
+
+    function hideBlockHours() {
+        document.getElementById('blockHoursForm').style.display = 'none';
+        document.getElementById('blockStartTime').value = '';
+        document.getElementById('blockEndTime').value = '';
+    }
+
+    function blockHours() {
+        const startTime = document.getElementById('blockStartTime').value;
+        const endTime = document.getElementById('blockEndTime').value;
+
+        if (!startTime || !endTime) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Validation Error',
+                text: 'Please select both start and end times'
+            });
+            return;
+        }
+
+        if (startTime >= endTime) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Validation Error',
+                text: 'End time must be after start time'
+            });
+            return;
+        }
+
+        fetch('/availability/quick-set', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                date: selectedDate,
+                action: 'block_hours',
+                start_time: startTime,
+                end_time: endTime
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: data.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                hideBlockHours();
+                loadDateAvailability(selectedDate);
+                setTimeout(() => location.reload(), 2000);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error || 'Failed to block hours'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred'
+            });
+        });
+    }
+
+    function unblockDay() {
+        if (!confirm('Are you sure you want to unblock this day?')) return;
+
+        fetch('/availability/quick-set', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                date: selectedDate,
+                action: 'unblock'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: data.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                loadDateAvailability(selectedDate);
+                setTimeout(() => location.reload(), 2000);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error || 'Failed to unblock day'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred'
+            });
+        });
+    }
+</script>
+@endpush
+@endif
 @endsection
 

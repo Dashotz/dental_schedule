@@ -213,14 +213,18 @@
                                 @error('appointment_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                                <small class="text-muted" id="dateStatus"></small>
                             </div>
                             <div class="col-12 col-md-4">
                                 <label for="appointment_time" class="form-label">Appointment Time <span class="text-danger">*</span></label>
-                                <input type="time" class="form-control @error('appointment_time') is-invalid @enderror" 
-                                       id="appointment_time" name="appointment_time" value="{{ old('appointment_time') }}" required>
+                                <select class="form-select @error('appointment_time') is-invalid @enderror" 
+                                        id="appointment_time" name="appointment_time" required disabled>
+                                    <option value="">Select date first</option>
+                                </select>
                                 @error('appointment_time')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                                <small class="text-muted" id="timeStatus"></small>
                             </div>
                             <div class="col-12 col-md-4">
                                 <label for="appointment_type" class="form-label">Appointment Type <span class="text-danger">*</span></label>
@@ -301,6 +305,107 @@
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         $('#appointment_date').attr('min', tomorrow.toISOString().split('T')[0]);
+
+        // Doctor IDs for availability checking
+        const doctorIds = @json($doctors->pluck('id')->toArray());
+
+        // Load available time slots when date is selected
+        $('#appointment_date').on('change', function() {
+            const selectedDate = $(this).val();
+            const timeSelect = $('#appointment_time');
+            const dateStatus = $('#dateStatus');
+            const timeStatus = $('#timeStatus');
+
+            if (!selectedDate) {
+                timeSelect.html('<option value="">Select date first</option>').prop('disabled', true);
+                dateStatus.text('');
+                return;
+            }
+
+            // Check if date is blocked for all doctors
+            checkDateAvailability(selectedDate, doctorIds, timeSelect, dateStatus, timeStatus);
+        });
+
+        function checkDateAvailability(date, doctorIds, timeSelect, dateStatus, timeStatus) {
+            dateStatus.html('<i class="bi bi-hourglass-split"></i> Checking availability...');
+            timeSelect.html('<option value="">Loading...</option>').prop('disabled', true);
+
+            // Check availability for all doctors
+            let allSlots = [];
+            let checkedDoctors = 0;
+            let hasAvailableDoctor = false;
+
+            if (doctorIds.length === 0) {
+                dateStatus.html('<span class="text-danger"><i class="bi bi-x-circle"></i> No doctors available</span>');
+                timeSelect.html('<option value="">No doctors available</option>').prop('disabled', true);
+                return;
+            }
+
+            doctorIds.forEach(doctorId => {
+                fetch(`/availability/slots?doctor_id=${doctorId}&date=${date}`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    checkedDoctors++;
+                    
+                    if (data.slots && data.slots.length > 0) {
+                        hasAvailableDoctor = true;
+                        // Merge slots from all doctors
+                        data.slots.forEach(slot => {
+                            if (!allSlots.find(s => s.start === slot.start && s.end === slot.end)) {
+                                allSlots.push(slot);
+                            }
+                        });
+                    }
+
+                    // When all doctors checked
+                    if (checkedDoctors === doctorIds.length) {
+                        if (hasAvailableDoctor && allSlots.length > 0) {
+                            // Sort slots by time
+                            allSlots.sort((a, b) => a.start.localeCompare(b.start));
+                            
+                            // Populate time select
+                            timeSelect.html('<option value="">Select time...</option>');
+                            allSlots.forEach(slot => {
+                                const startTime = formatTime(slot.start);
+                                const endTime = formatTime(slot.end);
+                                timeSelect.append(`<option value="${slot.start}">${startTime} - ${endTime}</option>`);
+                            });
+                            
+                            timeSelect.prop('disabled', false);
+                            dateStatus.html('<span class="text-success"><i class="bi bi-check-circle"></i> Available</span>');
+                            timeStatus.text(`${allSlots.length} time slot(s) available`);
+                        } else {
+                            dateStatus.html('<span class="text-danger"><i class="bi bi-x-circle"></i> No available time slots for this date</span>');
+                            timeSelect.html('<option value="">No available slots</option>').prop('disabled', true);
+                            timeStatus.text('Please select another date');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking availability:', error);
+                    checkedDoctors++;
+                    
+                    if (checkedDoctors === doctorIds.length) {
+                        if (!hasAvailableDoctor) {
+                            dateStatus.html('<span class="text-danger"><i class="bi bi-x-circle"></i> Unable to check availability</span>');
+                            timeSelect.html('<option value="">Error loading slots</option>').prop('disabled', true);
+                        }
+                    }
+                });
+            });
+        }
+
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour % 12 || 12;
+            return `${displayHour}:${minutes} ${ampm}`;
+        }
 
         // Reload CAPTCHA
         $('#reload-captcha').on('click', function() {

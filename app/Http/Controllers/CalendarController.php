@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\DoctorAvailability;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -24,6 +25,61 @@ class CalendarController extends Controller
                 return $appointment->appointment_date->format('Y-m-d');
             });
         
+        // Get availability data for doctors (if logged in as doctor)
+        $availabilityData = [];
+        if (auth()->check() && auth()->user()->isDoctor()) {
+            $doctorId = auth()->id();
+            
+            // Get all availability entries for this month
+            $availabilities = DoctorAvailability::where('doctor_id', $doctorId)
+                ->where(function($query) use ($startDate, $endDate) {
+                    $query->where(function($q) use ($startDate, $endDate) {
+                        // Weekly schedules
+                        $q->where('type', 'weekly');
+                    })->orWhere(function($q) use ($startDate, $endDate) {
+                        // Specific dates in this month
+                        $q->where('type', 'specific_date')
+                          ->whereBetween('specific_date', [$startDate, $endDate]);
+                    })->orWhere(function($q) use ($startDate, $endDate) {
+                        // Date ranges that overlap with this month
+                        $q->where('type', 'date_range')
+                          ->where(function($subQ) use ($startDate, $endDate) {
+                              $subQ->whereBetween('start_date', [$startDate, $endDate])
+                                   ->orWhereBetween('end_date', [$startDate, $endDate])
+                                   ->orWhere(function($r) use ($startDate, $endDate) {
+                                       $r->where('start_date', '<=', $startDate)
+                                         ->where('end_date', '>=', $endDate);
+                                   });
+                          });
+                    });
+                })
+                ->get();
+            
+            // Group by date
+            $currentDate = $startDate->copy();
+            while ($currentDate->lte($endDate)) {
+                $dateKey = $currentDate->format('Y-m-d');
+                $dayOfWeek = $currentDate->dayOfWeek;
+                
+                $dayAvailabilities = $availabilities->filter(function($avail) use ($currentDate, $dayOfWeek) {
+                    if ($avail->type === 'weekly' && $avail->day_of_week == $dayOfWeek) {
+                        return true;
+                    }
+                    if ($avail->type === 'specific_date' && $avail->specific_date && $avail->specific_date->isSameDay($currentDate)) {
+                        return true;
+                    }
+                    if ($avail->type === 'date_range' && $avail->start_date && $avail->end_date) {
+                        return $currentDate->gte($avail->start_date) && $currentDate->lte($avail->end_date);
+                    }
+                    return false;
+                });
+                
+                $availabilityData[$dateKey] = $dayAvailabilities;
+                
+                $currentDate->addDay();
+            }
+        }
+        
         // Calendar data
         $calendar = [];
         $currentDate = $startDate->copy();
@@ -38,12 +94,20 @@ class CalendarController extends Controller
         while ($currentDate->lte($endDate)) {
             $dateKey = $currentDate->format('Y-m-d');
             $dayAppointments = $appointments->get($dateKey, collect());
+            $dayAvailabilities = $availabilityData[$dateKey] ?? collect();
+            
+            // Check if day is blocked
+            $isBlocked = $dayAvailabilities->contains(function($avail) {
+                return $avail->is_available === false;
+            });
             
             $calendar[] = [
                 'date' => $currentDate->copy(),
                 'appointments' => $dayAppointments,
                 'count' => $dayAppointments->count(),
                 'isToday' => $currentDate->isToday(),
+                'isBlocked' => $isBlocked,
+                'availabilities' => $dayAvailabilities,
             ];
             
             $currentDate->addDay();

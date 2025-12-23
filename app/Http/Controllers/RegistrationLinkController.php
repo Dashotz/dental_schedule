@@ -41,6 +41,11 @@ class RegistrationLinkController extends Controller
             }
         }
 
-        return view('patient.register', compact('registrationLink'));
+        // Get available doctors for this subdomain (or all active doctors if no subdomain)
+        $doctors = \App\Models\User::where('role', 'doctor')
+            ->where('is_active', true)
+            ->get();
+
+        return view('patient.register', compact('registrationLink', 'doctors'));
     }
 }

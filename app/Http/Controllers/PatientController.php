@@ -128,6 +128,42 @@ class PatientController extends Controller
         // Sanitize all inputs
         $sanitized = $this->sanitizeInput($validated);
 
+        // Check doctor availability before creating appointment
+        $appointmentDate = \Carbon\Carbon::parse($sanitized['appointment_date']);
+        $appointmentTime = $sanitized['appointment_time'];
+        $appointmentDateTime = $appointmentDate->format('Y-m-d') . ' ' . $appointmentTime;
+
+        // Get all active doctors
+        $doctors = \App\Models\User::where('role', 'doctor')
+            ->where('is_active', true)
+            ->get();
+
+        if ($doctors->isEmpty()) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'No doctors are currently available. Please contact the clinic.');
+        }
+
+        // Check if any doctor is available for this date/time
+        $availableDoctor = null;
+        foreach ($doctors as $doctor) {
+            $slots = $this->getAvailableSlotsForDoctor($doctor->id, $appointmentDate);
+            
+            // Check if the selected time is in available slots
+            foreach ($slots as $slot) {
+                if ($appointmentTime >= $slot['start'] && $appointmentTime < $slot['end']) {
+                    $availableDoctor = $doctor;
+                    break 2; // Break both loops
+                }
+            }
+        }
+
+        if (!$availableDoctor) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'The selected date and time are not available. Please choose another time slot.');
+        }
+
         try {
             DB::beginTransaction();
 
@@ -153,11 +189,10 @@ class PatientController extends Controller
                 'insurance_policy_number' => $sanitized['insurance_policy_number'] ?? null,
             ]);
 
-            // Create appointment
-            $appointmentDateTime = $sanitized['appointment_date'] . ' ' . $sanitized['appointment_time'];
-            
+            // Create appointment with assigned doctor
             $appointment = Appointment::create([
                 'patient_id' => $patient->id,
+                'doctor_id' => $availableDoctor->id,
                 'appointment_date' => $appointmentDateTime,
                 'type' => $sanitized['appointment_type'],
                 'status' => 'scheduled',
@@ -183,6 +218,92 @@ class PatientController extends Controller
                 ->withInput()
                 ->with('error', 'An error occurred. Please try again.');
         }
+    }
+
+    /**
+     * Get available time slots for a doctor on a specific date
+     */
+    private function getAvailableSlotsForDoctor($doctorId, $date)
+    {
+        $dayOfWeek = $date->dayOfWeek;
+
+        // Get weekly availability for this day
+        $weeklyAvailability = \App\Models\DoctorAvailability::where('doctor_id', $doctorId)
+            ->where('type', 'weekly')
+            ->where('day_of_week', $dayOfWeek)
+            ->where('is_available', true)
+            ->first();
+
+        // Get specific date overrides
+        $specificAvailability = \App\Models\DoctorAvailability::where('doctor_id', $doctorId)
+            ->where('type', 'specific_date')
+            ->where('specific_date', $date->format('Y-m-d'))
+            ->first();
+
+        // Get date range availability
+        $rangeAvailability = \App\Models\DoctorAvailability::where('doctor_id', $doctorId)
+            ->where('type', 'date_range')
+            ->where('start_date', '<=', $date)
+            ->where('end_date', '>=', $date)
+            ->where('is_available', true)
+            ->first();
+
+        // Check for blocked dates
+        $blocked = \App\Models\DoctorAvailability::where('doctor_id', $doctorId)
+            ->where(function($query) use ($date, $dayOfWeek) {
+                $query->where(function($q) use ($date) {
+                    $q->where('type', 'specific_date')
+                      ->where('specific_date', $date->format('Y-m-d'))
+                      ->where('is_available', false);
+                })->orWhere(function($q) use ($date) {
+                    $q->where('type', 'date_range')
+                      ->where('start_date', '<=', $date)
+                      ->where('end_date', '>=', $date)
+                      ->where('is_available', false);
+                })->orWhere(function($q) use ($dayOfWeek) {
+                    $q->where('type', 'weekly')
+                      ->where('day_of_week', $dayOfWeek)
+                      ->where('is_available', false);
+                });
+            })
+            ->exists();
+
+        if ($blocked) {
+            return [];
+        }
+
+        // Use specific date override if exists, otherwise use weekly or range
+        $availability = $specificAvailability ?? $rangeAvailability ?? $weeklyAvailability;
+
+        if (!$availability || !$availability->is_available) {
+            return [];
+        }
+
+        // Get existing appointments for this date
+        $existingAppointments = Appointment::where('doctor_id', $doctorId)
+            ->whereDate('appointment_date', $date)
+            ->whereIn('status', ['scheduled', 'confirmed', 'in_progress'])
+            ->get();
+
+        // Generate all possible slots
+        $allSlots = $availability->getTimeSlots();
+
+        // Filter out booked slots
+        $availableSlots = array_filter($allSlots, function($slot) use ($existingAppointments) {
+            foreach ($existingAppointments as $apt) {
+                $aptStart = \Carbon\Carbon::parse($apt->appointment_date)->format('H:i');
+                $aptEnd = \Carbon\Carbon::parse($apt->appointment_date)->addMinutes($apt->duration)->format('H:i');
+                
+                if (($slot['start'] >= $aptStart && $slot['start'] < $aptEnd) ||
+                    ($slot['end'] > $aptStart && $slot['end'] <= $aptEnd) ||
+                    ($slot['start'] <= $aptStart && $slot['end'] >= $aptEnd)) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        return array_values($availableSlots);
     }
 
     public function index()

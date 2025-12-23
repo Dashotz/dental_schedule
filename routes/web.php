@@ -93,5 +93,7 @@ Route::middleware('auth')->group(function () {
         // Availability management
         Route::resource('availability', AvailabilityController::class);
         Route::get('/availability/slots', [AvailabilityController::class, 'getAvailableSlots'])->name('availability.slots');
+        Route::post('/availability/quick-set', [AvailabilityController::class, 'quickSetAvailability'])->name('availability.quick-set');
+        Route::get('/availability/date-availability', [AvailabilityController::class, 'getDateAvailability'])->name('availability.date-availability');
     });
 });

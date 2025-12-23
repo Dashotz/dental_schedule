@@ -217,4 +217,131 @@ class AvailabilityController extends Controller
             'slot_duration' => $availability->slot_duration,
         ]);
     }
+
+    public function quickSetAvailability(Request $request)
+    {
+        $doctor = auth()->user();
+        
+        if (!$doctor->isDoctor()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $validated = $request->validate([
+            'date' => ['required', 'date'],
+            'action' => ['required', 'in:block_day,block_hours,unblock'],
+            'start_time' => ['nullable', 'date_format:H:i', 'required_if:action,block_hours'],
+            'end_time' => ['nullable', 'date_format:H:i', 'required_if:action,block_hours', 'after:start_time'],
+        ]);
+
+        $date = Carbon::parse($validated['date']);
+        
+        if ($validated['action'] === 'unblock') {
+            // Delete all availability entries for this specific date
+            DoctorAvailability::where('doctor_id', $doctor->id)
+                ->where(function($query) use ($date) {
+                    $query->where(function($q) use ($date) {
+                        $q->where('type', 'specific_date')
+                          ->where('specific_date', $date->format('Y-m-d'));
+                    })->orWhere(function($q) use ($date) {
+                        $q->where('type', 'date_range')
+                          ->where('start_date', '<=', $date)
+                          ->where('end_date', '>=', $date)
+                          ->where('is_available', false);
+                    });
+                })
+                ->delete();
+            
+            return response()->json(['success' => true, 'message' => 'Date unblocked successfully']);
+        }
+        
+        if ($validated['action'] === 'block_day') {
+            // Check if already exists
+            $existing = DoctorAvailability::where('doctor_id', $doctor->id)
+                ->where('type', 'specific_date')
+                ->where('specific_date', $date->format('Y-m-d'))
+                ->where('is_available', false)
+                ->first();
+            
+            if ($existing) {
+                return response()->json(['success' => true, 'message' => 'Day already blocked']);
+            }
+            
+            // Create block for entire day (9 AM to 5 PM as default, but marked as unavailable)
+            DoctorAvailability::create([
+                'doctor_id' => $doctor->id,
+                'type' => 'specific_date',
+                'specific_date' => $date->format('Y-m-d'),
+                'start_time' => '00:00',
+                'end_time' => '23:59',
+                'slot_duration' => 30,
+                'is_available' => false,
+                'notes' => 'Blocked day',
+            ]);
+            
+            return response()->json(['success' => true, 'message' => 'Day blocked successfully']);
+        }
+        
+        if ($validated['action'] === 'block_hours') {
+            // Create block for specific hours
+            DoctorAvailability::create([
+                'doctor_id' => $doctor->id,
+                'type' => 'specific_date',
+                'specific_date' => $date->format('Y-m-d'),
+                'start_time' => $validated['start_time'],
+                'end_time' => $validated['end_time'],
+                'slot_duration' => 30,
+                'is_available' => false,
+                'notes' => 'Blocked hours',
+            ]);
+            
+            return response()->json(['success' => true, 'message' => 'Hours blocked successfully']);
+        }
+        
+        return response()->json(['error' => 'Invalid action'], 400);
+    }
+
+    public function getDateAvailability(Request $request)
+    {
+        $doctor = auth()->user();
+        
+        if (!$doctor->isDoctor()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'date' => ['required', 'date'],
+        ]);
+
+        $date = Carbon::parse($request->date);
+        $dayOfWeek = $date->dayOfWeek;
+
+        // Get all availability entries for this date
+        $availabilities = DoctorAvailability::where('doctor_id', $doctor->id)
+            ->where(function($query) use ($date, $dayOfWeek) {
+                $query->where(function($q) use ($date) {
+                    $q->where('type', 'specific_date')
+                      ->where('specific_date', $date->format('Y-m-d'));
+                })->orWhere(function($q) use ($date) {
+                    $q->where('type', 'date_range')
+                      ->where('start_date', '<=', $date)
+                      ->where('end_date', '>=', $date);
+                })->orWhere(function($q) use ($dayOfWeek) {
+                    $q->where('type', 'weekly')
+                      ->where('day_of_week', $dayOfWeek);
+                });
+            })
+            ->get()
+            ->map(function($avail) {
+                return [
+                    'id' => $avail->id,
+                    'type' => $avail->type,
+                    'start_time' => substr($avail->start_time, 0, 5),
+                    'end_time' => substr($avail->end_time, 0, 5),
+                    'is_available' => $avail->is_available,
+                    'notes' => $avail->notes,
+                ];
+            });
+
+        return response()->json(['availabilities' => $availabilities]);
+    }
 }

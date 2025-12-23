@@ -329,14 +329,6 @@
                             <span>Calendar</span>
                         </a>
                     </li>
-                    @if(auth()->user()->isDoctor())
-                    <li>
-                        <a href="{{ route('availability.index') }}" class="{{ request()->routeIs('availability.*') ? 'active' : '' }}">
-                            <i class="bi bi-clock-history"></i>
-                            <span>My Availability</span>
-                        </a>
-                    </li>
-                    @endif
                 @endif
             </ul>
 
