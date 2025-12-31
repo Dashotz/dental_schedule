@@ -2,7 +2,7 @@
 
 A comprehensive web-based dental clinic management system designed to streamline patient management, appointment scheduling, and clinic operations.
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
@@ -11,11 +11,11 @@ A comprehensive web-based dental clinic management system designed to streamline
 - [Contributing](#contributing)
 - [License](#license)
 
-## 📖 Overview
+## Overview
 
 This system provides a complete solution for managing dental clinic operations, from patient registration to appointment scheduling and treatment tracking. The platform is designed with security and ease of use in mind, featuring role-based access control and comprehensive administrative tools.
 
-## ✨ Features
+## Features
 
 ### Core Functionality
 
@@ -48,7 +48,7 @@ This system provides a complete solution for managing dental clinic operations, 
   - Comprehensive reporting and analytics
   - System configuration tools
 
-## 🛠 Technology Stack
+## Technology Stack
 
 - **Backend Framework**: Modern PHP framework
 - **Database**: MySQL
@@ -56,7 +56,7 @@ This system provides a complete solution for managing dental clinic operations, 
 - **UI Components**: Modern responsive design
 - **Security**: Role-based authentication and authorization
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 dental_schedule/
@@ -69,11 +69,11 @@ dental_schedule/
 └── config/             # Configuration files
 ```
 
-## 🤝 Contributing
+## Contributing
 
 This is a private project. For access or contributions, please contact the repository maintainer.
 
-## 📝 License
+## License
 
 This project is proprietary software. All rights reserved.
 
