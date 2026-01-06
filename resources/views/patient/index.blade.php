@@ -16,6 +16,11 @@
 </div>
 
 <div class="card-dental">
+    <div class="card-dental-header">
+        <h5 class="text-lg font-semibold flex items-center gap-2">
+            <x-dental-icon name="people" class="w-5 h-5" /> All Patients
+        </h5>
+    </div>
     <div class="p-6">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -51,13 +56,10 @@
                             <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $patient->created_at->format('M d, Y') }}
                             </td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm space-x-2">
-                                <a href="{{ route('patients.show', $patient) }}" class="btn-dental text-sm py-1.5 px-3">
-                                    <x-dental-icon name="eye" class="w-5 h-5" /> View
-                                </a>
-                                <a href="{{ route('patients.edit', $patient) }}" class="btn-dental-outline text-sm py-1.5 px-3 border-yellow-500 text-yellow-600 hover:bg-yellow-50">
-                                    <x-dental-icon name="pencil" class="w-5 h-5" /> Edit
-                                </a>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm">
+                                <button type="button" class="btn-dental text-sm py-1.5 px-3 inline-flex items-center gap-1 view-patient-btn" data-patient-id="{{ $patient->id }}">
+                                    <x-dental-icon name="eye" class="w-4 h-4" /> View
+                                </button>
                             </td>
                         </tr>
                     @empty
@@ -74,4 +76,14 @@
         </div>
     </div>
 </div>
+
+<!-- Patient View Modal Container -->
+<div id="viewPatientModalContainer"></div>
+
+<!-- Patient Edit Modal Container -->
+<div id="editPatientModalContainer"></div>
+
+@push('scripts')
+<script src="{{ asset('js/patient-modals.js') }}" defer></script>
+@endpush
 @endsection

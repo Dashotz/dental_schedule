@@ -477,194 +477,24 @@
         </main>
     <?php endif; ?>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <!-- Session messages for JavaScript (hidden) -->
+    <?php if(session('success')): ?>
+        <div data-session-success style="display: none;"><?php echo e(session('success')); ?></div>
+    <?php endif; ?>
+    <?php if(session('error')): ?>
+        <div data-session-error style="display: none;"><?php echo e(session('error')); ?></div>
+    <?php endif; ?>
+    <?php if($errors->any()): ?>
+        <div data-validation-errors style="display: none;"><?php echo e(json_encode($errors->all())); ?></div>
+    <?php endif; ?>
+
+    <!-- External Dependencies (with defer for better performance) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js" defer></script>
     
-    <script>
-        // Global SweetAlert configuration with Tailwind colors
-        const Swal = window.Swal;
-        
-        // Configure SweetAlert2 with Tailwind-compatible dental theme
-        Swal.mixin({
-            customClass: {
-                confirmButton: 'btn-dental',
-                cancelButton: 'btn-dental-outline',
-                popup: 'rounded-2xl',
-                title: 'text-gray-800',
-                htmlContainer: 'text-gray-600'
-            },
-            buttonsStyling: false,
-            confirmButtonColor: '#20b2aa',
-            cancelButtonColor: '#6c757d'
-        });
-        
-        // Show success message from session
-        <?php if(session('success')): ?>
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: '<?php echo e(session('success')); ?>',
-                confirmButtonColor: '#20b2aa',
-                timer: 3000,
-                timerProgressBar: true,
-                customClass: {
-                    confirmButton: 'btn-dental'
-                },
-                buttonsStyling: false
-            });
-        <?php endif; ?>
-
-        // Show error message from session
-        <?php if(session('error')): ?>
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: '<?php echo e(session('error')); ?>',
-                confirmButtonColor: '#dc3545',
-                customClass: {
-                    confirmButton: 'bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg'
-                },
-                buttonsStyling: false
-            });
-        <?php endif; ?>
-
-        // Show validation errors
-        <?php if($errors->any()): ?>
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                html: '<ul class="text-left list-disc pl-5 text-gray-700"><?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><li><?php echo e($error); ?></li><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></ul>',
-                confirmButtonColor: '#dc3545',
-                customClass: {
-                    confirmButton: 'bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg'
-                },
-                buttonsStyling: false
-            });
-        <?php endif; ?>
-
-        // Sidebar Toggle Functionality
-        $(document).ready(function() {
-            const sidebar = $('#sidebar');
-            const mainContent = $('#mainContent');
-            const toggleBtn = $('#toggleSidebar');
-            const toggleIcon = $('#toggleIcon');
-            const mobileToggle = $('#mobileToggleSidebar');
-            const sidebarOverlay = $('#sidebarOverlay');
-            const analyticsMenu = $('#analyticsMenu');
-            const analyticsChevron = $('#analyticsChevron');
-            let isCollapsed = false;
-
-            // Desktop toggle
-            toggleBtn.on('click', function() {
-                isCollapsed = !isCollapsed;
-                if (isCollapsed) {
-                    sidebar.addClass('w-16').removeClass('w-64');
-                    mainContent.addClass('lg:ml-16').removeClass('lg:ml-64');
-                    // Rotate icon to point right when collapsed
-                    toggleIcon.css('transform', 'rotate(180deg)');
-                    // Hide text elements
-                    $('.sidebar-title').hide();
-                    $('.nav-link-dental span').hide();
-                    $('.user-info-text').hide();
-                    $('.logout-text').hide();
-                    // Hide tooth icon, center the chevron button
-                    $('.sidebar-tooth-icon').hide();
-                    toggleBtn.addClass('mx-auto').removeClass('flex-shrink-0');
-                } else {
-                    sidebar.addClass('w-64').removeClass('w-16');
-                    mainContent.addClass('lg:ml-64').removeClass('lg:ml-16');
-                    // Reset icon to point left when expanded
-                    toggleIcon.css('transform', 'rotate(0deg)');
-                    // Show text elements
-                    $('.sidebar-title').show();
-                    $('.nav-link-dental span').show();
-                    $('.user-info-text').show();
-                    $('.logout-text').show();
-                    // Show tooth icon, restore chevron position
-                    $('.sidebar-tooth-icon').show();
-                    toggleBtn.removeClass('mx-auto').addClass('flex-shrink-0');
-                }
-            });
-
-            // Mobile toggle
-            mobileToggle.on('click', function() {
-                sidebar.toggleClass('-translate-x-full');
-                sidebarOverlay.toggleClass('hidden');
-            });
-
-            // Close sidebar when overlay is clicked (mobile)
-            sidebarOverlay.on('click', function() {
-                sidebar.addClass('-translate-x-full');
-                sidebarOverlay.addClass('hidden');
-            });
-
-            // Analytics menu toggle
-            $('.analytics-toggle').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                analyticsMenu.toggleClass('hidden');
-                analyticsChevron.toggleClass('rotate-180');
-            });
-
-            // Handle window resize
-            $(window).on('resize', function() {
-                const isMobileNow = window.innerWidth < 1024;
-                if (isMobileNow) {
-                    sidebar.addClass('-translate-x-full');
-                    sidebarOverlay.addClass('hidden');
-                    mainContent.removeClass('lg:ml-16 lg:ml-64').addClass('ml-0');
-                } else {
-                    sidebar.removeClass('-translate-x-full');
-                    sidebarOverlay.addClass('hidden');
-                    if (isCollapsed) {
-                        mainContent.addClass('lg:ml-16').removeClass('lg:ml-64');
-                    } else {
-                        mainContent.addClass('lg:ml-64').removeClass('lg:ml-16');
-                    }
-                }
-            });
-        });
-
-        // Modal Functions
-        window.openModal = function(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                document.body.style.overflow = 'hidden';
-            }
-        };
-
-        window.closeModal = function(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                document.body.style.overflow = '';
-            }
-        };
-
-        // Close modal when clicking outside
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('fixed') && e.target.id && e.target.id.includes('modal')) {
-                window.closeModal(e.target.id);
-            }
-        });
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const openModals = document.querySelectorAll('.fixed.flex[id*="modal"]');
-                openModals.forEach(modal => {
-                    window.closeModal(modal.id);
-                });
-            }
-        });
-    </script>
+    <!-- Core Application JavaScript -->
+    <script src="<?php echo e(asset('js/app-core.js')); ?>" defer></script>
     
     <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>

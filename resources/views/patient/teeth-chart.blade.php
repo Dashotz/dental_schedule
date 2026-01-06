@@ -5,10 +5,10 @@
 @section('content')
 <div class="flex justify-between items-center mb-6">
     <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
-        <x-dental-icon name="tooth" class="w-5 h-5" /> Dental Chart - {{ $patient->first_name }} {{ $patient->last_name }}
+        <x-dental-icon name="tooth" class="w-8 h-8 text-dental-teal" /> Dental Chart - {{ $patient->first_name }} {{ $patient->last_name }}
     </h2>
-    <a href="{{ route('patients.show', $patient) }}" class="btn-dental-outline">
-        <x-dental-icon name="arrow-left" class="w-5 h-5" /> Back to Patient
+    <a href="{{ route('patients.index') }}" class="btn-dental-outline">
+        <x-dental-icon name="arrow-left" class="w-5 h-5" /> Back to Patients
     </a>
 </div>
 
@@ -20,92 +20,42 @@
     </div>
     <div class="p-6">
         <!-- Upper Jaw (Maxilla) -->
-        <div class="mb-8">
-            <h6 class="text-center mb-4 text-gray-700 font-semibold flex items-center justify-center gap-2">
-                <x-dental-icon name="arrow-up" class="w-5 h-5" /> Upper Jaw (Maxilla)
+        <div class="mb-12">
+            <h6 class="text-center mb-6 text-gray-700 font-semibold flex items-center justify-center gap-2">
+                <x-dental-icon name="arrow-up" class="w-5 h-5 text-dental-teal" /> Upper Jaw (Maxilla)
             </h6>
-            <div class="flex justify-center overflow-x-auto">
-                <svg width="1000" height="140" viewBox="0 0 1000 140" class="jaw-svg">
-                    <!-- Upper Right Quadrant (18-11) - from patient's right to center -->
-                    @php
-                        $upperRightTeeth = [18, 17, 16, 15, 14, 13, 12, 11];
-                        $spacing = 110;
-                        $startX = 30;
-                        $y = 70;
-                    @endphp
-                    @foreach($upperRightTeeth as $index => $toothNum)
-                        @php
-                            $x = $startX + ($index * $spacing);
-                        @endphp
-                        @include('patient.partials.tooth-svg', [
-                            'toothNumber' => $toothNum,
-                            'x' => $x,
-                            'y' => $y,
-                            'teethRecords' => $teethRecords
-                        ])
-                    @endforeach
-                    
-                    <!-- Upper Left Quadrant (21-28) - from center to patient's left -->
-                    @php
-                        $upperLeftTeeth = [21, 22, 23, 24, 25, 26, 27, 28];
-                    @endphp
-                    @foreach($upperLeftTeeth as $index => $toothNum)
-                        @php
-                            $x = $startX + (($index + 8) * $spacing);
-                        @endphp
-                        @include('patient.partials.tooth-svg', [
-                            'toothNumber' => $toothNum,
-                            'x' => $x,
-                            'y' => $y,
-                            'teethRecords' => $teethRecords
-                        ])
-                    @endforeach
-                </svg>
+            <div class="flex justify-center flex-wrap gap-4 max-w-6xl mx-auto">
+                @php
+                    $upperRightTeeth = [18, 17, 16, 15, 14, 13, 12, 11];
+                    $upperLeftTeeth = [21, 22, 23, 24, 25, 26, 27, 28];
+                    $allUpperTeeth = array_merge($upperRightTeeth, $upperLeftTeeth);
+                @endphp
+                @foreach($allUpperTeeth as $toothNum)
+                    @include('patient.partials.tooth', [
+                        'toothNumber' => $toothNum,
+                        'teethRecords' => $teethRecords
+                    ])
+                @endforeach
             </div>
         </div>
 
         <!-- Lower Jaw (Mandible) -->
         <div>
-            <h6 class="text-center mb-4 text-gray-700 font-semibold flex items-center justify-center gap-2">
-                <x-dental-icon name="arrow-down" class="w-5 h-5" /> Lower Jaw (Mandible)
+            <h6 class="text-center mb-6 text-gray-700 font-semibold flex items-center justify-center gap-2">
+                <x-dental-icon name="arrow-down" class="w-5 h-5 text-dental-teal" /> Lower Jaw (Mandible)
             </h6>
-            <div class="flex justify-center overflow-x-auto">
-                <svg width="1000" height="140" viewBox="0 0 1000 140" class="jaw-svg">
-                    <!-- Lower Right Quadrant (48-41) - from patient's right to center -->
-                    @php
-                        $lowerRightTeeth = [48, 47, 46, 45, 44, 43, 42, 41];
-                        $spacing = 110;
-                        $startX = 30;
-                        $y = 70;
-                    @endphp
-                    @foreach($lowerRightTeeth as $index => $toothNum)
-                        @php
-                            $x = $startX + ($index * $spacing);
-                        @endphp
-                        @include('patient.partials.tooth-svg', [
-                            'toothNumber' => $toothNum,
-                            'x' => $x,
-                            'y' => $y,
-                            'teethRecords' => $teethRecords
-                        ])
-                    @endforeach
-                    
-                    <!-- Lower Left Quadrant (31-38) - from center to patient's left -->
-                    @php
-                        $lowerLeftTeeth = [31, 32, 33, 34, 35, 36, 37, 38];
-                    @endphp
-                    @foreach($lowerLeftTeeth as $index => $toothNum)
-                        @php
-                            $x = $startX + (($index + 8) * $spacing);
-                        @endphp
-                        @include('patient.partials.tooth-svg', [
-                            'toothNumber' => $toothNum,
-                            'x' => $x,
-                            'y' => $y,
-                            'teethRecords' => $teethRecords
-                        ])
-                    @endforeach
-                </svg>
+            <div class="flex justify-center flex-wrap gap-4 max-w-6xl mx-auto">
+                @php
+                    $lowerRightTeeth = [48, 47, 46, 45, 44, 43, 42, 41];
+                    $lowerLeftTeeth = [31, 32, 33, 34, 35, 36, 37, 38];
+                    $allLowerTeeth = array_merge($lowerRightTeeth, $lowerLeftTeeth);
+                @endphp
+                @foreach($allLowerTeeth as $toothNum)
+                    @include('patient.partials.tooth', [
+                        'toothNumber' => $toothNum,
+                        'teethRecords' => $teethRecords
+                    ])
+                @endforeach
             </div>
         </div>
     </div>
@@ -143,8 +93,6 @@
         <button type="submit" form="teethRecordForm" class="btn-dental">Save Record</button>
     </x-slot>
 </x-modal>
-
-{{-- Styles migrated to Tailwind in app.css --}}
 
 @push('scripts')
 <script>

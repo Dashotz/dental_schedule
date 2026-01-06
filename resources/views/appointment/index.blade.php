@@ -13,6 +13,11 @@
 </div>
 
 <div class="card-dental">
+    <div class="card-dental-header">
+        <h5 class="text-lg font-semibold flex items-center gap-2">
+            <x-dental-icon name="calendar-check" class="w-5 h-5" /> All Appointments
+        </h5>
+    </div>
     <div class="p-6">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -35,9 +40,9 @@
                                 <small class="text-gray-500">{{ $appointment->appointment_date->format('g:i A') }}</small>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">
-                                <a href="{{ route('patients.show', $appointment->patient) }}" class="text-dental-teal hover:text-dental-teal-dark">
+                                <button type="button" class="text-dental-teal hover:text-dental-teal-dark font-medium view-patient-btn" data-patient-id="{{ $appointment->patient->id }}">
                                     {{ $appointment->patient->first_name }} {{ $appointment->patient->last_name }}
-                                </a>
+                                </button>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $appointment->doctor ? $appointment->doctor->name : 'Unassigned' }}
@@ -92,4 +97,84 @@
         </div>
     </div>
 </div>
+
+<!-- Patient View Modal Container -->
+<div id="viewPatientModalContainer"></div>
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        // View patient modal (same as in patient index)
+        $(document).on('click', '.view-patient-btn', function(e) {
+            e.preventDefault();
+            const patientId = $(this).data('patient-id');
+            
+            // Check if container exists
+            if ($('#viewPatientModalContainer').length === 0) {
+                $('body').append('<div id="viewPatientModalContainer"></div>');
+            }
+            
+            // Show loading state
+            $('#viewPatientModalContainer').html(`
+                <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center" id="viewPatientModal">
+                    <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-scroll">
+                        <div class="card-dental-header flex justify-between items-center">
+                            <h5 class="text-lg font-semibold">Loading...</h5>
+                            <button type="button" class="text-white hover:text-gray-200 text-2xl transition-colors" onclick="closeModal('viewPatientModal')">
+                                &times;
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-center py-8">
+                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-dental-teal"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+            
+            // Open modal
+            openModal('viewPatientModal');
+            
+            // Load patient data
+            $.ajax({
+                url: `/patients/${patientId}`,
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    $('#viewPatientModalContainer').html(response.html);
+                    const modal = document.getElementById('viewPatientModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                    }
+                },
+                error: function(xhr) {
+                    $('#viewPatientModalContainer').html(`
+                        <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center" id="viewPatientModal">
+                            <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto modal-scroll">
+                                <div class="card-dental-header flex justify-between items-center">
+                                    <h5 class="text-lg font-semibold">Error</h5>
+                                    <button type="button" class="text-white hover:text-gray-200 text-2xl transition-colors" onclick="closeModal('viewPatientModal')">
+                                        &times;
+                                    </button>
+                                </div>
+                                <div class="p-6">
+                                    <p class="text-red-600">Failed to load patient details. Please try again.</p>
+                                </div>
+                                <div class="px-6 py-4 border-t border-gray-200 flex justify-end">
+                                    <button onclick="closeModal('viewPatientModal')" class="btn-dental-outline">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                    openModal('viewPatientModal');
+                }
+            });
+        });
+    });
+</script>
+@endpush
 @endsection

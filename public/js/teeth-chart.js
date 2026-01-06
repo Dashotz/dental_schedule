@@ -7,7 +7,7 @@ $(document).ready(function() {
         return;
     }
 
-    $('.tooth-svg').on('click', function() {
+    $(document).on('click', '.tooth-button', function() {
         const toothNumber = $(this).data('tooth');
         $('#modalToothNumber').text(toothNumber);
         $('#tooth_number').val(toothNumber);

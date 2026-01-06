@@ -12,7 +12,6 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
-        /* Remove top padding from main for welcome page */
         body:has(.welcome-page) main,
         .welcome-page-wrapper main {
             padding-top: 0 !important;

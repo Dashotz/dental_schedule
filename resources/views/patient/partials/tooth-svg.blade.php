@@ -32,30 +32,33 @@
 <g class="{{ $classes }}" data-tooth="{{ $toothNumber }}" transform="translate({{ $x }}, {{ $y }})" style="cursor: pointer;">
     <title>{{ $title }}</title>
     
-    <!-- Use tooth.png image -->
-    <g transform="translate(-30, -35)">
-        <image href="{{ asset('images/dental/tooth.png') }}" 
-               x="0" 
-               y="0" 
-               width="60" 
-               height="70"
-               opacity="{{ $opacity }}"
-               preserveAspectRatio="xMidYMid meet"/>
+    <!-- Inner group for hover effects -->
+    <g class="tooth-content" transform="translate(0, 0)">
+        <!-- Use tooth.png image -->
+        <g transform="translate(-30, -35)">
+            <image href="{{ asset('images/dental/tooth.png') }}" 
+                   x="0" 
+                   y="0" 
+                   width="60" 
+                   height="70"
+                   opacity="{{ $opacity }}"
+                   preserveAspectRatio="xMidYMid meet"/>
+            
+            <!-- X mark overlay for extracted/missing teeth -->
+            @if($showX)
+                <path d="M 10,15 L 50,55 M 50,15 L 10,55" 
+                      stroke="#000000" 
+                      stroke-width="4"
+                      opacity="0.8"/>
+            @endif
+        </g>
         
-        <!-- X mark overlay for extracted/missing teeth -->
-        @if($showX)
-            <path d="M 10,15 L 50,55 M 50,15 L 10,55" 
-                  stroke="#000000" 
-                  stroke-width="4"
-                  opacity="0.8"/>
-        @endif
+        <!-- Tooth number below -->
+        <text x="0" y="45" text-anchor="middle" dominant-baseline="central" 
+              font-size="13" font-weight="bold" 
+              fill="#333333"
+              style="pointer-events: none;">
+            {{ $toothNumber }}
+        </text>
     </g>
-    
-    <!-- Tooth number below -->
-    <text x="0" y="45" text-anchor="middle" dominant-baseline="central" 
-          font-size="13" font-weight="bold" 
-          fill="#333333"
-          style="pointer-events: none;">
-        {{ $toothNumber }}
-    </text>
 </g>

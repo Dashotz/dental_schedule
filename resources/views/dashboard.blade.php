@@ -95,7 +95,7 @@
 
     <!-- Upcoming Appointments -->
     <div class="card-dental">
-        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-t-2xl">
+        <div class="card-dental-header">
             <h5 class="text-lg font-semibold flex items-center gap-2">
                 <x-dental-icon name="calendar" class="w-5 h-5" /> Upcoming Appointments
             </h5>
@@ -126,7 +126,7 @@
 
 <!-- Recent Patients -->
 <div class="card-dental">
-    <div class="px-6 py-4 border-b border-gray-200">
+    <div class="card-dental-header">
         <h5 class="text-lg font-semibold flex items-center gap-2">
             <x-dental-icon name="people" class="w-5 h-5" /> Recent Patients
         </h5>
@@ -141,7 +141,6 @@
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registered</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -158,11 +157,6 @@
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ $patient->created_at->diffForHumans() }}
-                                </td>
-                                <td class="px-4 py-4 whitespace-nowrap text-sm">
-                                    <a href="{{ route('patients.show', $patient) }}" class="btn-dental text-sm py-1.5 px-3">
-                                        <x-dental-icon name="eye" class="w-4 h-4 mr-1" /> View
-                                    </a>
                                 </td>
                             </tr>
                         @endforeach

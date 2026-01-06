@@ -464,18 +464,40 @@ class PatientController extends Controller
             });
         }
 
-        $patients = $query->latest()->paginate(15);
+        // Eager load relationships to prevent N+1 queries
+        $patients = $query->with(['appointments' => function($q) {
+                $q->latest()->limit(3);
+            }])
+            ->latest()
+            ->paginate(15);
+        
         return view('patient.index', compact('patients'));
     }
 
     public function show(Patient $patient)
     {
         $patient->load(['appointments', 'treatmentPlans', 'teethRecords', 'treatments']);
-        return view('patient.show', compact('patient'));
+        
+        // If AJAX request, return modal content
+        if (request()->ajax()) {
+            return response()->json([
+                'html' => view('patient.partials.view-modal', compact('patient'))->render()
+            ]);
+        }
+        
+        // Redirect to index page since we're using modals now
+        return redirect()->route('patients.index');
     }
 
     public function edit(Patient $patient)
     {
+        // If AJAX request, return modal content
+        if (request()->ajax()) {
+            return response()->json([
+                'html' => view('patient.partials.edit-modal', compact('patient'))->render()
+            ]);
+        }
+        
         return view('patient.edit', compact('patient'));
     }
 
@@ -506,6 +528,14 @@ class PatientController extends Controller
         // Sanitize inputs
         $sanitized = $this->sanitizeInput($validated);
         $patient->update($sanitized);
+
+        // If AJAX request, return JSON response
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Patient information updated successfully.'
+            ]);
+        }
 
         return redirect()->route('patients.show', $patient)
             ->with('success', 'Patient information updated successfully.');

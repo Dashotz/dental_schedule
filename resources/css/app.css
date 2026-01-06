@@ -305,35 +305,21 @@
     }
     
     /* Teeth Chart Styles */
-    .jaw-section {
-        @apply bg-white py-10 px-5 mb-8;
+    .tooth-button {
+        transform-origin: center center;
     }
     
-    .jaw-svg {
-        @apply max-w-full h-auto bg-transparent;
-    }
-    
-    .tooth-svg {
-        @apply transition-all duration-200;
-    }
-    
-    .tooth-svg:hover image {
-        opacity: 0.8;
-        filter: brightness(1.1);
-    }
-    
-    .tooth-svg:hover {
-        @apply scale-105;
+    .tooth-button:active {
+        transform: scale(0.95);
     }
     
     @media (max-width: 768px) {
-        .jaw-svg {
-            @apply w-full;
-            height: 120px;
+        .tooth-button {
+            @apply w-12 h-16;
         }
         
-        .jaw-section {
-            @apply py-6 px-2.5;
+        .tooth-button svg {
+            @apply w-10 h-12;
         }
     }
     

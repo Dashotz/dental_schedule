@@ -1,0 +1,11 @@
+<svg width="60" height="70" viewBox="0 0 60 70" xmlns="http://www.w3.org/2000/svg">
+    <!-- Crown (pointed) -->
+    <path d="M 30 5 L 50 5 Q 50 5 50 10 L 50 25 Q 50 30 45 30 L 15 30 Q 10 30 10 25 L 10 10 Q 10 5 15 5 Z" 
+          fill="currentColor" stroke="none"/>
+    <!-- Point -->
+    <path d="M 30 5 L 35 15 L 30 20 L 25 15 Z" 
+          fill="currentColor" stroke="none"/>
+    <!-- Root -->
+    <path d="M 25 30 L 25 60 L 35 60 L 35 30 Z" 
+          fill="currentColor" stroke="none" opacity="0.8"/>
+</svg>
