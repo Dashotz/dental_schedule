@@ -22,7 +22,7 @@
 
 @section('content')
 <!-- Top Bar - Contact Information Banner -->
-<div class="bg-dental-teal text-white py-6 w-full welcome-page">
+<div class="bg-dental-teal text-white py-8 w-full welcome-page">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center text-sm">
             <div class="flex items-center justify-center gap-2">
