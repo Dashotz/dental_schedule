@@ -10,13 +10,17 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
+        /* Remove top padding from main for welcome page */
+        body:has(.welcome-page) main,
+        .welcome-page-wrapper main {
+            padding-top: 0 !important;
+        }
     </style>
 <?php $__env->stopPush(); ?>
 
 <?php $__env->startSection('content'); ?>
-
-<!-- Top Bar -->
-<div class="bg-dental-teal text-white py-3">
+<!-- Top Bar - Contact Information Banner -->
+<div class="bg-dental-teal text-white py-6 w-full welcome-page">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center text-sm">
             <div class="flex items-center justify-center gap-2">
@@ -609,13 +613,13 @@
             <p class="text-lg text-gray-600 max-w-3xl mx-auto">Extensive dental expertise, truly state-of-the-art technology, and the best locations. We guarantee you'll experience and enjoy every aspect of our world-class service.</p>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
-            <div class="rounded-2xl overflow-hidden shadow-lg">
+            <div class="rounded-2xl overflow-hidden shadow-lg h-[50vh]">
                 <img src="<?php echo e(asset('images/choose1.jpg')); ?>" 
                      alt="Dental examination and patient care" 
                      class="w-full h-full object-cover"
                      loading="lazy">
             </div>
-            <div class="rounded-2xl overflow-hidden shadow-lg">
+            <div class="rounded-2xl overflow-hidden shadow-lg h-[50vh]">
                 <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
                      alt="Dental equipment and technology" 
                      class="w-full h-full object-cover"

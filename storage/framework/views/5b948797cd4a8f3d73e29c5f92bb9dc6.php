@@ -473,7 +473,7 @@
         </div>
     <?php else: ?>
         <!-- Public Layout (No Sidebar) -->
-        <main class="w-full py-4">
+        <main class="w-full <?php if(request()->routeIs('welcome') || request()->is('/')): ?> pt-0 pb-4 <?php else: ?> py-4 <?php endif; ?>">
             <?php echo $__env->yieldContent('content'); ?>
         </main>
     <?php endif; ?>

@@ -183,30 +183,58 @@
 
 /* Custom Scrollbar */
 @layer utilities {
+    /* Global scrollbar styles */
+    * {
+        /* Firefox */
+        scrollbar-width: thin;
+        scrollbar-color: #20b2aa #f3f4f6;
+    }
+
+    *::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    
+    *::-webkit-scrollbar-track {
+        background: #f3f4f6;
+        border-radius: 10px;
+    }
+    
+    *::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #20b2aa 0%, #008b8b 100%);
+        border-radius: 10px;
+        border: 1px solid #f3f4f6;
+    }
+    
+    *::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #008b8b 0%, #20b2aa 100%);
+    }
+
+    /* Sidebar specific scrollbar (darker background) */
     .scrollbar-dental {
         /* Firefox */
         scrollbar-width: thin;
-        scrollbar-color: #0f766e #111827;
+        scrollbar-color: #20b2aa rgba(255, 255, 255, 0.1);
     }
 
     .scrollbar-dental::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
+        width: 6px;
+        height: 6px;
     }
     
     .scrollbar-dental::-webkit-scrollbar-track {
-        @apply rounded-full;
-        background: #111827;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
     }
     
     .scrollbar-dental::-webkit-scrollbar-thumb {
-        @apply rounded-full;
-        background: linear-gradient(180deg, #0f766e 0%, #14b8a6 100%);
-        border: 2px solid #111827;
+        background: linear-gradient(180deg, #20b2aa 0%, #008b8b 100%);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .scrollbar-dental::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #0f766e 0%, #0d9488 100%);
+        background: linear-gradient(180deg, #008b8b 0%, #20b2aa 100%);
     }
     
     /* Skeleton Loading */
@@ -328,6 +356,39 @@
     @keyframes float {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-5px); }
+    }
+    
+    /* Login Page Styles */
+    .login-container {
+        @apply min-h-screen bg-gradient-to-br from-dental-teal-lighter via-white to-dental-teal-lighter;
+    }
+    
+    .login-card {
+        @apply transform transition-all duration-300;
+        animation: slideUp 0.5s ease-out;
+    }
+    
+    .login-card:hover {
+        @apply shadow-2xl;
+    }
+    
+    .login-icon-wrapper {
+        @apply transform transition-all duration-300;
+    }
+    
+    .login-icon-wrapper:hover {
+        @apply scale-110 rotate-3;
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
     
     .registration-body {

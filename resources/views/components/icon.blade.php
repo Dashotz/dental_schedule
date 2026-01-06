@@ -42,8 +42,8 @@
         'clock' => 'clock',
         'clock-history' => 'clock',
         
-        // Medical & Dental - using sparkles as a placeholder for tooth
-        'tooth' => 'sparkles',
+        // Medical & Dental - using heart as medical symbol (tooth icon not available in Heroicons)
+        'tooth' => 'heart',
         'heart-pulse' => 'heart',
         
         // Business & Finance

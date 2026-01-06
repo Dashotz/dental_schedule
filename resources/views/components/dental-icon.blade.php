@@ -37,8 +37,8 @@
         'calendar-range' => 'calendar',
         'clock' => 'clock',
         'clock-history' => 'clock',
-        // Dental placeholder
-        'tooth' => 'sparkles',
+        // Dental/Medical - using heart as medical symbol (tooth icon not available in Heroicons)
+        'tooth' => 'heart',
         'heart-pulse' => 'heart',
         'credit-card' => 'credit-card',
         'currency-dollar' => 'currency-dollar',
@@ -82,6 +82,7 @@
         'trophy' => 'trophy',
         'lightning-charge' => 'bolt',
         'box-arrow-right' => 'arrow-right-on-rectangle',
+        'box-arrow-in-right' => 'arrow-right-on-rectangle',
         'diagram-3' => 'squares-plus',
         'list-ul' => 'list-bullet',
         // Additional icons for welcome page

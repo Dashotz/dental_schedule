@@ -149,7 +149,7 @@
         </div>
     @else
         <!-- Public Layout (No Sidebar) -->
-        <main class="w-full py-4">
+        <main class="w-full @if(request()->routeIs('welcome') || request()->is('/')) pt-0 pb-4 @else py-4 @endif">
             @yield('content')
         </main>
     @endauth
