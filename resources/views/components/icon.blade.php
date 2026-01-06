@@ -117,7 +117,8 @@
     // blade-heroicons format: heroicon-o-{name} or heroicon-s-{name}
     $iconSet = $solid ? 'heroicon-s' : 'heroicon-o';
     $iconIdentifier = $iconSet . '-' . $heroiconName;
+    
 @endphp
 
-{{-- Render the icon using the mapped identifier --}}
+{{-- Render the icon using the @svg directive --}}
 @svg($iconIdentifier, $class)

@@ -128,8 +128,9 @@
             'icon_identifier' => $iconIdentifier,
         ]);
     }
+    
 @endphp
 
-{{-- Render the icon using the mapped identifier --}}
+{{-- Render the icon using the @svg directive --}}
 @svg($iconIdentifier, $class)
 

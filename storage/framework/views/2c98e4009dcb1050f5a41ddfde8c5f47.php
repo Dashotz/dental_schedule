@@ -160,9 +160,10 @@ unset($__defined_vars, $__key, $__value); ?>
             'icon_identifier' => $iconIdentifier,
         ]);
     }
+    
 ?>
 
 
 <?php echo e(svg($iconIdentifier, $class)); ?>
 
-<?php /**PATH C:\Users\User\Desktop\Laravel\dental_schedule\resources\views/components/dental-icon.blade.php ENDPATH**/ ?>
+<?php /**PATH H:\Github\dental_schedule\resources\views/components/dental-icon.blade.php ENDPATH**/ ?>
