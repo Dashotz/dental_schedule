@@ -8,7 +8,7 @@
         <div class="card-dental shadow-xl">
             <div class="card-dental-header">
                 <h4 class="text-xl font-semibold flex items-center gap-2">
-                    <i class="bi bi-box-arrow-in-right"></i> Login
+                    <x-dental-icon name="box-arrow-in-right" class="w-5 h-5" /> Login
                 </h4>
             </div>
             <div class="p-6">
@@ -39,7 +39,7 @@
                     </div>
 
                     <button type="submit" class="btn-dental w-full">
-                        <i class="bi bi-box-arrow-in-right"></i> Login
+                        <x-dental-icon name="box-arrow-in-right" class="w-5 h-5" /> Login
                     </button>
                 </form>
             </div>

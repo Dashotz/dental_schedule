@@ -5,7 +5,7 @@
 @section('content')
 <div class="mb-6">
     <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
-        <i class="bi bi-speedometer2"></i> Dashboard
+        <x-dental-icon name="speedometer2" class="w-8 h-8 text-dental-teal" /> Dashboard
     </h2>
     <p class="text-gray-600 mt-2">Welcome back, {{ auth()->user()->name }}!</p>
 </div>
@@ -19,7 +19,7 @@
                     <h6 class="text-sm font-medium opacity-90 mb-2">Total Patients</h6>
                     <h3 class="text-3xl font-bold mb-0">{{ $totalPatients }}</h3>
                 </div>
-                <i class="bi bi-people text-5xl opacity-50"></i>
+                <x-dental-icon name="people" class="w-12 h-12 opacity-50" />
             </div>
         </div>
     </div>
@@ -30,7 +30,7 @@
                     <h6 class="text-sm font-medium opacity-90 mb-2">Today's Appointments</h6>
                     <h3 class="text-3xl font-bold mb-0">{{ $todayAppointmentsCount }}</h3>
                 </div>
-                <i class="bi bi-calendar-check text-5xl opacity-50"></i>
+                <x-dental-icon name="calendar-check" class="w-12 h-12 opacity-50" />
             </div>
         </div>
     </div>
@@ -41,7 +41,7 @@
                     <h6 class="text-sm font-medium opacity-90 mb-2">Pending Appointments</h6>
                     <h3 class="text-3xl font-bold mb-0">{{ $pendingAppointments }}</h3>
                 </div>
-                <i class="bi bi-clock-history text-5xl opacity-50"></i>
+                <x-dental-icon name="clock-history" class="w-12 h-12 opacity-50" />
             </div>
         </div>
     </div>
@@ -52,7 +52,7 @@
                     <h6 class="text-sm font-medium opacity-90 mb-2">Total Appointments</h6>
                     <h3 class="text-3xl font-bold mb-0">{{ $totalAppointments }}</h3>
                 </div>
-                <i class="bi bi-calendar3 text-5xl opacity-50"></i>
+                <x-dental-icon name="calendar3" class="w-12 h-12 opacity-50" />
             </div>
         </div>
     </div>
@@ -63,7 +63,7 @@
     <div class="card-dental">
         <div class="card-dental-header">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-calendar-day"></i> Today's Appointments
+                <x-dental-icon name="calendar-check" class="w-5 h-5" /> Today's Appointments
             </h5>
         </div>
         <div class="p-6">
@@ -81,7 +81,7 @@
                                 </span>
                             </div>
                             <p class="text-sm text-gray-600 flex items-center gap-2">
-                                <i class="bi bi-clock"></i> {{ $appointment->appointment_date->format('g:i A') }}
+                                <x-dental-icon name="clock" class="w-4 h-4" /> {{ $appointment->appointment_date->format('g:i A') }}
                                 <span class="text-gray-500">• {{ ucfirst($appointment->type) }}</span>
                             </p>
                         </a>
@@ -97,7 +97,7 @@
     <div class="card-dental">
         <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-t-2xl">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-calendar-week"></i> Upcoming Appointments
+                <x-dental-icon name="calendar" class="w-5 h-5" /> Upcoming Appointments
             </h5>
         </div>
         <div class="p-6">
@@ -111,7 +111,7 @@
                                 <small class="text-gray-500">{{ $appointment->appointment_date->format('M d') }}</small>
                             </div>
                             <p class="text-sm text-gray-600 flex items-center gap-2">
-                                <i class="bi bi-clock"></i> {{ $appointment->appointment_date->format('g:i A') }}
+                                <x-dental-icon name="clock" class="w-4 h-4" /> {{ $appointment->appointment_date->format('g:i A') }}
                                 <span class="text-gray-500">• {{ ucfirst($appointment->type) }}</span>
                             </p>
                         </a>
@@ -128,7 +128,7 @@
 <div class="card-dental">
     <div class="px-6 py-4 border-b border-gray-200">
         <h5 class="text-lg font-semibold flex items-center gap-2">
-            <i class="bi bi-people"></i> Recent Patients
+            <x-dental-icon name="people" class="w-5 h-5" /> Recent Patients
         </h5>
     </div>
     <div class="p-6">
@@ -161,7 +161,7 @@
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap text-sm">
                                     <a href="{{ route('patients.show', $patient) }}" class="btn-dental text-sm py-1.5 px-3">
-                                        <i class="bi bi-eye"></i> View
+                                        <x-dental-icon name="eye" class="w-4 h-4 mr-1" /> View
                                     </a>
                                 </td>
                             </tr>

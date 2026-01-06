@@ -5,10 +5,10 @@
 @section('content')
 <div class="flex justify-between items-center mb-6">
     <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
-        <i class="bi bi-calendar-check"></i> Appointments
+        <x-dental-icon name="calendar-check" class="w-5 h-5" /> Appointments
     </h2>
     <a href="{{ route('appointments.create') }}" class="btn-dental">
-        <i class="bi bi-plus-circle"></i> New Appointment
+        <x-dental-icon name="plus-circle" class="w-5 h-5" /> New Appointment
     </a>
 </div>
 
@@ -64,16 +64,16 @@
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-sm space-x-2">
                                 <a href="{{ route('appointments.show', $appointment) }}" class="btn-dental text-sm py-1.5 px-3">
-                                    <i class="bi bi-eye"></i>
+                                    <x-dental-icon name="eye" class="w-5 h-5" />
                                 </a>
                                 <a href="{{ route('appointments.edit', $appointment) }}" class="btn-dental-outline text-sm py-1.5 px-3 border-yellow-500 text-yellow-600 hover:bg-yellow-50">
-                                    <i class="bi bi-pencil"></i>
+                                    <x-dental-icon name="pencil" class="w-5 h-5" />
                                 </a>
                                 <form action="{{ route('appointments.destroy', $appointment) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this appointment?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn-dental-outline text-sm py-1.5 px-3 border-red-500 text-red-600 hover:bg-red-50">
-                                        <i class="bi bi-trash"></i>
+                                        <x-dental-icon name="trash" class="w-5 h-5" />
                                     </button>
                                 </form>
                             </td>

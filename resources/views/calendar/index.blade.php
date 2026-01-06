@@ -5,14 +5,14 @@
 @section('content')
 <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
     <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
-        <i class="bi bi-calendar3"></i> Appointment Calendar
+        <x-dental-icon name="calendar3" class="w-5 h-5" /> Appointment Calendar
     </h2>
     <div class="flex gap-2">
         <a href="{{ route('appointments.index') }}" class="btn-dental-outline">
-            <i class="bi bi-list"></i> List View
+            <x-dental-icon name="list" class="w-5 h-5" /> List View
         </a>
         <a href="{{ route('appointments.create') }}" class="btn-dental">
-            <i class="bi bi-plus-circle"></i> New Appointment
+            <x-dental-icon name="plus-circle" class="w-5 h-5" /> New Appointment
         </a>
     </div>
 </div>
@@ -21,19 +21,19 @@
     <div class="card-dental-header">
         <div class="flex justify-between items-center">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-calendar-month"></i> {{ $startDate->format('F Y') }}
+                <x-dental-icon name="calendar-month" class="w-5 h-5" /> {{ $startDate->format('F Y') }}
             </h5>
             <div class="flex gap-2">
                 <a href="{{ route('calendar.index', ['year' => $prevMonth->year, 'month' => $prevMonth->month]) }}" 
                    class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded text-sm transition-colors">
-                    <i class="bi bi-chevron-left"></i> Previous
+                    <x-dental-icon name="chevron-left" class="w-5 h-5" /> Previous
                 </a>
                 <a href="{{ route('calendar.index') }}" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded text-sm transition-colors">
                     Today
                 </a>
                 <a href="{{ route('calendar.index', ['year' => $nextMonth->year, 'month' => $nextMonth->month]) }}" 
                    class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded text-sm transition-colors">
-                    Next <i class="bi bi-chevron-right"></i>
+                    Next <x-dental-icon name="chevron-right" class="w-5 h-5" />
                 </a>
             </div>
         </div>
@@ -67,7 +67,7 @@
                             <div class="font-bold text-lg mb-1 flex items-center gap-1">
                                 {{ $day['date']->format('j') }}
                                 @if(isset($day['isBlocked']) && $day['isBlocked'])
-                                    <i class="bi bi-x-circle-fill text-red-500 text-sm" title="Blocked"></i>
+                                    <x-dental-icon name="x-circle" class="w-4 h-4 text-red-500 text-sm" />
                                 @endif
                             </div>
                             @if($day['count'] > 0)
@@ -77,7 +77,7 @@
                                              onclick="window.location='{{ route('appointments.show', $appointment) }}'"
                                              title="{{ $appointment->patient->first_name }} {{ $appointment->patient->last_name }} - {{ $appointment->appointment_date->format('g:i A') }}">
                                             <div class="flex items-center gap-1">
-                                                <i class="bi bi-clock text-xs"></i>
+                                                <x-dental-icon name="clock" class="w-3 h-3 text-xs" />
                                                 <span class="text-xs">{{ $appointment->appointment_date->format('g:i A') }}</span>
                                             </div>
                                             <div class="text-xs truncate">
@@ -125,13 +125,13 @@
                 <label class="block text-sm font-medium text-gray-700 mb-2">Quick Actions:</label>
                 <div class="space-y-2">
                     <button type="button" class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors" onclick="blockDay()">
-                        <i class="bi bi-x-circle"></i> Block Entire Day
+                        <x-dental-icon name="x-circle" class="w-5 h-5" /> Block Entire Day
                     </button>
                     <button type="button" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors" onclick="showBlockHours()">
-                        <i class="bi bi-clock"></i> Block Specific Hours
+                        <x-dental-icon name="clock" class="w-5 h-5" /> Block Specific Hours
                     </button>
                     <button type="button" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors" onclick="unblockDay()">
-                        <i class="bi bi-check-circle"></i> Unblock Day
+                        <x-dental-icon name="check-circle" class="w-5 h-5" /> Unblock Day
                     </button>
                 </div>
             </div>
@@ -154,7 +154,7 @@
                 </div>
                 <div class="flex gap-2">
                     <button type="button" class="btn-dental flex-1" onclick="blockHours()">
-                        <i class="bi bi-check"></i> Block Hours
+                        <x-dental-icon name="check" class="w-5 h-5" /> Block Hours
                     </button>
                     <button type="button" class="btn-dental-outline flex-1" onclick="hideBlockHours()">
                         Cancel
@@ -232,7 +232,7 @@
                         if (avail.start_time && avail.end_time) {
                             const startTime = formatTimeForDisplay(avail.start_time);
                             const endTime = formatTimeForDisplay(avail.end_time);
-                            html += `<li class="flex items-center gap-2"><i class="bi bi-x-circle text-red-500"></i> <strong>${startTime} - ${endTime}</strong> <span class="px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Blocked</span></li>`;
+                            html += `<li class="flex items-center gap-2"><x-dental-icon name="x-circle" class="w-5 h-5 text-red-500" /> <strong>${startTime} - ${endTime}</strong> <span class="px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Blocked</span></li>`;
                         }
                     });
                     html += '</ul>';
@@ -244,7 +244,7 @@
                         if (avail.start_time && avail.end_time) {
                             const startTime = formatTimeForDisplay(avail.start_time);
                             const endTime = formatTimeForDisplay(avail.end_time);
-                            html += `<li class="flex items-center gap-2"><i class="bi bi-check-circle text-green-500"></i> ${startTime} - ${endTime} <span class="px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Available</span></li>`;
+                            html += `<li class="flex items-center gap-2"><x-dental-icon name="check-circle" class="w-5 h-5 text-green-500" /> ${startTime} - ${endTime} <span class="px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Available</span></li>`;
                         }
                     });
                     html += '</ul>';

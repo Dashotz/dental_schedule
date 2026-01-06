@@ -5,11 +5,11 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h2 class="mb-1"><i class="bi bi-plus-circle text-primary"></i> Create New Subdomain</h2>
+        <h2 class="mb-1"><x-dental-icon name="plus-circle" class="w-5 h-5 text-primary" /> Create New Subdomain</h2>
         <p class="text-muted mb-0">Add a new dental clinic subdomain to the system</p>
     </div>
     <a href="{{ route('admin.subdomains.index') }}" class="btn btn-secondary shadow-sm">
-        <i class="bi bi-arrow-left"></i> Back
+        <x-dental-icon name="arrow-left" class="w-5 h-5" /> Back
     </a>
 </div>
 
@@ -17,7 +17,7 @@
     <div class="col-12">
         <div class="card shadow-sm border-0">
             <div class="card-header bg-primary text-white py-3">
-                <h5 class="mb-0"><i class="bi bi-globe me-2"></i> Subdomain Information</h5>
+                <h5 class="mb-0"><x-dental-icon name="globe" class="w-5 h-5" /> Subdomain Information</h5>
             </div>
             <div class="card-body p-4">
                 <form method="POST" action="{{ route('admin.subdomains.store') }}">
@@ -26,7 +26,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-4">
                             <label for="subdomain" class="form-label fw-semibold mb-2">
-                                <i class="bi bi-globe text-primary me-1"></i>Subdomain <span class="text-danger">*</span>
+                                <x-dental-icon name="globe" class="w-5 h-5 text-primary" />Subdomain <span class="text-danger">*</span>
                             </label>
                             <div class="input-group">
                                 <input type="text" 
@@ -39,7 +39,7 @@
                                 <span class="input-group-text bg-light border-start-0">.helioho.st</span>
                             </div>
                             <small class="text-muted d-block mt-2">
-                                <i class="bi bi-info-circle"></i> Only lowercase letters, numbers, and hyphens allowed.
+                                <x-dental-icon name="info-circle" class="w-5 h-5" /> Only lowercase letters, numbers, and hyphens allowed.
                             </small>
                             @error('subdomain')
                                 <div class="invalid-feedback d-block mt-1">{{ $message }}</div>
@@ -48,7 +48,7 @@
 
                         <div class="col-md-6 mb-4">
                             <label for="name" class="form-label fw-semibold mb-2">
-                                <i class="bi bi-building text-primary me-1"></i>Clinic Name <span class="text-danger">*</span>
+                                <x-dental-icon name="building" class="w-5 h-5 text-primary" />Clinic Name <span class="text-danger">*</span>
                             </label>
                             <input type="text" 
                                    class="form-control form-control-lg @error('name') is-invalid @enderror" 
@@ -64,7 +64,7 @@
 
                         <div class="col-12 mb-4">
                             <label for="description" class="form-label fw-semibold mb-2">
-                                <i class="bi bi-file-text text-primary me-1"></i>Description
+                                <x-dental-icon name="file-text" class="w-5 h-5 text-primary" />Description
                             </label>
                             <textarea class="form-control @error('description') is-invalid @enderror" 
                                       id="description" 
@@ -78,7 +78,7 @@
 
                         <div class="col-md-4 mb-4">
                             <label for="email" class="form-label fw-semibold mb-2">
-                                <i class="bi bi-envelope text-primary me-1"></i>Email
+                                <x-dental-icon name="envelope" class="w-5 h-5 text-primary" />Email
                             </label>
                             <input type="email" 
                                    class="form-control @error('email') is-invalid @enderror" 
@@ -93,7 +93,7 @@
 
                         <div class="col-md-4 mb-4">
                             <label for="phone" class="form-label fw-semibold mb-2">
-                                <i class="bi bi-telephone text-primary me-1"></i>Phone
+                                <x-dental-icon name="telephone" class="w-5 h-5 text-primary" />Phone
                             </label>
                             <input type="text" 
                                    class="form-control @error('phone') is-invalid @enderror" 
@@ -108,7 +108,7 @@
 
                         <div class="col-md-4 mb-4">
                             <label for="address" class="form-label fw-semibold mb-2">
-                                <i class="bi bi-geo-alt text-primary me-1"></i>Address
+                                <x-dental-icon name="geo-alt" class="w-5 h-5 text-primary" />Address
                             </label>
                             <textarea class="form-control @error('address') is-invalid @enderror" 
                                       id="address" 
@@ -123,10 +123,10 @@
 
                     <div class="d-flex gap-2 pt-4 mt-4 border-top">
                         <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm">
-                            <i class="bi bi-check-circle me-2"></i> Create Subdomain
+                            <x-dental-icon name="check-circle" class="w-5 h-5" /> Create Subdomain
                         </button>
                         <a href="{{ route('admin.subdomains.index') }}" class="btn btn-secondary btn-lg px-4">
-                            <i class="bi bi-x-circle me-2"></i> Cancel
+                            <x-dental-icon name="x-circle" class="w-5 h-5" /> Cancel
                         </a>
                     </div>
                 </form>

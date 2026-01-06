@@ -10,10 +10,10 @@
     
     <x-slot name="footer">
         <button type="button" class="btn-dental-outline" onclick="closeModal('editSubdomainModal')">
-            <i class="bi bi-x-circle"></i> Cancel
+            <x-dental-icon name="x-circle" class="w-5 h-5" /> Cancel
         </button>
         <button type="submit" form="editSubdomainForm" class="btn-dental">
-            <i class="bi bi-check-circle"></i> Update Subdomain
+            <x-dental-icon name="check-circle" class="w-5 h-5" /> Update Subdomain
         </button>
     </x-slot>
 </x-modal>

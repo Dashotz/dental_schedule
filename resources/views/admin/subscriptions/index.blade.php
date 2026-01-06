@@ -8,19 +8,19 @@
 <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
     <div>
         <h2 class="text-3xl font-bold text-gray-800 mb-1 flex items-center gap-2">
-            <i class="bi bi-credit-card text-dental-teal"></i> Subscriptions Management
+            <x-dental-icon name="credit-card" class="w-8 h-8 text-dental-teal" /> Subscriptions Management
         </h2>
         <p class="text-gray-600">Manage all subscription plans and billing cycles</p>
     </div>
-    <button type="button" class="btn-dental shadow-lg" onclick="openModal('createSubscriptionModal')" id="openCreateSubscriptionModal">
-        <i class="bi bi-plus-circle"></i> Add Subscription
+        <button type="button" class="inline-flex items-center gap-2 btn-dental shadow-lg" onclick="openModal('createSubscriptionModal')" id="openCreateSubscriptionModal">
+        <x-dental-icon name="plus-circle" class="w-5 h-5" /> Add Subscription
     </button>
 </div>
 
 <div class="card-dental">
     <div class="px-6 py-4 border-b border-gray-200">
         <h5 class="text-lg font-semibold flex items-center gap-2">
-            <i class="bi bi-list-ul text-dental-teal"></i> All Subscriptions
+            <x-dental-icon name="list-ul" class="w-5 h-5 text-dental-teal" /> All Subscriptions
         </h5>
     </div>
     <div class="p-0">
@@ -29,25 +29,25 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <i class="bi bi-globe mr-2"></i>Subdomain
+                            <span class="flex items-center"><x-dental-icon name="globe" class="w-4 h-4 mr-2" />Subdomain</span>
                         </th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <i class="bi bi-star mr-2"></i>Plan
+                            <span class="flex items-center"><x-dental-icon name="star" class="w-4 h-4 mr-2" />Plan</span>
                         </th>
                         <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <i class="bi bi-currency-dollar mr-2"></i>Amount
+                            <span class="flex items-center justify-end"><x-dental-icon name="currency-dollar" class="w-4 h-4 mr-2" />Amount</span>
                         </th>
                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <i class="bi bi-calendar-range mr-2"></i>Billing Cycle
+                            <span class="flex items-center justify-center"><x-dental-icon name="calendar-range" class="w-4 h-4 mr-2" />Billing Cycle</span>
                         </th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <i class="bi bi-calendar-check mr-2"></i>Start Date
+                            <span class="flex items-center"><x-dental-icon name="calendar-check" class="w-4 h-4 mr-2" />Start Date</span>
                         </th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <i class="bi bi-calendar-x mr-2"></i>End Date
+                            <span class="flex items-center"><x-dental-icon name="calendar-x" class="w-4 h-4 mr-2" />End Date</span>
                         </th>
                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <i class="bi bi-info-circle mr-2"></i>Status
+                            <span class="flex items-center justify-center"><x-dental-icon name="info-circle" class="w-4 h-4 mr-2" />Status</span>
                         </th>
                         <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
@@ -58,7 +58,7 @@
                             <td class="px-4 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="bg-dental-teal/10 rounded-full p-2 mr-3">
-                                        <i class="bi bi-globe text-dental-teal"></i>
+                                        <x-dental-icon name="globe" class="w-5 h-5 text-dental-teal" />
                                     </div>
                                     <div>
                                         <button type="button" 
@@ -72,8 +72,8 @@
                                 </div>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">
-                                <span class="px-3 py-1.5 rounded text-xs font-medium bg-cyan-100 text-cyan-800">
-                                    <i class="bi bi-star-fill mr-1"></i>
+                                <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded text-xs font-medium bg-cyan-100 text-cyan-800">
+                                    <x-dental-icon name="star" class="w-3 h-3" />
                                     {{ ucfirst($subscription->plan_name) }}
                                 </span>
                             </td>
@@ -86,11 +86,11 @@
                                 </span>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <i class="bi bi-calendar-check text-gray-400 mr-1"></i>
+                                <x-dental-icon name="calendar-check" class="w-4 h-4 text-gray-400 mr-1 inline" />
                                 {{ $subscription->start_date->format('M d, Y') }}
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-sm">
-                                <i class="bi bi-calendar-x text-gray-400 mr-1"></i>
+                                <x-dental-icon name="calendar-x" class="w-4 h-4 text-gray-400 mr-1 inline" />
                                 <span class="{{ $subscription->end_date->isPast() ? 'text-red-600' : 'text-gray-500' }}">
                                     {{ $subscription->end_date->format('M d, Y') }}
                                 </span>
@@ -112,23 +112,23 @@
                                     ];
                                     $statusIcon = $statusIcons[$subscription->status] ?? 'circle';
                                 @endphp
-                                <span class="px-3 py-1.5 rounded text-xs font-medium {{ $statusColor }}">
-                                    <i class="bi bi-{{ $statusIcon }}"></i>
+                                <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded text-xs font-medium {{ $statusColor }}">
+                                    <x-dental-icon name="{{ $statusIcon }}" class="w-3 h-3" />
                                     {{ ucfirst($subscription->status) }}
                                 </span>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-right text-sm space-x-2">
-                                <button class="btn-dental text-sm py-1.5 px-3 update-status-btn" 
+                                <button class="inline-flex items-center justify-center btn-dental text-sm py-1.5 px-3 update-status-btn" 
                                         data-id="{{ $subscription->id }}"
                                         data-status="{{ $subscription->status }}"
                                         title="Update Status">
-                                    <i class="bi bi-pencil"></i>
+                                    <x-dental-icon name="pencil" class="w-4 h-4" />
                                 </button>
                                 @if($subscription->status === 'active' && $subscription->end_date <= now()->addDays(7))
-                                    <button class="btn-dental-outline text-sm py-1.5 px-3 border-yellow-500 text-yellow-600 hover:bg-yellow-50 send-reminder" 
+                                    <button class="inline-flex items-center justify-center btn-dental-outline text-sm py-1.5 px-3 border-yellow-500 text-yellow-600 hover:bg-yellow-50 send-reminder" 
                                             data-id="{{ $subscription->id }}"
                                             title="Send Payment Reminder">
-                                        <i class="bi bi-envelope"></i>
+                                        <x-dental-icon name="envelope" class="w-4 h-4" />
                                     </button>
                                 @endif
                             </td>
@@ -137,10 +137,10 @@
                         <tr>
                             <td colspan="8" class="px-4 py-12 text-center">
                                 <div class="py-4">
-                                    <i class="bi bi-inbox text-6xl text-gray-300"></i>
+                                    <x-dental-icon name="inbox" class="w-16 h-16 text-gray-300 mx-auto" />
                                     <p class="text-gray-500 mt-3 mb-0">No subscriptions found.</p>
-                                    <button type="button" class="btn-dental mt-3" onclick="openModal('createSubscriptionModal')" id="openCreateSubscriptionModalEmpty">
-                                        <i class="bi bi-plus-circle"></i> Create Your First Subscription
+                                    <button type="button" class="inline-flex items-center gap-2 btn-dental mt-3" onclick="openModal('createSubscriptionModal')" id="openCreateSubscriptionModalEmpty">
+                                        <x-dental-icon name="plus-circle" class="w-5 h-5" /> Create Your First Subscription
                                     </button>
                                 </div>
                             </td>
@@ -261,7 +261,7 @@
                             text: xhr.responseJSON?.message || 'Failed to create subscription.'
                         });
                     }
-                    submitBtn.prop('disabled', false).html('<i class="bi bi-check-circle mr-2"></i>Create Subscription');
+                    submitBtn.prop('disabled', false).html('<svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Create Subscription');
                 }
             });
         });

@@ -5,10 +5,10 @@
 @section('content')
 <div class="flex justify-between items-center mb-6">
     <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
-        <i class="bi bi-bar-chart"></i> Reports
+        <x-dental-icon name="bar-chart" class="w-5 h-5" /> Reports
     </h2>
     <a href="{{ route('admin.insights.index') }}" class="btn-dental">
-        <i class="bi bi-pie-chart"></i> View Insights
+        <x-dental-icon name="pie-chart" class="w-5 h-5" /> View Insights
     </a>
 </div>
 
@@ -16,7 +16,7 @@
 <div class="card-dental mb-6">
     <div class="card-dental-header">
         <h5 class="text-lg font-semibold flex items-center gap-2">
-            <i class="bi bi-graph-up"></i> Revenue Over Time (Last 12 Months)
+            <x-dental-icon name="graph-up" class="w-5 h-5" /> Revenue Over Time (Last 12 Months)
         </h5>
     </div>
     <div class="p-6">
@@ -28,7 +28,7 @@
 <div class="card-dental mb-6">
     <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-t-2xl">
         <h5 class="text-lg font-semibold flex items-center gap-2">
-            <i class="bi bi-calendar-month"></i> Monthly Revenue Breakdown
+            <x-dental-icon name="calendar-month" class="w-5 h-5" /> Monthly Revenue Breakdown
         </h5>
     </div>
     <div class="p-6">
@@ -41,7 +41,7 @@
     <div class="card-dental">
         <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white px-6 py-4 rounded-t-2xl">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-arrow-up-circle"></i> Subscription Growth
+                <x-dental-icon name="arrow-up-circle" class="w-5 h-5" /> Subscription Growth
             </h5>
         </div>
         <div class="p-6">
@@ -53,7 +53,7 @@
     <div class="card-dental">
         <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-6 py-4 rounded-t-2xl">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-globe"></i> Subdomain Growth
+                <x-dental-icon name="globe" class="w-5 h-5" /> Subdomain Growth
             </h5>
         </div>
         <div class="p-6">
@@ -67,7 +67,7 @@
     <div class="card-dental">
         <div class="bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 py-4 rounded-t-2xl">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-pie-chart"></i> Revenue by Plan
+                <x-dental-icon name="pie-chart" class="w-5 h-5" /> Revenue by Plan
             </h5>
         </div>
         <div class="p-6">
@@ -79,7 +79,7 @@
     <div class="card-dental">
         <div class="bg-gradient-to-r from-gray-800 to-gray-900 text-white px-6 py-4 rounded-t-2xl">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-credit-card"></i> Revenue by Billing Cycle
+                <x-dental-icon name="credit-card" class="w-5 h-5" /> Revenue by Billing Cycle
             </h5>
         </div>
         <div class="p-6">

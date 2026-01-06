@@ -5,10 +5,10 @@
 @section('content')
 <div class="flex justify-between items-center mb-6">
     <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
-        <i class="bi bi-pie-chart"></i> Insights & Analytics
+        <x-dental-icon name="pie-chart" class="w-5 h-5" /> Insights & Analytics
     </h2>
     <a href="{{ route('admin.reports.index') }}" class="btn-dental">
-        <i class="bi bi-bar-chart"></i> View Reports
+        <x-dental-icon name="bar-chart" class="w-5 h-5" /> View Reports
     </a>
 </div>
 
@@ -39,7 +39,7 @@
     <div class="card-dental">
         <div class="card-dental-header">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-pie-chart"></i> Subscription Status Distribution
+                <x-dental-icon name="pie-chart" class="w-5 h-5" /> Subscription Status Distribution
             </h5>
         </div>
         <div class="p-6">
@@ -51,7 +51,7 @@
     <div class="card-dental">
         <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-t-2xl">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-diagram-3"></i> Plan Distribution
+                <x-dental-icon name="diagram-3" class="w-5 h-5" /> Plan Distribution
             </h5>
         </div>
         <div class="p-6">
@@ -65,7 +65,7 @@
     <div class="card-dental">
         <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-6 py-4 rounded-t-2xl">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-credit-card"></i> Billing Cycle Distribution
+                <x-dental-icon name="credit-card" class="w-5 h-5" /> Billing Cycle Distribution
             </h5>
         </div>
         <div class="p-6">
@@ -77,7 +77,7 @@
     <div class="card-dental">
         <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white px-6 py-4 rounded-t-2xl">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-globe"></i> Subdomain Status
+                <x-dental-icon name="globe" class="w-5 h-5" /> Subdomain Status
             </h5>
         </div>
         <div class="p-6">
@@ -90,7 +90,7 @@
 <div class="card-dental mb-6">
     <div class="bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 py-4 rounded-t-2xl">
         <h5 class="text-lg font-semibold flex items-center gap-2">
-            <i class="bi bi-graph-up-arrow"></i> Revenue Trends (Last 6 Months)
+            <x-dental-icon name="graph-up" class="w-5 h-5" /> Revenue Trends (Last 6 Months)
         </h5>
     </div>
     <div class="p-6">
@@ -102,7 +102,7 @@
 <div class="card-dental">
     <div class="bg-gradient-to-r from-gray-800 to-gray-900 text-white px-6 py-4 rounded-t-2xl">
         <h5 class="text-lg font-semibold flex items-center gap-2">
-            <i class="bi bi-trophy"></i> Top Revenue Generating Subdomains
+            <x-dental-icon name="trophy" class="w-5 h-5" /> Top Revenue Generating Subdomains
         </h5>
     </div>
     <div class="p-6">
@@ -137,7 +137,7 @@
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap text-sm">
                                     <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="btn-dental text-sm py-1.5 px-3">
-                                        <i class="bi bi-eye"></i> View
+                                        <x-dental-icon name="eye" class="w-5 h-5" /> View
                                     </a>
                                 </td>
                             </tr>

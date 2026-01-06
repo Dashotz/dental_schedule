@@ -243,11 +243,29 @@
         });
 
         // View subdomain modal
-        $(document).on('click', '.view-subdomain-btn', function() {
+        $(document).on('click', '.view-subdomain-btn', function(e) {
+            e.preventDefault();
             const subdomainId = $(this).data('subdomain-id');
+            console.log('View button clicked, subdomain ID:', subdomainId);
+            
+            // Check if container exists
+            if ($('#viewSubdomainModalContainer').length === 0) {
+                $('body').append('<div id="viewSubdomainModalContainer"></div>');
+            }
+            
             const loadingHtml = SkeletonLoading.getViewSubdomainModal();
             $('#viewSubdomainModalContainer').html(loadingHtml);
-            openModal('viewSubdomainModal');
+            
+            // Open modal
+            const modal = document.getElementById('viewSubdomainModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+                console.log('Modal opened');
+            } else {
+                console.error('Modal element not found');
+            }
             
             $.ajax({
                 url: `/admin/subdomains/${subdomainId}`,
@@ -256,13 +274,34 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 success: function(response) {
+                    console.log('AJAX success, response:', response);
                     $('#viewSubdomainModalContainer').html(response.html);
+                    // Make sure modal is visible after content loads
+                    const modal = document.getElementById('viewSubdomainModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                    }
                 },
                 error: function(xhr) {
+                    console.error('Error loading subdomain:', xhr);
                     $('#viewSubdomainModalContainer').html(`
-                        <x-modal id="viewSubdomainModal" title="Error">
-                            <p class="text-red-600">Failed to load subdomain details. Please try again.</p>
-                        </x-modal>
+                        <div class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center" id="viewSubdomainModal">
+                            <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+                                <div class="card-dental-header flex justify-between items-center">
+                                    <h5 class="text-lg font-semibold">Error</h5>
+                                    <button type="button" class="text-white hover:text-gray-200 text-2xl transition-colors" onclick="closeModal('viewSubdomainModal')">
+                                        &times;
+                                    </button>
+                                </div>
+                                <div class="p-6">
+                                    <p class="text-red-600">Failed to load subdomain details. Please try again.</p>
+                                </div>
+                                <div class="px-6 py-4 border-t border-gray-200 flex justify-end">
+                                    <button onclick="closeModal('viewSubdomainModal')" class="btn-dental-outline">Close</button>
+                                </div>
+                            </div>
+                        </div>
                     `);
                     openModal('viewSubdomainModal');
                 }

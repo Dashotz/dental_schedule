@@ -4,13 +4,13 @@
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-person"></i> Patient Details</h2>
+    <h2><x-dental-icon name="person" class="w-5 h-5" /> Patient Details</h2>
     <div>
         <a href="{{ route('patients.edit', $patient) }}" class="btn btn-warning">
-            <i class="bi bi-pencil"></i> Edit
+            <x-dental-icon name="pencil" class="w-5 h-5" /> Edit
         </a>
         <a href="{{ route('patients.index') }}" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Back
+            <x-dental-icon name="arrow-left" class="w-5 h-5" /> Back
         </a>
     </div>
 </div>
@@ -20,7 +20,7 @@
     <div class="col-lg-8 mb-4">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="bi bi-person-circle"></i> Personal Information</h5>
+                <h5 class="mb-0"><x-dental-icon name="person-circle" class="w-5 h-5" /> Personal Information</h5>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -79,7 +79,7 @@
         <!-- Medical Information -->
         <div class="card mt-4">
             <div class="card-header bg-info text-white">
-                <h5 class="mb-0"><i class="bi bi-heart-pulse"></i> Medical Information</h5>
+                <h5 class="mb-0"><x-dental-icon name="heart-pulse" class="w-5 h-5" /> Medical Information</h5>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -103,7 +103,7 @@
         @if($patient->emergency_contact_name || $patient->emergency_contact_phone)
         <div class="card mt-4">
             <div class="card-header bg-warning text-white">
-                <h5 class="mb-0"><i class="bi bi-telephone"></i> Emergency Contact</h5>
+                <h5 class="mb-0"><x-dental-icon name="telephone" class="w-5 h-5" /> Emergency Contact</h5>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -124,7 +124,7 @@
         @if($patient->insurance_provider || $patient->insurance_policy_number)
         <div class="card mt-4">
             <div class="card-header bg-success text-white">
-                <h5 class="mb-0"><i class="bi bi-shield-check"></i> Insurance Information</h5>
+                <h5 class="mb-0"><x-dental-icon name="shield-check" class="w-5 h-5" /> Insurance Information</h5>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -147,11 +147,11 @@
         <!-- Dental Chart -->
         <div class="card mb-3">
             <div class="card-header bg-info text-white">
-                <h6 class="mb-0"><i class="bi bi-teeth"></i> Dental Chart</h6>
+                <h6 class="mb-0"><x-dental-icon name="tooth" class="w-5 h-5" /> Dental Chart</h6>
             </div>
             <div class="card-body">
                 <a href="{{ route('patients.teeth-chart', $patient) }}" class="btn btn-info w-100">
-                    <i class="bi bi-grid"></i> View Teeth Chart
+                    <x-dental-icon name="grid" class="w-5 h-5" /> View Teeth Chart
                 </a>
             </div>
         </div>
@@ -159,7 +159,7 @@
         <!-- Recent Appointments -->
         <div class="card">
             <div class="card-header bg-info text-white">
-                <h6 class="mb-0"><i class="bi bi-calendar-check"></i> Recent Appointments</h6>
+                <h6 class="mb-0"><x-dental-icon name="calendar-check" class="w-5 h-5" /> Recent Appointments</h6>
             </div>
             <div class="card-body">
                 @if($patient->appointments->count() > 0)
@@ -176,7 +176,7 @@
                                         </span>
                                     </div>
                                     <a href="{{ route('appointments.show', $appointment) }}" class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-eye"></i>
+                                        <x-dental-icon name="eye" class="w-5 h-5" />
                                     </a>
                                 </div>
                             </div>

@@ -4,13 +4,13 @@
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-calendar-check"></i> Appointment Details</h2>
+    <h2><x-dental-icon name="calendar-check" class="w-5 h-5" /> Appointment Details</h2>
     <div>
         <a href="{{ route('appointments.edit', $appointment) }}" class="btn btn-warning">
-            <i class="bi bi-pencil"></i> Edit
+            <x-dental-icon name="pencil" class="w-5 h-5" /> Edit
         </a>
         <a href="{{ route('appointments.index') }}" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Back
+            <x-dental-icon name="arrow-left" class="w-5 h-5" /> Back
         </a>
     </div>
 </div>
@@ -101,14 +101,14 @@
             </div>
             <div class="card-body">
                 <a href="{{ route('patients.show', $appointment->patient) }}" class="btn btn-primary w-100 mb-2">
-                    <i class="bi bi-person"></i> View Patient
+                    <x-dental-icon name="person" class="w-5 h-5" /> View Patient
                 </a>
                 @if($appointment->status !== 'completed' && $appointment->status !== 'cancelled')
                     <form action="{{ route('appointments.destroy', $appointment) }}" method="POST" class="d-inline w-100" onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger w-100">
-                            <i class="bi bi-x-circle"></i> Cancel Appointment
+                            <x-dental-icon name="x-circle" class="w-5 h-5" /> Cancel Appointment
                         </button>
                     </form>
                 @endif

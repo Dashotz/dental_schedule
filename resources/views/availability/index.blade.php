@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-clock-history"></i> My Availability</h2>
+    <h2><x-dental-icon name="clock-history" class="w-5 h-5" /> My Availability</h2>
     <a href="{{ route('availability.create') }}" class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i> Add Availability
+        <x-dental-icon name="plus-circle" class="w-5 h-5" /> Add Availability
     </a>
 </div>
 
@@ -76,13 +76,13 @@
                             </td>
                             <td>
                                 <a href="{{ route('availability.edit', $availability) }}" class="btn btn-sm btn-warning">
-                                    <i class="bi bi-pencil"></i>
+                                    <x-dental-icon name="pencil" class="w-5 h-5" />
                                 </a>
                                 <form action="{{ route('availability.destroy', $availability) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this availability?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="bi bi-trash"></i>
+                                        <x-dental-icon name="trash" class="w-5 h-5" />
                                     </button>
                                 </form>
                             </td>
@@ -92,7 +92,7 @@
                             <td colspan="6" class="text-center">
                                 <p class="text-muted mb-3">No availability schedules set yet.</p>
                                 <a href="{{ route('availability.create') }}" class="btn btn-primary">
-                                    <i class="bi bi-plus-circle"></i> Create Your First Schedule
+                                    <x-dental-icon name="plus-circle" class="w-5 h-5" /> Create Your First Schedule
                                 </a>
                             </td>
                         </tr>

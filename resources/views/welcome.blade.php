@@ -22,15 +22,15 @@
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center text-sm">
             <div class="flex items-center justify-center gap-2">
-                <i class="bi bi-clock"></i>
+                <x-dental-icon name="clock" class="w-5 h-5" />
                 <span>Mon-Sun 9:00AM-6:00PM</span>
             </div>
             <div class="flex items-center justify-center gap-2">
-                <i class="bi bi-telephone"></i>
+                <x-dental-icon name="telephone" class="w-5 h-5" />
                 <span>(123) 456-7890</span>
             </div>
             <div class="flex items-center justify-center gap-2">
-                <i class="bi bi-envelope"></i>
+                <x-dental-icon name="envelope" class="w-5 h-5" />
                 <span>info@dentalcare.com</span>
             </div>
         </div>
@@ -42,7 +42,7 @@
     <div class="container mx-auto px-4">
         <div class="flex justify-between items-center py-4">
             <a href="/" class="flex items-center gap-2 text-dental-teal font-bold text-xl hover:text-dental-teal-dark transition-colors">
-                <i class="bi bi-tooth text-2xl"></i>
+                <x-dental-icon name="tooth" class="w-6 h-6 text-2xl" />
                 <span>Dental Care Clinic</span>
             </a>
             <div class="flex items-center gap-6">
@@ -51,7 +51,7 @@
                 <a href="#testimonials" class="hidden md:block text-gray-700 hover:text-dental-teal transition-colors font-medium">Testimonials</a>
                 <a href="#contact" class="hidden md:block text-gray-700 hover:text-dental-teal transition-colors font-medium">Contact</a>
                 <button class="md:hidden text-dental-teal text-2xl p-2 hover:bg-gray-100 rounded transition-colors" id="mobileMenuBtn">
-                    <i class="bi bi-list"></i>
+                    <x-dental-icon name="list" class="w-5 h-5" />
                 </button>
             </div>
         </div>
@@ -66,7 +66,7 @@
         </div>
     </div>
     <a href="{{ route('login') }}" class="fixed bottom-6 right-6 bg-dental-teal hover:bg-dental-teal-dark text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-110 z-40" title="Staff Login">
-        <i class="bi bi-person-circle text-2xl"></i>
+        <x-dental-icon name="person-circle" class="w-6 h-6 text-2xl" />
     </a>
 </nav>
 
@@ -114,12 +114,12 @@
                 </div>
                 <div class="p-6 relative -mt-8">
                     <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-2xl mb-4 shadow-lg">
-                        <i class="bi bi-heart-pulse"></i>
+                        <x-dental-icon name="heart-pulse" class="w-5 h-5" />
                     </div>
                     <h4 class="text-xl font-bold mb-2 text-gray-800">Cosmetic Dentistry</h4>
                     <p class="text-gray-600 mb-4">We promise you a smile makeover that goes beyond improving how your teeth and gums function.</p>
                     <a href="#services" class="text-dental-teal hover:text-dental-teal-dark font-semibold flex items-center gap-2 transition-colors">
-                        Learn More <i class="bi bi-arrow-right"></i>
+                        Learn More <x-dental-icon name="arrow-right" class="w-5 h-5" />
                     </a>
                 </div>
             </div>
@@ -132,12 +132,12 @@
                 </div>
                 <div class="p-6 relative -mt-8">
                     <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-2xl mb-4 shadow-lg">
-                        <i class="bi bi-shield-check"></i>
+                        <x-dental-icon name="shield-check" class="w-5 h-5" />
                     </div>
                     <h4 class="text-xl font-bold mb-2 text-gray-800">TMJ Therapy</h4>
                     <p class="text-gray-600 mb-4">Our clinic has advanced diagnostic and treatment facilities for TMJ dysfunction.</p>
                     <a href="#services" class="text-dental-teal hover:text-dental-teal-dark font-semibold flex items-center gap-2 transition-colors">
-                        Learn More <i class="bi bi-arrow-right"></i>
+                        Learn More <x-dental-icon name="arrow-right" class="w-5 h-5" />
                     </a>
                 </div>
             </div>
@@ -150,12 +150,12 @@
                 </div>
                 <div class="p-6 relative -mt-8">
                     <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-2xl mb-4 shadow-lg">
-                        <i class="bi bi-camera"></i>
+                        <x-dental-icon name="camera" class="w-5 h-5" />
                     </div>
                     <h4 class="text-xl font-bold mb-2 text-gray-800">CBCT and Dental X-ray</h4>
                     <p class="text-gray-600 mb-4">Dental imaging plays a crucial role in accurate diagnosis and treatment planning.</p>
                     <a href="#services" class="text-dental-teal hover:text-dental-teal-dark font-semibold flex items-center gap-2 transition-colors">
-                        Learn More <i class="bi bi-arrow-right"></i>
+                        Learn More <x-dental-icon name="arrow-right" class="w-5 h-5" />
                     </a>
                 </div>
             </div>
@@ -173,49 +173,49 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
                 <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
-                    <i class="bi bi-clipboard-pulse"></i>
+                    <x-dental-icon name="clipboard" class="w-5 h-5" />
                 </div>
                 <h5 class="font-semibold text-gray-800">General Dentistry</h5>
             </div>
             <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
                 <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
-                    <i class="bi bi-heart-pulse"></i>
+                    <x-dental-icon name="heart-pulse" class="w-5 h-5" />
                 </div>
                 <h5 class="font-semibold text-gray-800">Cosmetic Dentistry</h5>
             </div>
             <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
                 <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
-                    <i class="bi bi-shield-check"></i>
+                    <x-dental-icon name="shield-check" class="w-5 h-5" />
                 </div>
                 <h5 class="font-semibold text-gray-800">Orthodontics</h5>
             </div>
             <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
                 <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
-                    <i class="bi bi-droplet"></i>
+                    <x-dental-icon name="wrench-screwdriver" class="w-5 h-5" />
                 </div>
                 <h5 class="font-semibold text-gray-800">Root Canal Treatment</h5>
             </div>
             <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
                 <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
-                    <i class="bi bi-stars"></i>
+                    <x-dental-icon name="sparkles" class="w-5 h-5" />
                 </div>
                 <h5 class="font-semibold text-gray-800">Dental Implants</h5>
             </div>
             <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
                 <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
-                    <i class="bi bi-emoji-smile"></i>
+                    <x-dental-icon name="face-smile" class="w-5 h-5" />
                 </div>
                 <h5 class="font-semibold text-gray-800">Emergency Care</h5>
             </div>
             <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
                 <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
-                    <i class="bi bi-hospital"></i>
+                    <x-dental-icon name="building-office-2" class="w-5 h-5" />
                 </div>
                 <h5 class="font-semibold text-gray-800">Oral Surgery</h5>
             </div>
             <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
                 <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
-                    <i class="bi bi-brush"></i>
+                    <x-dental-icon name="paint-brush" class="w-5 h-5" />
                 </div>
                 <h5 class="font-semibold text-gray-800">Teeth Whitening</h5>
             </div>
@@ -247,42 +247,42 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="card-dental p-6 text-center hover:shadow-xl transition-all">
                 <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-4">
-                    <i class="bi bi-people"></i>
+                    <x-dental-icon name="people" class="w-5 h-5" />
                 </div>
                 <h4 class="text-xl font-bold mb-3 text-gray-800">Skilled Dental Experts</h4>
                 <p class="text-gray-600">Our experienced team provides top-quality care backed by advanced training and a passion for healthy smiles.</p>
             </div>
             <div class="card-dental p-6 text-center hover:shadow-xl transition-all">
                 <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-4">
-                    <i class="bi bi-clipboard-check"></i>
+                    <x-dental-icon name="clipboard-check" class="w-5 h-5" />
                 </div>
                 <h4 class="text-xl font-bold mb-3 text-gray-800">Personalized Treatment Plans</h4>
                 <p class="text-gray-600">Every smile is unique. We create customized care plans to meet your individual dental needs and goals.</p>
             </div>
             <div class="card-dental p-6 text-center hover:shadow-xl transition-all">
                 <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-4">
-                    <i class="bi bi-cpu"></i>
+                    <x-dental-icon name="cpu" class="w-5 h-5" />
                 </div>
                 <h4 class="text-xl font-bold mb-3 text-gray-800">State-of-the-Art Technology</h4>
                 <p class="text-gray-600">We use the latest dental equipment for accurate diagnoses, safer procedures, and more comfortable visits.</p>
             </div>
             <div class="card-dental p-6 text-center hover:shadow-xl transition-all">
                 <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-4">
-                    <i class="bi bi-grid-3x3"></i>
+                    <x-dental-icon name="grid-3x3" class="w-5 h-5" />
                 </div>
                 <h4 class="text-xl font-bold mb-3 text-gray-800">Full Range of Services</h4>
                 <p class="text-gray-600">From cleanings and fillings to cosmetic makeovers and implants—we offer dental care in one place.</p>
             </div>
             <div class="card-dental p-6 text-center hover:shadow-xl transition-all">
                 <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-4">
-                    <i class="bi bi-cash-coin"></i>
+                    <x-dental-icon name="cash-coin" class="w-5 h-5" />
                 </div>
                 <h4 class="text-xl font-bold mb-3 text-gray-800">Transparent & Affordable</h4>
                 <p class="text-gray-600">We offer honest pricing, flexible payment options, and no surprise fees—quality care within your reach.</p>
             </div>
             <div class="card-dental p-6 text-center hover:shadow-xl transition-all">
                 <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-4">
-                    <i class="bi bi-heart"></i>
+                    <x-dental-icon name="heart" class="w-5 h-5" />
                 </div>
                 <h4 class="text-xl font-bold mb-3 text-gray-800">Trusted by Families</h4>
                 <p class="text-gray-600">We're proud to be the go-to dental provider for many families in our community, year after year.</p>
@@ -301,33 +301,33 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="card-dental p-6">
                 <div class="flex gap-1 text-yellow-400 mb-4 text-xl">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
+                    <x-dental-icon name="star" class="w-5 h-5" />
+                    <x-dental-icon name="star" class="w-5 h-5" />
+                    <x-dental-icon name="star" class="w-5 h-5" />
+                    <x-dental-icon name="star" class="w-5 h-5" />
+                    <x-dental-icon name="star" class="w-5 h-5" />
                 </div>
                 <p class="text-gray-700 mb-4 italic">"Together with his excellent team of doctors, they showed me the perfect combination of professionalism and compassion. They were patient, gentle and very polite."</p>
                 <div class="font-bold text-gray-800">Rosana Castaneda</div>
             </div>
             <div class="card-dental p-6">
                 <div class="flex gap-1 text-yellow-400 mb-4 text-xl">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
+                    <x-dental-icon name="star" class="w-5 h-5" />
+                    <x-dental-icon name="star" class="w-5 h-5" />
+                    <x-dental-icon name="star" class="w-5 h-5" />
+                    <x-dental-icon name="star" class="w-5 h-5" />
+                    <x-dental-icon name="star" class="w-5 h-5" />
                 </div>
                 <p class="text-gray-700 mb-4 italic">"Excellent service and professional staff. The clinic is modern and clean, and the dentists are very knowledgeable. Highly recommend!"</p>
                 <div class="font-bold text-gray-800">Sarah Johnson</div>
             </div>
             <div class="card-dental p-6">
                 <div class="flex gap-1 text-yellow-400 mb-4 text-xl">
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
-                    <i class="bi bi-star-fill"></i>
+                    <x-dental-icon name="star" class="w-5 h-5" />
+                    <x-dental-icon name="star" class="w-5 h-5" />
+                    <x-dental-icon name="star" class="w-5 h-5" />
+                    <x-dental-icon name="star" class="w-5 h-5" />
+                    <x-dental-icon name="star" class="w-5 h-5" />
                 </div>
                 <p class="text-gray-700 mb-4 italic">"I've been coming here for years. The team is friendly, the facilities are top-notch, and I always feel comfortable during my visits."</p>
                 <div class="font-bold text-gray-800">Michael Chen</div>
@@ -355,29 +355,29 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="card-dental p-6">
                 <h5 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
-                    <i class="bi bi-geo-alt-fill text-dental-teal"></i> Main Clinic
+                    <x-dental-icon name="geo-alt-fill" class="w-5 h-5 text-dental-teal" /> Main Clinic
                 </h5>
                 <p class="text-gray-600 mb-2">123 Main Street<br>Your City, State 12345<br>United States</p>
                 <p class="text-gray-700 font-medium flex items-center gap-2 mt-4">
-                    <i class="bi bi-telephone text-dental-teal"></i> (123) 456-7890
+                    <x-dental-icon name="telephone" class="w-5 h-5 text-dental-teal" /> (123) 456-7890
                 </p>
             </div>
             <div class="card-dental p-6">
                 <h5 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
-                    <i class="bi bi-geo-alt-fill text-dental-teal"></i> Branch Office
+                    <x-dental-icon name="geo-alt-fill" class="w-5 h-5 text-dental-teal" /> Branch Office
                 </h5>
                 <p class="text-gray-600 mb-2">456 Second Avenue<br>Your City, State 12345<br>United States</p>
                 <p class="text-gray-700 font-medium flex items-center gap-2 mt-4">
-                    <i class="bi bi-telephone text-dental-teal"></i> (123) 456-7891
+                    <x-dental-icon name="telephone" class="w-5 h-5 text-dental-teal" /> (123) 456-7891
                 </p>
             </div>
             <div class="card-dental p-6">
                 <h5 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
-                    <i class="bi bi-info-circle-fill text-dental-teal"></i> Patient Registration
+                    <x-dental-icon name="info-circle-fill" class="w-5 h-5 text-dental-teal" /> Patient Registration
                 </h5>
                 <p class="text-gray-600 mb-2">To book an appointment, please use the registration link provided by our clinic staff.</p>
                 <p class="text-gray-700 font-medium flex items-center gap-2 mt-4">
-                    <i class="bi bi-clock text-dental-teal"></i> Mon-Fri: 9AM-6PM<br>Sat: 9AM-2PM
+                    <x-dental-icon name="clock" class="w-5 h-5 text-dental-teal" /> Mon-Fri: 9AM-6PM<br>Sat: 9AM-2PM
                 </p>
             </div>
         </div>
@@ -402,7 +402,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
                 <h5 class="text-xl font-bold mb-4 flex items-center gap-2">
-                    <i class="bi bi-tooth text-dental-teal"></i>Dental Care Clinic
+                    <x-dental-icon name="tooth" class="w-5 h-5 text-dental-teal" />Dental Care Clinic
                 </h5>
                 <p class="text-gray-400">Your trusted partner in dental health and wellness. We provide comprehensive dental care solutions for you and your family.</p>
             </div>
@@ -418,25 +418,29 @@
             <div>
                 <h6 class="font-semibold mb-4">Contact</h6>
                 <ul class="space-y-2 text-gray-400">
-                    <li class="flex items-center gap-2"><i class="bi bi-telephone"></i> (123) 456-7890</li>
-                    <li class="flex items-center gap-2"><i class="bi bi-envelope"></i> info@dentalcare.com</li>
-                    <li class="flex items-center gap-2"><i class="bi bi-clock"></i> Mon-Sun 9:00AM-6:00PM</li>
+                    <li class="flex items-center gap-2"><x-dental-icon name="telephone" class="w-5 h-5" /> (123) 456-7890</li>
+                    <li class="flex items-center gap-2"><x-dental-icon name="envelope" class="w-5 h-5" /> info@dentalcare.com</li>
+                    <li class="flex items-center gap-2"><x-dental-icon name="clock" class="w-5 h-5" /> Mon-Sun 9:00AM-6:00PM</li>
                 </ul>
             </div>
             <div>
                 <h6 class="font-semibold mb-4">Social Media</h6>
                 <div class="flex gap-4">
-                    <a href="#" class="w-10 h-10 bg-gray-700 hover:bg-dental-teal rounded-full flex items-center justify-center transition-colors">
-                        <i class="bi bi-facebook"></i>
+                    <a href="#" aria-label="Facebook" class="w-10 h-10 bg-gray-700 hover:bg-dental-teal rounded-full flex items-center justify-center transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8.94 6.588H10.5V5h-1.56V4.21c0-.404.132-.763.787-.763H10.5V2.01C10.286 1.98 9.675 1.92 8.996 1.92 7.576 1.92 6.6 2.802 6.6 4.04V5H5v1.588h1.6V13h1.84V6.588Z"/>
+                        </svg>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-gray-700 hover:bg-dental-teal rounded-full flex items-center justify-center transition-colors">
-                        <i class="bi bi-twitter"></i>
+                    <a href="#" aria-label="Instagram" class="w-10 h-10 bg-gray-700 hover:bg-dental-teal rounded-full flex items-center justify-center transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 5.5A2.5 2.5 0 1 0 8 10.5 2.5 2.5 0 0 0 8 5.5Z"/>
+                            <path d="M4 1h8a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H4a3 3 0 0 1-3-3V4a3 3 0 0 1 3-3Zm0 1.5A1.5 1.5 0 0 0 2.5 4v8A1.5 1.5 0 0 0 4 13.5h8a1.5 1.5 0 0 0 1.5-1.5V4A1.5 1.5 0 0 0 12 2.5H4Zm8.25 1a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM8 6.75A1.25 1.25 0 1 1 8 9.25a1.25 1.25 0 0 1 0-2.5Z"/>
+                        </svg>
                     </a>
-                    <a href="#" class="w-10 h-10 bg-gray-700 hover:bg-dental-teal rounded-full flex items-center justify-center transition-colors">
-                        <i class="bi bi-instagram"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 bg-gray-700 hover:bg-dental-teal rounded-full flex items-center justify-center transition-colors">
-                        <i class="bi bi-linkedin"></i>
+                    <a href="#" aria-label="Twitter / X" class="w-10 h-10 bg-gray-700 hover:bg-dental-teal rounded-full flex items-center justify-center transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M4 4h3.3l4 5.5 4-5.5H19l-5.1 6.9L19.5 20h-3.3l-4.3-5.9-4.3 5.9H4.2l5.6-7.6Z"/>
+                        </svg>
                     </a>
                 </div>
             </div>

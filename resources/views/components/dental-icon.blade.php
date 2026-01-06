@@ -1,3 +1,4 @@
+{{-- Force recompile: 2025-01-27-14:30:00 - Fixed droplet icon mapping --}}
 @props([
     'name' => '',
     'class' => 'w-5 h-5',
@@ -73,8 +74,8 @@
         'copy' => 'clipboard-document',
         'gear' => 'cog-6-tooth',
         'settings' => 'cog-6-tooth',
-        'toggle-on' => 'toggle-right',
-        'toggle-off' => 'toggle-left',
+        'toggle-on' => 'check-circle',
+        'toggle-off' => 'x-circle',
         'inbox' => 'inbox',
         'star' => 'star',
         'star-fill' => 'star',
@@ -83,12 +84,52 @@
         'box-arrow-right' => 'arrow-right-on-rectangle',
         'diagram-3' => 'squares-plus',
         'list-ul' => 'list-bullet',
+        // Additional icons for welcome page
+        'droplet' => 'wrench-screwdriver', // Changed from sparkles - using wrench-screwdriver instead
+        'wrench-screwdriver' => 'wrench-screwdriver',
+        'shield-check' => 'shield-check',
+        'camera' => 'camera',
+        'stars' => 'sparkles',
+        'emoji-smile' => 'face-smile',
+        'hospital' => 'building-office-2',
+        'brush' => 'paint-brush',
+        'clipboard-check' => 'clipboard-document-check',
+        'cpu' => 'cpu-chip',
+        'grid-3x3' => 'squares-2x2',
+        'cash-coin' => 'banknotes',
+        'heart' => 'heart',
+        'geo-alt-fill' => 'map-pin',
+        'info-circle-fill' => 'information-circle',
+        'facebook' => 'globe-alt',
+        'twitter' => 'globe-alt',
+        'instagram' => 'globe-alt',
+        'linkedin' => 'globe-alt',
     ];
 
-    $heroiconName = $iconMap[$name] ?? $name;
+    // Get the mapped Heroicon name - ensure we always get a valid name
+    if (isset($iconMap[$name]) && $iconMap[$name] !== null) {
+        $heroiconName = $iconMap[$name];
+    } elseif (!empty($name)) {
+        $heroiconName = $name;
+    } else {
+        $heroiconName = 'sparkles'; // Fallback for empty names
+    }
+    
+    // blade-heroicons format: heroicon-o-{name} or heroicon-s-{name}
     $iconSet = $solid ? 'heroicon-s' : 'heroicon-o';
     $iconIdentifier = $iconSet . '-' . $heroiconName;
+    
+    // Debug logging to trace icon resolution (only in debug)
+    if (config('app.debug')) {
+        \Log::debug('dental-icon render', [
+            'requested_name' => $name,
+            'mapped_name' => $heroiconName,
+            'icon_set' => $iconSet,
+            'icon_identifier' => $iconIdentifier,
+        ]);
+    }
 @endphp
 
+{{-- Render the icon using the mapped identifier --}}
 @svg($iconIdentifier, $class)
 

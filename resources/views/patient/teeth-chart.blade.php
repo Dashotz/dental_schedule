@@ -5,24 +5,24 @@
 @section('content')
 <div class="flex justify-between items-center mb-6">
     <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
-        <i class="bi bi-teeth"></i> Dental Chart - {{ $patient->first_name }} {{ $patient->last_name }}
+        <x-dental-icon name="tooth" class="w-5 h-5" /> Dental Chart - {{ $patient->first_name }} {{ $patient->last_name }}
     </h2>
     <a href="{{ route('patients.show', $patient) }}" class="btn-dental-outline">
-        <i class="bi bi-arrow-left"></i> Back to Patient
+        <x-dental-icon name="arrow-left" class="w-5 h-5" /> Back to Patient
     </a>
 </div>
 
 <div class="card-dental">
     <div class="card-dental-header">
         <h5 class="text-lg font-semibold flex items-center gap-2">
-            <i class="bi bi-grid"></i> Teeth Chart
+            <x-dental-icon name="grid" class="w-5 h-5" /> Teeth Chart
         </h5>
     </div>
     <div class="p-6">
         <!-- Upper Jaw (Maxilla) -->
         <div class="mb-8">
             <h6 class="text-center mb-4 text-gray-700 font-semibold flex items-center justify-center gap-2">
-                <i class="bi bi-arrow-up"></i> Upper Jaw (Maxilla)
+                <x-dental-icon name="arrow-up" class="w-5 h-5" /> Upper Jaw (Maxilla)
             </h6>
             <div class="flex justify-center overflow-x-auto">
                 <svg width="1000" height="140" viewBox="0 0 1000 140" class="jaw-svg">
@@ -67,7 +67,7 @@
         <!-- Lower Jaw (Mandible) -->
         <div>
             <h6 class="text-center mb-4 text-gray-700 font-semibold flex items-center justify-center gap-2">
-                <i class="bi bi-arrow-down"></i> Lower Jaw (Mandible)
+                <x-dental-icon name="arrow-down" class="w-5 h-5" /> Lower Jaw (Mandible)
             </h6>
             <div class="flex justify-center overflow-x-auto">
                 <svg width="1000" height="140" viewBox="0 0 1000 140" class="jaw-svg">

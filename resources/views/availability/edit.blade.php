@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-pencil"></i> Edit Availability</h2>
+    <h2><x-dental-icon name="pencil" class="w-5 h-5" /> Edit Availability</h2>
     <a href="{{ route('availability.index') }}" class="btn btn-secondary">
-        <i class="bi bi-arrow-left"></i> Back
+        <x-dental-icon name="arrow-left" class="w-5 h-5" /> Back
     </a>
 </div>
 
@@ -98,7 +98,7 @@
             <div class="d-flex justify-content-end gap-2">
                 <a href="{{ route('availability.index') }}" class="btn btn-secondary">Cancel</a>
                 <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-check-circle"></i> Update Availability
+                    <x-dental-icon name="check-circle" class="w-5 h-5" /> Update Availability
                 </button>
             </div>
         </form>

@@ -1,7 +1,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div class="md:col-span-2">
         <label for="edit_modal_subdomain" class="form-label flex items-center gap-2">
-            <i class="bi bi-globe text-dental-teal"></i>Subdomain <span class="text-red-500">*</span>
+            <x-dental-icon name="globe" class="w-5 h-5 text-dental-teal" />Subdomain <span class="text-red-500">*</span>
         </label>
         <div class="flex">
             <input type="text" 
@@ -14,14 +14,14 @@
             <span class="bg-gray-100 border border-l-0 border-gray-300 rounded-r-lg px-4 py-2.5 text-gray-600 flex items-center">.helioho.st</span>
         </div>
         <small class="text-gray-500 block mt-2">
-            <i class="bi bi-info-circle"></i> Only lowercase letters, numbers, and hyphens allowed.
+            <x-dental-icon name="info-circle" class="w-5 h-5" /> Only lowercase letters, numbers, and hyphens allowed.
         </small>
         <div class="text-red-500 text-sm mt-1 hidden" id="subdomain_error"></div>
     </div>
 
     <div class="md:col-span-2">
         <label for="edit_modal_name" class="form-label flex items-center gap-2">
-            <i class="bi bi-building text-dental-teal"></i>Clinic Name <span class="text-red-500">*</span>
+            <x-dental-icon name="building" class="w-5 h-5 text-dental-teal" />Clinic Name <span class="text-red-500">*</span>
         </label>
         <input type="text" 
                class="input-dental" 
@@ -35,7 +35,7 @@
 
     <div class="md:col-span-2">
         <label for="edit_modal_description" class="form-label flex items-center gap-2">
-            <i class="bi bi-file-text text-dental-teal"></i>Description
+            <x-dental-icon name="file-text" class="w-5 h-5 text-dental-teal" />Description
         </label>
         <textarea class="input-dental" 
                   id="edit_modal_description" 
@@ -47,7 +47,7 @@
 
     <div>
         <label for="edit_modal_email" class="form-label flex items-center gap-2">
-            <i class="bi bi-envelope text-dental-teal"></i>Email
+            <x-dental-icon name="envelope" class="w-5 h-5 text-dental-teal" />Email
         </label>
         <input type="email" 
                class="input-dental" 
@@ -60,7 +60,7 @@
 
     <div>
         <label for="edit_modal_phone" class="form-label flex items-center gap-2">
-            <i class="bi bi-telephone text-dental-teal"></i>Phone
+            <x-dental-icon name="telephone" class="w-5 h-5 text-dental-teal" />Phone
         </label>
         <input type="text" 
                class="input-dental" 
@@ -73,7 +73,7 @@
 
     <div class="md:col-span-2">
         <label for="edit_modal_address" class="form-label flex items-center gap-2">
-            <i class="bi bi-geo-alt text-dental-teal"></i>Address
+            <x-dental-icon name="geo-alt" class="w-5 h-5 text-dental-teal" />Address
         </label>
         <textarea class="input-dental" 
                   id="edit_modal_address" 

@@ -183,20 +183,30 @@
 
 /* Custom Scrollbar */
 @layer utilities {
+    .scrollbar-dental {
+        /* Firefox */
+        scrollbar-width: thin;
+        scrollbar-color: #0f766e #111827;
+    }
+
     .scrollbar-dental::-webkit-scrollbar {
         width: 10px;
+        height: 10px;
     }
     
     .scrollbar-dental::-webkit-scrollbar-track {
-        @apply bg-gray-100 rounded-full;
+        @apply rounded-full;
+        background: #111827;
     }
     
     .scrollbar-dental::-webkit-scrollbar-thumb {
-        @apply bg-dental-teal rounded-full;
+        @apply rounded-full;
+        background: linear-gradient(180deg, #0f766e 0%, #14b8a6 100%);
+        border: 2px solid #111827;
     }
     
     .scrollbar-dental::-webkit-scrollbar-thumb:hover {
-        @apply bg-dental-teal-dark;
+        background: linear-gradient(180deg, #0f766e 0%, #0d9488 100%);
     }
     
     /* Skeleton Loading */

@@ -12,16 +12,16 @@
                 <div class="card registration-card">
                     <div class="card-header registration-header">
                         <h4>
-                            <i class="bi bi-clipboard-pulse"></i> Patient Registration & Appointment Booking
+                            <x-dental-icon name="clipboard" class="w-5 h-5" /> Patient Registration & Appointment Booking
                         </h4>
-                        <i class="bi bi-tooth dental-decoration top-right"></i>
+                        <x-dental-icon name="tooth" class="w-5 h-5" />
                     </div>
                     <div class="card-body registration-body">
                 <form method="POST" action="{{ route('patient.store', $registrationLink->token ?? '') }}" id="registrationForm">
                     @csrf
 
                         <!-- Personal Information -->
-                        <h5 class="section-title"><i class="bi bi-person"></i> Personal Information</h5>
+                        <h5 class="section-title"><x-dental-icon name="person" class="w-5 h-5" /> Personal Information</h5>
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <label for="first_name" class="form-label">First Name <span class="text-danger">*</span></label>
@@ -73,7 +73,7 @@
                         </div>
 
                         <!-- Contact Information -->
-                        <h5 class="section-title mt-4"><i class="bi bi-telephone"></i> Contact Information</h5>
+                        <h5 class="section-title mt-4"><x-dental-icon name="telephone" class="w-5 h-5" /> Contact Information</h5>
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <label for="phone" class="form-label">Phone <span class="text-danger">*</span></label>
@@ -129,7 +129,7 @@
                         </div>
 
                         <!-- Emergency Contact -->
-                        <h5 class="section-title mt-4"><i class="bi bi-person-exclamation"></i> Emergency Contact</h5>
+                        <h5 class="section-title mt-4"><x-dental-icon name="person" class="w-5 h-5" /> Emergency Contact</h5>
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <label for="emergency_contact_name" class="form-label">Emergency Contact Name</label>
@@ -150,7 +150,7 @@
                         </div>
 
                         <!-- Medical Information -->
-                        <h5 class="section-title mt-4"><i class="bi bi-heart-pulse"></i> Medical Information</h5>
+                        <h5 class="section-title mt-4"><x-dental-icon name="heart-pulse" class="w-5 h-5" /> Medical Information</h5>
                         <div class="row">
                             <div class="col-12 col-md-4">
                                 <label for="medical_history" class="form-label">Medical History</label>
@@ -179,7 +179,7 @@
                         </div>
 
                         <!-- Insurance Information -->
-                        <h5 class="section-title mt-4"><i class="bi bi-shield-check"></i> Insurance Information</h5>
+                        <h5 class="section-title mt-4"><x-dental-icon name="shield-check" class="w-5 h-5" /> Insurance Information</h5>
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <label for="insurance_provider" class="form-label">Insurance Provider</label>
@@ -200,7 +200,7 @@
                         </div>
 
                         <!-- Appointment Information -->
-                        <h5 class="section-title mt-4"><i class="bi bi-calendar-check"></i> Appointment Booking</h5>
+                        <h5 class="section-title mt-4"><x-dental-icon name="calendar-check" class="w-5 h-5" /> Appointment Booking</h5>
                         <div class="row">
                             <div class="col-12 col-md-4">
                                 <label for="appointment_date" class="form-label">Appointment Date <span class="text-danger">*</span></label>
@@ -270,7 +270,7 @@
                                         {!! captcha_img('flat') !!}
                                     </div>
                                     <button type="button" class="btn btn-outline-secondary" id="reload-captcha" title="Reload CAPTCHA">
-                                        <i class="bi bi-arrow-clockwise"></i>
+                                        <x-dental-icon name="arrow-path" class="w-5 h-5" />
                                     </button>
                                 </div>
                                 <input type="text" class="form-control mt-2 @error('captcha') is-invalid @enderror" 
@@ -283,11 +283,10 @@
 
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-submit" id="submitBtn">
-                                <i class="bi bi-check-circle"></i> Submit Registration & Book Appointment
+                                <x-dental-icon name="check-circle" class="w-5 h-5" /> Submit Registration & Book Appointment
                             </button>
                         </div>
                     </form>
-                    <i class="bi bi-tooth dental-decoration bottom-left"></i>
                 </div>
             </div>
         </div>
@@ -339,7 +338,7 @@
         });
 
         function checkDateAvailability(date, doctorIds, timeSelect, dateStatus, timeStatus) {
-            dateStatus.html('<i class="bi bi-hourglass-split"></i> Checking availability...');
+            dateStatus.html('<svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Checking availability...');
             timeSelect.html('<option value="">Loading...</option>').prop('disabled', true);
 
             // Check availability for all doctors
@@ -348,7 +347,7 @@
             let hasAvailableDoctor = false;
 
             if (doctorIds.length === 0) {
-                dateStatus.html('<span class="text-danger"><i class="bi bi-x-circle"></i> No doctors available</span>');
+                dateStatus.html('<span class="text-danger"><svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> No doctors available</span>');
                 timeSelect.html('<option value="">No doctors available</option>').prop('disabled', true);
                 return;
             }
@@ -407,9 +406,9 @@
                             }
                             
                             timeSelect.prop('disabled', false);
-                            dateStatus.html('<span class="text-success"><i class="bi bi-check-circle"></i> Available</span>');
+                            dateStatus.html('<span class="text-success"><svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Available</span>');
                         } else {
-                            dateStatus.html('<span class="text-danger"><i class="bi bi-x-circle"></i> No available time slots for this date</span>');
+                            dateStatus.html('<span class="text-danger"><svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> No available time slots for this date</span>');
                             timeSelect.html('<option value="">No available slots</option>').prop('disabled', true);
                             timeStatus.text('Please select another date');
                         }
@@ -426,7 +425,7 @@
                                 text: 'Failed to check availability. Please try again.',
                                 confirmButtonColor: '#dc3545'
                             });
-                            dateStatus.html('<span class="text-danger"><i class="bi bi-x-circle"></i> Unable to check availability</span>');
+                            dateStatus.html('<span class="text-danger"><svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Unable to check availability</span>');
                             timeSelect.html('<option value="">Error loading slots</option>').prop('disabled', true);
                         }
                     }
@@ -446,7 +445,7 @@
         $('#reload-captcha').on('click', function() {
             const captchaContainer = $('#captcha-container');
             const btn = $(this);
-            btn.prop('disabled', true).html('<i class="bi bi-arrow-clockwise spin"></i>');
+            btn.prop('disabled', true).html('<svg class="w-5 h-5 inline animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>');
             
             $.ajax({
                 url: '/captcha/reload',
@@ -467,10 +466,10 @@
                         // Fallback: use captcha_src
                         window.location.reload();
                     }
-                    btn.prop('disabled', false).html('<i class="bi bi-arrow-clockwise"></i>');
+                    btn.prop('disabled', false).html('<svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>');
                 },
                 error: function(xhr, status, error) {
-                    btn.prop('disabled', false).html('<i class="bi bi-arrow-clockwise"></i>');
+                    btn.prop('disabled', false).html('<svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>');
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',

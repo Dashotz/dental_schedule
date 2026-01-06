@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-pencil"></i> Edit Patient</h2>
+    <h2><x-dental-icon name="pencil" class="w-5 h-5" /> Edit Patient</h2>
     <a href="{{ route('patients.show', $patient) }}" class="btn btn-secondary">
-        <i class="bi bi-arrow-left"></i> Back
+        <x-dental-icon name="arrow-left" class="w-5 h-5" /> Back
     </a>
 </div>
 
@@ -14,7 +14,7 @@
     <div class="col-12 col-lg-10">
         <div class="card">
             <div class="card-header bg-warning text-white">
-                <h5 class="mb-0"><i class="bi bi-person-gear"></i> Edit Patient Information</h5>
+                <h5 class="mb-0"><x-dental-icon name="person-gear" class="w-5 h-5" /> Edit Patient Information</h5>
             </div>
             <div class="card-body">
                 <form method="POST" action="{{ route('patients.update', $patient) }}">
@@ -22,7 +22,7 @@
                     @method('PUT')
 
                     <!-- Personal Information -->
-                    <h5 class="mb-3"><i class="bi bi-person"></i> Personal Information</h5>
+                    <h5 class="mb-3"><x-dental-icon name="person" class="w-5 h-5" /> Personal Information</h5>
                     <div class="row mb-3">
                         <div class="col-12 col-md-6">
                             <label for="first_name" class="form-label">First Name <span class="text-danger">*</span></label>
@@ -131,7 +131,7 @@
                     </div>
 
                     <!-- Medical Information -->
-                    <h5 class="mb-3 mt-4"><i class="bi bi-heart-pulse"></i> Medical Information</h5>
+                    <h5 class="mb-3 mt-4"><x-dental-icon name="heart-pulse" class="w-5 h-5" /> Medical Information</h5>
                     <div class="row mb-3">
                         <div class="col-12 col-md-6">
                             <label for="medical_history" class="form-label">Medical History</label>
@@ -163,7 +163,7 @@
                     </div>
 
                     <!-- Emergency Contact -->
-                    <h5 class="mb-3 mt-4"><i class="bi bi-telephone"></i> Emergency Contact</h5>
+                    <h5 class="mb-3 mt-4"><x-dental-icon name="telephone" class="w-5 h-5" /> Emergency Contact</h5>
                     <div class="row mb-3">
                         <div class="col-12 col-md-6">
                             <label for="emergency_contact_name" class="form-label">Emergency Contact Name</label>
@@ -184,7 +184,7 @@
                     </div>
 
                     <!-- Insurance Information -->
-                    <h5 class="mb-3 mt-4"><i class="bi bi-shield-check"></i> Insurance Information</h5>
+                    <h5 class="mb-3 mt-4"><x-dental-icon name="shield-check" class="w-5 h-5" /> Insurance Information</h5>
                     <div class="row mb-3">
                         <div class="col-12 col-md-6">
                             <label for="insurance_provider" class="form-label">Insurance Provider</label>
@@ -218,10 +218,10 @@
 
                     <div class="d-flex gap-2 mt-4">
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle"></i> Update Patient
+                            <x-dental-icon name="check-circle" class="w-5 h-5" /> Update Patient
                         </button>
                         <a href="{{ route('patients.show', $patient) }}" class="btn btn-secondary">
-                            <i class="bi bi-x-circle"></i> Cancel
+                            <x-dental-icon name="x-circle" class="w-5 h-5" /> Cancel
                         </a>
                     </div>
                 </form>

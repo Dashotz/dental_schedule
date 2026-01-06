@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-pencil"></i> Edit Appointment</h2>
+    <h2><x-dental-icon name="pencil" class="w-5 h-5" /> Edit Appointment</h2>
     <a href="{{ route('appointments.show', $appointment) }}" class="btn btn-secondary">
-        <i class="bi bi-arrow-left"></i> Back
+        <x-dental-icon name="arrow-left" class="w-5 h-5" /> Back
     </a>
 </div>
 
@@ -137,10 +137,10 @@
 
                     <div class="d-flex gap-2 mt-4">
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-circle"></i> Update Appointment
+                            <x-dental-icon name="check-circle" class="w-5 h-5" /> Update Appointment
                         </button>
                         <a href="{{ route('appointments.show', $appointment) }}" class="btn btn-secondary">
-                            <i class="bi bi-x-circle"></i> Cancel
+                            <x-dental-icon name="x-circle" class="w-5 h-5" /> Cancel
                         </a>
                     </div>
                 </form>

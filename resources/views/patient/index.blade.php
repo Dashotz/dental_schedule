@@ -5,12 +5,12 @@
 @section('content')
 <div class="flex justify-between items-center mb-6">
     <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
-        <i class="bi bi-people"></i> Patients
+        <x-dental-icon name="people" class="w-5 h-5" /> Patients
     </h2>
     <form method="GET" action="{{ route('patients.index') }}" class="flex gap-2">
         <input type="text" name="search" class="input-dental" placeholder="Search patients..." value="{{ request('search') }}">
         <button class="btn-dental" type="submit">
-            <i class="bi bi-search"></i>
+            <x-dental-icon name="search" class="w-5 h-5" />
         </button>
     </form>
 </div>
@@ -53,10 +53,10 @@
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-sm space-x-2">
                                 <a href="{{ route('patients.show', $patient) }}" class="btn-dental text-sm py-1.5 px-3">
-                                    <i class="bi bi-eye"></i> View
+                                    <x-dental-icon name="eye" class="w-5 h-5" /> View
                                 </a>
                                 <a href="{{ route('patients.edit', $patient) }}" class="btn-dental-outline text-sm py-1.5 px-3 border-yellow-500 text-yellow-600 hover:bg-yellow-50">
-                                    <i class="bi bi-pencil"></i> Edit
+                                    <x-dental-icon name="pencil" class="w-5 h-5" /> Edit
                                 </a>
                             </td>
                         </tr>

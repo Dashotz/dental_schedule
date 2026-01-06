@@ -6,18 +6,18 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h2 class="mb-1">
-            <i class="bi bi-globe text-primary"></i> {{ $subdomain->name }}
+            <x-dental-icon name="globe" class="w-5 h-5 text-primary" /> {{ $subdomain->name }}
         </h2>
         <p class="text-muted mb-0">
-            <i class="bi bi-link-45deg"></i> {{ $subdomain->subdomain }}.helioho.st
+            <x-dental-icon name="link-45deg" class="w-5 h-5" /> {{ $subdomain->subdomain }}.helioho.st
         </p>
     </div>
     <div class="d-flex gap-2">
         <a href="{{ route('admin.subdomains.edit', $subdomain) }}" class="btn btn-warning shadow-sm">
-            <i class="bi bi-pencil"></i> Edit
+            <x-dental-icon name="pencil" class="w-5 h-5" /> Edit
         </a>
         <a href="{{ route('admin.subdomains.index') }}" class="btn btn-secondary shadow-sm">
-            <i class="bi bi-arrow-left"></i> Back
+            <x-dental-icon name="arrow-left" class="w-5 h-5" /> Back
         </a>
     </div>
 </div>
@@ -26,14 +26,14 @@
     <div class="col-lg-8 mb-4">
         <div class="card shadow-sm border-0">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Subdomain Information</h5>
+                <h5 class="mb-0"><x-dental-icon name="info-circle" class="w-5 h-5" /> Subdomain Information</h5>
             </div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded">
                             <label class="text-muted small mb-1 d-block">
-                                <i class="bi bi-globe me-1"></i>Subdomain
+                                <x-dental-icon name="globe" class="w-5 h-5" />Subdomain
                             </label>
                             <strong class="d-block">{{ $subdomain->subdomain }}.helioho.st</strong>
                         </div>
@@ -41,7 +41,7 @@
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded">
                             <label class="text-muted small mb-1 d-block">
-                                <i class="bi bi-building me-1"></i>Clinic Name
+                                <x-dental-icon name="building" class="w-5 h-5" />Clinic Name
                             </label>
                             <strong class="d-block">{{ $subdomain->name }}</strong>
                         </div>
@@ -49,7 +49,7 @@
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded">
                             <label class="text-muted small mb-1 d-block">
-                                <i class="bi bi-envelope me-1"></i>Email
+                                <x-dental-icon name="envelope" class="w-5 h-5" />Email
                             </label>
                             <span class="d-block">
                                 @if($subdomain->email)
@@ -63,7 +63,7 @@
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded">
                             <label class="text-muted small mb-1 d-block">
-                                <i class="bi bi-telephone me-1"></i>Phone
+                                <x-dental-icon name="telephone" class="w-5 h-5" />Phone
                             </label>
                             <span class="d-block">
                                 @if($subdomain->phone)
@@ -78,7 +78,7 @@
                     <div class="col-12">
                         <div class="p-3 bg-light rounded">
                             <label class="text-muted small mb-1 d-block">
-                                <i class="bi bi-geo-alt me-1"></i>Address
+                                <x-dental-icon name="geo-alt" class="w-5 h-5" />Address
                             </label>
                             <span class="d-block">{{ $subdomain->address }}</span>
                         </div>
@@ -88,7 +88,7 @@
                     <div class="col-12">
                         <div class="p-3 bg-light rounded">
                             <label class="text-muted small mb-1 d-block">
-                                <i class="bi bi-file-text me-1"></i>Description
+                                <x-dental-icon name="file-text" class="w-5 h-5" />Description
                             </label>
                             <span class="d-block">{{ $subdomain->description }}</span>
                         </div>
@@ -97,7 +97,7 @@
                     <div class="col-12">
                         <div class="p-3 bg-light rounded">
                             <label class="text-muted small mb-2 d-block">
-                                <i class="bi bi-toggle-on me-1"></i>Status
+                                <x-dental-icon name="toggle-on" class="w-5 h-5" />Status
                             </label>
                             <div class="d-flex align-items-center gap-3">
                                 <div class="form-check form-switch">
@@ -108,7 +108,7 @@
                                            style="width: 3.5rem; height: 1.75rem; cursor: pointer;">
                                 </div>
                                 <span class="badge bg-{{ $subdomain->is_active ? 'success' : 'danger' }} px-3 py-2">
-                                    <i class="bi bi-{{ $subdomain->is_active ? 'check-circle' : 'x-circle' }}"></i>
+                                    <x-dental-icon name="$subdomain->is_active ? 'check-circle' : 'x-circle'" class="w-4 h-4 bi $subdomain->is_active ?" />
                                     {{ $subdomain->is_active ? 'Active' : 'Inactive' }}
                                 </span>
                             </div>
@@ -122,11 +122,11 @@
     <div class="col-lg-4 mb-4">
         <div class="card shadow-sm border-0 mb-3">
             <div class="card-header bg-success text-white">
-                <h6 class="mb-0"><i class="bi bi-lightning-charge"></i> Quick Actions</h6>
+                <h6 class="mb-0"><x-dental-icon name="lightning-charge" class="w-5 h-5" /> Quick Actions</h6>
             </div>
             <div class="card-body">
                 <button class="btn btn-primary w-100" id="generateLinkBtn">
-                    <i class="bi bi-link-45deg"></i> Generate Registration Link
+                    <x-dental-icon name="link-45deg" class="w-5 h-5" /> Generate Registration Link
                 </button>
             </div>
         </div>
@@ -134,7 +134,7 @@
         <!-- Registration Links -->
         <div class="card shadow-sm border-0">
             <div class="card-header bg-info text-white">
-                <h6 class="mb-0"><i class="bi bi-link-45deg"></i> Registration Links</h6>
+                <h6 class="mb-0"><x-dental-icon name="link-45deg" class="w-5 h-5" /> Registration Links</h6>
             </div>
             <div class="card-body">
                 @php
@@ -153,17 +153,17 @@
                                     type="button" 
                                     data-link="{{ $activeLink->link }}"
                                     title="Copy to clipboard">
-                                <i class="bi bi-clipboard"></i>
+                                <x-dental-icon name="clipboard" class="w-5 h-5" />
                             </button>
                         </div>
                         <div class="mt-2">
                             <small class="text-muted d-block">
-                                <i class="bi bi-info-circle"></i> 
+                                <x-dental-icon name="info-circle" class="w-5 h-5" /> 
                                 Uses: <strong>{{ $activeLink->used_count }}</strong>/∞ (Unlimited)
                             </small>
                             @if($activeLink->expires_at)
                                 <small class="text-muted d-block mt-1">
-                                    <i class="bi bi-calendar-x"></i> 
+                                    <x-dental-icon name="calendar-x" class="w-5 h-5" /> 
                                     Expires: <strong>{{ $activeLink->expires_at->format('M d, Y') }}</strong>
                                     <br><span class="text-muted small">(when subscription ends)</span>
                                 </small>
@@ -172,7 +172,7 @@
                     </div>
                 @else
                     <div class="text-center py-3">
-                        <i class="bi bi-link-45deg display-6 text-muted"></i>
+                        <x-dental-icon name="link-45deg" class="w-5 h-5 text-muted" />
                         <p class="text-muted mb-0 mt-2">No active registration link</p>
                         <small class="text-muted">Generate one to get started</small>
                     </div>
