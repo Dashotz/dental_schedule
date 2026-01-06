@@ -136,8 +136,8 @@
                                     </span>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap text-sm">
-                                    <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="btn-dental text-sm py-1.5 px-3">
-                                        <x-dental-icon name="eye" class="w-5 h-5" /> View
+                                    <a href="{{ route('admin.subdomains.edit', $subdomain) }}" class="btn-dental text-sm py-1.5 px-3">
+                                        <x-dental-icon name="pencil" class="w-5 h-5" /> Edit
                                     </a>
                                 </td>
                             </tr>

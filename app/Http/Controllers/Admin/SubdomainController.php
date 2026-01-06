@@ -51,7 +51,7 @@ class SubdomainController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.subdomains.show', $subdomain)
+        return redirect()->route('admin.subdomains.index')
             ->with('success', 'Subdomain created successfully.');
     }
 
@@ -65,7 +65,8 @@ class SubdomainController extends Controller
             ]);
         }
         
-        return view('admin.subdomains.show', compact('subdomain'));
+        // Redirect to index for non-AJAX requests
+        return redirect()->route('admin.subdomains.index');
     }
 
     public function edit(Subdomain $subdomain)
@@ -99,7 +100,7 @@ class SubdomainController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.subdomains.show', $subdomain)
+        return redirect()->route('admin.subdomains.index')
             ->with('success', 'Subdomain updated successfully.');
     }
 

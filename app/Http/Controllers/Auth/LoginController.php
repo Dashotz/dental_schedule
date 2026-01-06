@@ -40,6 +40,11 @@ class LoginController extends Controller
                 ]);
             }
 
+            // Redirect admins to admin dashboard, doctors to regular dashboard
+            if ($user->role === 'admin') {
+                return redirect()->intended(route('admin.dashboard'));
+            }
+
             return redirect()->intended(route('dashboard'));
         }
 

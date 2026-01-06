@@ -1,26 +1,81 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Subdomains Management'); ?>
 
-@section('title', 'Subdomains Management')
 
-{{-- Skeleton loading styles migrated to Tailwind in app.css --}}
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
     <div>
         <h2 class="text-3xl font-bold text-gray-800 mb-1 flex items-center gap-2">
-            <x-dental-icon name="globe" class="w-8 h-8 text-dental-teal" /> Subdomains Management
+            <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'globe','class' => 'w-8 h-8 text-dental-teal']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'globe','class' => 'w-8 h-8 text-dental-teal']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?> Subdomains Management
         </h2>
         <p class="text-gray-600">Manage all dental clinic subdomains and their settings</p>
     </div>
     <button type="button" class="inline-flex items-center gap-2 btn-dental shadow-lg" onclick="openModal('createSubdomainModal')" id="openCreateModal">
-        <x-dental-icon name="plus-circle" class="w-5 h-5" /> Add New Subdomain
+        <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'plus-circle','class' => 'w-5 h-5']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'plus-circle','class' => 'w-5 h-5']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?> Add New Subdomain
     </button>
 </div>
 
 <div class="card-dental">
     <div class="px-6 py-4 border-b border-gray-200">
         <h5 class="text-lg font-semibold flex items-center gap-2">
-            <x-dental-icon name="list-ul" class="w-5 h-5 text-dental-teal" /> All Subdomains
+            <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'list-ul','class' => 'w-5 h-5 text-dental-teal']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'list-ul','class' => 'w-5 h-5 text-dental-teal']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?> All Subdomains
         </h5>
     </div>
     <div class="p-0">
@@ -29,127 +84,379 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <span class="flex items-center"><x-dental-icon name="globe" class="w-4 h-4 mr-2" />Subdomain</span>
+                            <span class="flex items-center"><?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'globe','class' => 'w-4 h-4 mr-2']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'globe','class' => 'w-4 h-4 mr-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>Subdomain</span>
                         </th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <span class="flex items-center"><x-dental-icon name="building" class="w-4 h-4 mr-2" />Name</span>
+                            <span class="flex items-center"><?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'building','class' => 'w-4 h-4 mr-2']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'building','class' => 'w-4 h-4 mr-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>Name</span>
                         </th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <span class="flex items-center"><x-dental-icon name="envelope" class="w-4 h-4 mr-2" />Email</span>
+                            <span class="flex items-center"><?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'envelope','class' => 'w-4 h-4 mr-2']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'envelope','class' => 'w-4 h-4 mr-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>Email</span>
                         </th>
                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <span class="flex items-center justify-center"><x-dental-icon name="toggle-on" class="w-4 h-4 mr-2" />Status</span>
+                            <span class="flex items-center justify-center"><?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'toggle-on','class' => 'w-4 h-4 mr-2']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'toggle-on','class' => 'w-4 h-4 mr-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>Status</span>
                         </th>
                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <span class="flex items-center justify-center"><x-dental-icon name="credit-card" class="w-4 h-4 mr-2" />Subscription</span>
+                            <span class="flex items-center justify-center"><?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'credit-card','class' => 'w-4 h-4 mr-2']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'credit-card','class' => 'w-4 h-4 mr-2']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>Subscription</span>
                         </th>
                         <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($subdomains as $subdomain)
+                    <?php $__empty_1 = true; $__currentLoopData = $subdomains; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subdomain): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-4 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="bg-dental-teal/10 rounded-full p-2 mr-3">
-                                        <x-dental-icon name="globe" class="w-5 h-5 text-dental-teal" />
+                                        <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'globe','class' => 'w-5 h-5 text-dental-teal']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'globe','class' => 'w-5 h-5 text-dental-teal']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
                                     </div>
                                     <div>
-                                        <strong class="block text-gray-900">{{ $subdomain->subdomain }}</strong>
+                                        <strong class="block text-gray-900"><?php echo e($subdomain->subdomain); ?></strong>
                                         <small class="text-gray-500">.helioho.st</small>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap">
-                                <span class="font-medium text-gray-900">{{ $subdomain->name }}</span>
+                                <span class="font-medium text-gray-900"><?php echo e($subdomain->name); ?></span>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                                @if($subdomain->email)
-                                    <x-dental-icon name="envelope" class="w-4 h-4 text-gray-400 mr-1 inline" />
-                                    {{ $subdomain->email }}
-                                @else
+                                <?php if($subdomain->email): ?>
+                                    <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'envelope','class' => 'w-4 h-4 text-gray-400 mr-1 inline']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'envelope','class' => 'w-4 h-4 text-gray-400 mr-1 inline']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+                                    <?php echo e($subdomain->email); ?>
+
+                                <?php else: ?>
                                     <span class="text-gray-400 italic">N/A</span>
-                                @endif
+                                <?php endif; ?>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-center">
                                 <div class="flex items-center justify-center gap-2">
                                     <div class="form-check form-switch">
                                         <input class="form-check-input toggle-status" 
                                                type="checkbox" 
-                                               data-id="{{ $subdomain->id }}"
-                                               {{ $subdomain->is_active ? 'checked' : '' }}
+                                               data-id="<?php echo e($subdomain->id); ?>"
+                                               <?php echo e($subdomain->is_active ? 'checked' : ''); ?>
+
                                                style="width: 3rem; height: 1.5rem; cursor: pointer;">
                                     </div>
-                                    <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded text-xs font-medium {{ $subdomain->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                        <x-dental-icon name="{{ $subdomain->is_active ? 'check-circle' : 'x-circle' }}" class="w-3 h-3" />
-                                        {{ $subdomain->is_active ? 'Active' : 'Inactive' }}
+                                    <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded text-xs font-medium <?php echo e($subdomain->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'); ?>">
+                                        <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => ''.e($subdomain->is_active ? 'check-circle' : 'x-circle').'','class' => 'w-3 h-3']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => ''.e($subdomain->is_active ? 'check-circle' : 'x-circle').'','class' => 'w-3 h-3']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+                                        <?php echo e($subdomain->is_active ? 'Active' : 'Inactive'); ?>
+
                                     </span>
                                 </div>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-center">
-                                @php
+                                <?php
                                     $activeSub = $subdomain->subscriptions
                                         ->where('status', 'active')
                                         ->where('end_date', '>=', now())
                                         ->sortByDesc('end_date')
                                         ->first();
-                                @endphp
-                                @if($activeSub)
+                                ?>
+                                <?php if($activeSub): ?>
                                     <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                        <x-dental-icon name="check-circle" class="w-3 h-3" />
-                                        {{ ucfirst($activeSub->plan_name) }}
+                                        <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'check-circle','class' => 'w-3 h-3']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'check-circle','class' => 'w-3 h-3']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+                                        <?php echo e(ucfirst($activeSub->plan_name)); ?>
+
                                     </span>
-                                @else
+                                <?php else: ?>
                                     <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                                        <x-dental-icon name="x-circle" class="w-3 h-3" />
+                                        <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'x-circle','class' => 'w-3 h-3']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'x-circle','class' => 'w-3 h-3']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
                                         No Subscription
                                     </span>
-                                @endif
+                                <?php endif; ?>
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-right text-sm">
                                 <button type="button" 
                                         class="inline-flex items-center gap-2 btn-dental text-sm py-1.5 px-3 view-subdomain-btn" 
-                                        data-subdomain-id="{{ $subdomain->id }}"
+                                        data-subdomain-id="<?php echo e($subdomain->id); ?>"
                                         title="View Details">
-                                    <x-dental-icon name="eye" class="w-4 h-4" /> View
+                                    <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'eye','class' => 'w-4 h-4']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'eye','class' => 'w-4 h-4']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?> View
                                 </button>
                             </td>
                         </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
                             <td colspan="6" class="px-4 py-12 text-center">
                                 <div class="py-4">
-                                    <x-dental-icon name="inbox" class="w-16 h-16 text-gray-300 mx-auto" />
+                                    <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'inbox','class' => 'w-16 h-16 text-gray-300 mx-auto']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'inbox','class' => 'w-16 h-16 text-gray-300 mx-auto']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
                                     <p class="text-gray-500 mt-3 mb-0">No subdomains found.</p>
                                     <button type="button" class="inline-flex items-center gap-2 btn-dental mt-3" onclick="openModal('createSubdomainModal')" id="openCreateModalEmpty">
-                                        <x-dental-icon name="plus-circle" class="w-5 h-5" /> Create Your First Subdomain
+                                        <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'plus-circle','class' => 'w-5 h-5']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'plus-circle','class' => 'w-5 h-5']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?> Create Your First Subdomain
                                     </button>
                                 </div>
                             </td>
                         </tr>
-                    @endforelse
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
 
-        @if($subdomains->hasPages())
+        <?php if($subdomains->hasPages()): ?>
             <div class="px-6 py-4 border-t border-gray-200 bg-white">
                 <div class="flex justify-center">
-                    {{ $subdomains->links() }}
+                    <?php echo e($subdomains->links()); ?>
+
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
 
 <!-- Modals -->
-@include('admin.subdomains.partials.create-modal')
-@include('admin.subdomains.partials.edit-modal')
+<?php echo $__env->make('admin.subdomains.partials.create-modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<?php echo $__env->make('admin.subdomains.partials.edit-modal', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 <div id="viewSubdomainModalContainer"></div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
-<script src="{{ asset('js/skeleton-loading.js') }}"></script>
+<?php $__env->startPush('scripts'); ?>
+<script src="<?php echo e(asset('js/skeleton-loading.js')); ?>"></script>
 <script>
     $(document).ready(function() {
         // Load create modal content
@@ -162,7 +469,7 @@
                 openModal('createSubdomainModal');
                 
                 $.ajax({
-                    url: '{{ route("admin.subdomains.create") }}',
+                    url: '<?php echo e(route("admin.subdomains.create")); ?>',
                     method: 'GET',
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'
@@ -173,7 +480,26 @@
                     error: function(xhr) {
                         modal.find('.p-6').html(`
                             <div class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                                <x-dental-icon name="exclamation-triangle" class="w-5 h-5" /> Failed to load form. Please try again.
+                                <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.dental-icon','data' => ['name' => 'exclamation-triangle','class' => 'w-5 h-5']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('dental-icon'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'exclamation-triangle','class' => 'w-5 h-5']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $attributes = $__attributesOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__attributesOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9acdd978a59e943fbf0d4792f9858795)): ?>
+<?php $component = $__componentOriginal9acdd978a59e943fbf0d4792f9858795; ?>
+<?php unset($__componentOriginal9acdd978a59e943fbf0d4792f9858795); ?>
+<?php endif; ?> Failed to load form. Please try again.
                             </div>
                         `);
                     }
@@ -191,7 +517,7 @@
             submitBtn.prop('disabled', true).html('<span class="inline-block animate-spin mr-2">⟳</span>Creating...');
 
             $.ajax({
-                url: '{{ route("admin.subdomains.store") }}',
+                url: '<?php echo e(route("admin.subdomains.store")); ?>',
                 method: 'POST',
                 data: form.serialize(),
                 headers: {
@@ -316,7 +642,7 @@
                         url: `/admin/subdomains/${subdomainId}/generate-link`,
                         method: 'POST',
                         data: {
-                            _token: '{{ csrf_token() }}'
+                            _token: '<?php echo e(csrf_token()); ?>'
                         },
                         success: function(response) {
                             Swal.fire({
@@ -487,7 +813,7 @@
                         method: 'POST',
                         data: {
                             _method: 'DELETE',
-                            _token: '{{ csrf_token() }}'
+                            _token: '<?php echo e(csrf_token()); ?>'
                         },
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest'
@@ -588,7 +914,7 @@
                         url: `/admin/subdomains/${subdomainId}/toggle-status`,
                         method: 'POST',
                         data: {
-                            _token: '{{ csrf_token() }}'
+                            _token: '<?php echo e(csrf_token()); ?>'
                         },
                         success: function(response) {
                             Swal.fire({
@@ -741,7 +1067,7 @@
                         url: `/admin/subdomains/${subdomainId}/toggle-status`,
                         method: 'POST',
                         data: {
-                            _token: '{{ csrf_token() }}'
+                            _token: '<?php echo e(csrf_token()); ?>'
                         },
                         success: function(response) {
                             Swal.fire({
@@ -791,7 +1117,7 @@
                         method: 'POST',
                         data: {
                             _method: 'DELETE',
-                            _token: '{{ csrf_token() }}'
+                            _token: '<?php echo e(csrf_token()); ?>'
                         },
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest'
@@ -828,4 +1154,6 @@
         });
     });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH H:\Github\dental_schedule\resources\views/admin/subdomains/index.blade.php ENDPATH**/ ?>

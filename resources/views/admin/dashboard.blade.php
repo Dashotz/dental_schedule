@@ -91,7 +91,6 @@
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subdomain</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -107,11 +106,6 @@
                                         <span class="px-2 py-1 rounded text-xs font-medium {{ $subdomain->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                             {{ $subdomain->is_active ? 'Active' : 'Inactive' }}
                                         </span>
-                                    </td>
-                                    <td class="px-4 py-4 whitespace-nowrap text-sm">
-                                        <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="inline-flex items-center justify-center btn-dental text-sm py-1.5 px-3">
-                                            <x-dental-icon name="eye" class="w-4 h-4" />
-                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -141,8 +135,8 @@
                                     <h6 class="font-semibold text-gray-800 mb-1">{{ $subdomain->name }}</h6>
                                     <small class="text-gray-500">{{ $subdomain->subdomain }}</small>
                                 </div>
-                                <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="inline-flex items-center gap-2 btn-dental-outline text-sm py-1.5 px-3">
-                                    <x-dental-icon name="eye" class="w-4 h-4" /> View
+                                <a href="{{ route('admin.subdomains.edit', $subdomain) }}" class="inline-flex items-center gap-2 btn-dental-outline text-sm py-1.5 px-3">
+                                    <x-dental-icon name="pencil" class="w-4 h-4" /> Edit
                                 </a>
                             </div>
                         </div>

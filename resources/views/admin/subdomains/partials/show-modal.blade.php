@@ -86,6 +86,9 @@
                 <button class="inline-flex items-center justify-center gap-2 btn-dental-outline w-full border-yellow-500 text-yellow-600 hover:bg-yellow-50" id="editSubdomainBtnModal" data-subdomain-id="{{ $subdomain->id }}">
                     <x-dental-icon name="pencil" class="w-5 h-5" /> Edit Subdomain
                 </button>
+                <button class="inline-flex items-center justify-center gap-2 btn-dental-outline w-full border-red-500 text-red-600 hover:bg-red-50" id="deleteSubdomainBtnModal" data-subdomain-id="{{ $subdomain->id }}" data-subdomain-name="{{ $subdomain->name }}">
+                    <x-dental-icon name="trash" class="w-5 h-5" /> Delete Subdomain
+                </button>
             </div>
         </div>
 

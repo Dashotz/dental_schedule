@@ -8,7 +8,7 @@
         <h2 class="mb-1"><x-dental-icon name="pencil" class="w-5 h-5 text-warning" /> Edit Subdomain</h2>
         <p class="text-muted mb-0">Update subdomain information for {{ $subdomain->name }}</p>
     </div>
-    <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="btn btn-secondary shadow-sm">
+    <a href="{{ route('admin.subdomains.index') }}" class="btn btn-secondary shadow-sm">
         <x-dental-icon name="arrow-left" class="w-5 h-5" /> Back
     </a>
 </div>
@@ -126,7 +126,7 @@
                         <button type="submit" class="btn btn-primary btn-lg px-5 shadow-sm">
                             <x-dental-icon name="check-circle" class="w-5 h-5" /> Update Subdomain
                         </button>
-                        <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="btn btn-secondary btn-lg px-4">
+                        <a href="{{ route('admin.subdomains.index') }}" class="btn btn-secondary btn-lg px-4">
                             <x-dental-icon name="x-circle" class="w-5 h-5" /> Cancel
                         </a>
                     </div>
