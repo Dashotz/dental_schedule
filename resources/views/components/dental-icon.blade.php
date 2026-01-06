@@ -26,6 +26,7 @@
         'arrow-right' => 'arrow-right',
         'arrow-up' => 'arrow-up',
         'arrow-down' => 'arrow-down',
+        'arrow-up-circle' => 'arrow-trending-up',
         'people' => 'users',
         'person' => 'user',
         'person-circle' => 'user-circle',
@@ -35,6 +36,7 @@
         'calendar3' => 'calendar',
         'calendar-x' => 'calendar-days',
         'calendar-range' => 'calendar',
+        'calendar-month' => 'calendar-days',
         'clock' => 'clock',
         'clock-history' => 'clock',
         // Dental/Medical - using heart as medical symbol (tooth icon not available in Heroicons)

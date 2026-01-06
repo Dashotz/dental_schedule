@@ -596,7 +596,7 @@
                 error: function(xhr) {
                     $('#viewSubdomainModalContainer').html(`
                         <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center" id="viewSubdomainModal">
-                            <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+                            <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto modal-scroll">
                                 <div class="card-dental-header flex justify-between items-center">
                                     <h5 class="text-lg font-semibold">Error</h5>
                                     <button type="button" class="text-white hover:text-gray-200 text-2xl transition-colors" onclick="closeModal('viewSubdomainModal')">
@@ -763,7 +763,7 @@
                 error: function(xhr) {
                     $('#viewSubdomainModalContainer').html(`
                         <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center" id="viewSubdomainModal">
-                            <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+                            <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto modal-scroll">
                                 <div class="card-dental-header flex justify-between items-center">
                                     <h5 class="text-lg font-semibold">Error</h5>
                                     <button type="button" class="text-white hover:text-gray-200 text-2xl transition-colors" onclick="closeModal('viewSubdomainModal')">

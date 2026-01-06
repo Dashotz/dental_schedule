@@ -237,6 +237,28 @@
         background: linear-gradient(180deg, #008b8b 0%, #20b2aa 100%);
     }
     
+    /* Hide scrollbar in modals */
+    .modal-scroll {
+        /* Firefox */
+        scrollbar-width: none;
+        /* IE and Edge */
+        -ms-overflow-style: none;
+    }
+    
+    .modal-scroll::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    
+    .modal-scroll::-webkit-scrollbar-track {
+        display: none !important;
+    }
+    
+    .modal-scroll::-webkit-scrollbar-thumb {
+        display: none !important;
+    }
+    
     /* Skeleton Loading */
     .skeleton {
         background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);

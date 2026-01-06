@@ -3,13 +3,10 @@
 @section('title', 'Reports')
 
 @section('content')
-<div class="flex justify-between items-center mb-6">
+<div class="mb-6">
     <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
         <x-dental-icon name="bar-chart" class="w-5 h-5" /> Reports
     </h2>
-    <a href="{{ route('admin.insights.index') }}" class="btn-dental">
-        <x-dental-icon name="pie-chart" class="w-5 h-5" /> View Insights
-    </a>
 </div>
 
 <!-- Revenue Over Time Chart -->

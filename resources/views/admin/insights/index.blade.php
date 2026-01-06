@@ -3,13 +3,10 @@
 @section('title', 'Insights')
 
 @section('content')
-<div class="flex justify-between items-center mb-6">
+<div class="mb-6">
     <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
         <x-dental-icon name="pie-chart" class="w-5 h-5" /> Insights & Analytics
     </h2>
-    <a href="{{ route('admin.reports.index') }}" class="btn-dental">
-        <x-dental-icon name="bar-chart" class="w-5 h-5" /> View Reports
-    </a>
 </div>
 
 <!-- Key Metrics -->
@@ -116,7 +113,6 @@
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Revenue</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -134,11 +130,6 @@
                                     <span class="px-2 py-1 rounded text-xs font-medium {{ $subdomain->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                         {{ $subdomain->is_active ? 'Active' : 'Inactive' }}
                                     </span>
-                                </td>
-                                <td class="px-4 py-4 whitespace-nowrap text-sm">
-                                    <a href="{{ route('admin.subdomains.edit', $subdomain) }}" class="btn-dental text-sm py-1.5 px-3">
-                                        <x-dental-icon name="pencil" class="w-5 h-5" /> Edit
-                                    </a>
                                 </td>
                             </tr>
                         @endforeach

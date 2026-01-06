@@ -103,7 +103,7 @@
 @if(auth()->check() && auth()->user()->isDoctor())
 <!-- Availability Modal -->
 <div class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center" id="availabilityModal">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto modal-scroll">
         <div class="card-dental-header flex justify-between items-center">
             <h5 class="text-lg font-semibold">Manage Availability</h5>
             <button type="button" class="text-white hover:text-gray-200 text-2xl" onclick="document.getElementById('availabilityModal').classList.add('hidden')">

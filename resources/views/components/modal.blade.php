@@ -18,7 +18,7 @@
 @endphp
 
 <div class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center" id="{{ $id }}">
-    <div class="bg-white rounded-2xl shadow-2xl {{ $sizeClass }} w-full mx-4 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl {{ $sizeClass }} w-full mx-4 max-h-[90vh] overflow-y-auto modal-scroll">
         <div class="card-dental-header flex justify-between items-center">
             @if($title)
                 <h5 class="text-lg font-semibold">{{ $title }}</h5>

@@ -10,7 +10,7 @@ const SkeletonLoading = {
     getViewSubdomainModal: function() {
         return `
             <div class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center" id="viewSubdomainModal">
-                <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto modal-scroll">
                     <div class="card-dental-header flex justify-between items-center">
                         <h5 class="text-lg font-semibold">Loading...</h5>
                         <button type="button" class="text-white hover:text-gray-200 text-2xl transition-colors" onclick="closeModal('viewSubdomainModal')">

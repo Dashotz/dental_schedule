@@ -57,8 +57,7 @@
                         </a>
                     </li>
                     <li class="border-b border-white/10">
-                        <a href="#" class="nav-link-dental flex items-center justify-between" 
-                           onclick="event.preventDefault(); document.getElementById('analyticsMenu').classList.toggle('hidden');">
+                        <a href="#" class="nav-link-dental flex items-center justify-between analytics-toggle">
                             <div class="flex items-center">
                                 <x-dental-icon name="graph-up" class="w-6 h-6" />
                                 <span>Analytics</span>
@@ -279,9 +278,10 @@
                 sidebarOverlay.addClass('hidden');
             });
 
-            // Analytics menu toggle (scope to analytics link only)
-            $('#analyticsMenu').parent().find('a[href="#"]').on('click', function(e) {
+            // Analytics menu toggle
+            $('.analytics-toggle').on('click', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 analyticsMenu.toggleClass('hidden');
                 analyticsChevron.toggleClass('rotate-180');
             });

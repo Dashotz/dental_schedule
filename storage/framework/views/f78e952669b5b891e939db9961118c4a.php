@@ -52,7 +52,7 @@ unset($__defined_vars, $__key, $__value); ?>
 ?>
 
 <div class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center" id="<?php echo e($id); ?>">
-    <div class="bg-white rounded-2xl shadow-2xl <?php echo e($sizeClass); ?> w-full mx-4 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl <?php echo e($sizeClass); ?> w-full mx-4 max-h-[90vh] overflow-y-auto modal-scroll">
         <div class="card-dental-header flex justify-between items-center">
             <?php if($title): ?>
                 <h5 class="text-lg font-semibold"><?php echo e($title); ?></h5>

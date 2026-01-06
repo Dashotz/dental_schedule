@@ -152,8 +152,7 @@
                         </a>
                     </li>
                     <li class="border-b border-white/10">
-                        <a href="#" class="nav-link-dental flex items-center justify-between" 
-                           onclick="event.preventDefault(); document.getElementById('analyticsMenu').classList.toggle('hidden');">
+                        <a href="#" class="nav-link-dental flex items-center justify-between analytics-toggle">
                             <div class="flex items-center">
                                 <?php if (isset($component)) { $__componentOriginal9acdd978a59e943fbf0d4792f9858795 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal9acdd978a59e943fbf0d4792f9858795 = $attributes; } ?>
@@ -603,9 +602,10 @@
                 sidebarOverlay.addClass('hidden');
             });
 
-            // Analytics menu toggle (scope to analytics link only)
-            $('#analyticsMenu').parent().find('a[href="#"]').on('click', function(e) {
+            // Analytics menu toggle
+            $('.analytics-toggle').on('click', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 analyticsMenu.toggleClass('hidden');
                 analyticsChevron.toggleClass('rotate-180');
             });
