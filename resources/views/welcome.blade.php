@@ -3,7 +3,6 @@
 @section('title', 'Welcome - Dental Care Clinic')
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
     <style>
         .hero-banner {
             background: linear-gradient(135deg, rgba(32, 178, 170, 0.4) 0%, rgba(0, 139, 139, 0.4) 100%),
@@ -19,83 +18,82 @@
 @section('content')
 
 <!-- Top Bar -->
-<div class="top-info-bar">
-    <div class="container">
-        <div class="row align-items-center justify-content-center">
-            <div class="col-md-4 col-lg-4">
-                <span class="top-info-item">
-                    <i class="bi bi-clock"></i> Mon-Sun 9:00AM-6:00PM
-                </span>
+<div class="bg-dental-teal text-white py-3">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center text-sm">
+            <div class="flex items-center justify-center gap-2">
+                <i class="bi bi-clock"></i>
+                <span>Mon-Sun 9:00AM-6:00PM</span>
             </div>
-            <div class="col-md-4 col-lg-4">
-                <span class="top-info-item">
-                    <i class="bi bi-telephone"></i> (123) 456-7890
-                </span>
+            <div class="flex items-center justify-center gap-2">
+                <i class="bi bi-telephone"></i>
+                <span>(123) 456-7890</span>
             </div>
-            <div class="col-md-4 col-lg-4">
-                <span class="top-info-item">
-                    <i class="bi bi-envelope"></i> info@dentalcare.com
-                </span>
+            <div class="flex items-center justify-center gap-2">
+                <i class="bi bi-envelope"></i>
+                <span>info@dentalcare.com</span>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Navigation Bar -->
-<nav class="main-navbar">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-            <a href="/" class="nav-brand">
-                <i class="bi bi-tooth"></i>
+<nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+            <a href="/" class="flex items-center gap-2 text-dental-teal font-bold text-xl hover:text-dental-teal-dark transition-colors">
+                <i class="bi bi-tooth text-2xl"></i>
                 <span>Dental Care Clinic</span>
             </a>
-            <div class="d-flex align-items-center">
-                <a href="#services" class="nav-link-custom d-none d-md-block">Services</a>
-                <a href="#about" class="nav-link-custom d-none d-md-block">About</a>
-                <a href="#testimonials" class="nav-link-custom d-none d-md-block">Testimonials</a>
-                <a href="#contact" class="nav-link-custom d-none d-md-block">Contact</a>
-                <button class="mobile-menu-btn d-md-none" id="mobileMenuBtn">
+            <div class="flex items-center gap-6">
+                <a href="#services" class="hidden md:block text-gray-700 hover:text-dental-teal transition-colors font-medium">Services</a>
+                <a href="#about" class="hidden md:block text-gray-700 hover:text-dental-teal transition-colors font-medium">About</a>
+                <a href="#testimonials" class="hidden md:block text-gray-700 hover:text-dental-teal transition-colors font-medium">Testimonials</a>
+                <a href="#contact" class="hidden md:block text-gray-700 hover:text-dental-teal transition-colors font-medium">Contact</a>
+                <button class="md:hidden text-dental-teal text-2xl p-2 hover:bg-gray-100 rounded transition-colors" id="mobileMenuBtn">
                     <i class="bi bi-list"></i>
                 </button>
             </div>
         </div>
         <!-- Mobile Menu -->
-        <div class="mobile-menu d-md-none" id="mobileMenu">
-            <a href="#services" class="mobile-menu-link">Services</a>
-            <a href="#about" class="mobile-menu-link">About</a>
-            <a href="#testimonials" class="mobile-menu-link">Testimonials</a>
-            <a href="#contact" class="mobile-menu-link">Contact</a>
+        <div class="hidden md:hidden pb-4 border-t border-gray-200" id="mobileMenu">
+            <div class="flex flex-col gap-2 pt-4">
+                <a href="#services" class="text-gray-700 hover:text-dental-teal py-2 px-4 rounded transition-colors">Services</a>
+                <a href="#about" class="text-gray-700 hover:text-dental-teal py-2 px-4 rounded transition-colors">About</a>
+                <a href="#testimonials" class="text-gray-700 hover:text-dental-teal py-2 px-4 rounded transition-colors">Testimonials</a>
+                <a href="#contact" class="text-gray-700 hover:text-dental-teal py-2 px-4 rounded transition-colors">Contact</a>
+            </div>
         </div>
     </div>
-    <a href="{{ route('login') }}" class="btn btn-staff-login" title="Staff Login">
-        <i class="bi bi-person-circle"></i>
+    <a href="{{ route('login') }}" class="fixed bottom-6 right-6 bg-dental-teal hover:bg-dental-teal-dark text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-110 z-40" title="Staff Login">
+        <i class="bi bi-person-circle text-2xl"></i>
     </a>
 </nav>
 
 <!-- Hero Banner Section -->
-<section class="hero-banner">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="hero-title">Your One-Stop Shop For Dental Treatment</h1>
-                <p class="hero-subtitle">
+<section class="hero-banner py-20 md:py-32">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div class="text-white">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">Your One-Stop Shop For Dental Treatment</h1>
+                <p class="text-lg md:text-xl mb-8 text-white/90 leading-relaxed">
                     Advanced dental knowledge, cutting-edge technology, and world-class service make Dental Care Clinic 
                     the perfect choice for both locals and dental tourists. Experience every aspect of our professional dental care.
                 </p>
-                <div class="hero-buttons">
-                    <a href="#services" class="btn btn-primary-hero">
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#services" class="btn-dental text-center">
                         Learn More
                     </a>
-                    <a href="https://www.facebook.com/messages/t/28771958192418167" target="_blank" class="btn btn-secondary-hero">
+                    <a href="https://www.facebook.com/messages/t/28771958192418167" target="_blank" class="btn-dental-outline text-center">
                         Make an Appointment
                     </a>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="hero-image-wrapper">
+            <div class="hidden lg:block">
+                <div class="relative">
                     <img src="https://images.unsplash.com/photo-1606811971618-4486d14f3f99?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
                          alt="Modern dental clinic with professional dentist" 
-                         class="hero-image"
+                         class="rounded-2xl shadow-2xl"
                          loading="lazy">
                 </div>
             </div>
@@ -104,52 +102,61 @@
 </section>
 
 <!-- Services Preview Section -->
-<section class="services-preview">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="service-preview-card">
-                    <div class="service-preview-image">
-                        <img src="https://images.unsplash.com/photo-1609840114035-3c981b782dfe?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                             alt="Cosmetic Dentistry" 
-                             loading="lazy">
-                    </div>
-                    <div class="service-preview-icon">
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="card-dental group hover:shadow-xl transition-shadow">
+                <div class="relative h-48 overflow-hidden rounded-t-2xl">
+                    <img src="https://images.unsplash.com/photo-1609840114035-3c981b782dfe?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                         alt="Cosmetic Dentistry" 
+                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                         loading="lazy">
+                </div>
+                <div class="p-6 relative -mt-8">
+                    <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-2xl mb-4 shadow-lg">
                         <i class="bi bi-heart-pulse"></i>
                     </div>
-                    <h4>Cosmetic Dentistry</h4>
-                    <p>We promise you a smile makeover that goes beyond improving how your teeth and gums function.</p>
-                    <a href="#services" class="service-preview-link">Learn More <i class="bi bi-arrow-right"></i></a>
+                    <h4 class="text-xl font-bold mb-2 text-gray-800">Cosmetic Dentistry</h4>
+                    <p class="text-gray-600 mb-4">We promise you a smile makeover that goes beyond improving how your teeth and gums function.</p>
+                    <a href="#services" class="text-dental-teal hover:text-dental-teal-dark font-semibold flex items-center gap-2 transition-colors">
+                        Learn More <i class="bi bi-arrow-right"></i>
+                    </a>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="service-preview-card">
-                    <div class="service-preview-image">
-                        <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                             alt="TMJ Therapy" 
-                             loading="lazy">
-                    </div>
-                    <div class="service-preview-icon">
+            <div class="card-dental group hover:shadow-xl transition-shadow">
+                <div class="relative h-48 overflow-hidden rounded-t-2xl">
+                    <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                         alt="TMJ Therapy" 
+                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                         loading="lazy">
+                </div>
+                <div class="p-6 relative -mt-8">
+                    <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-2xl mb-4 shadow-lg">
                         <i class="bi bi-shield-check"></i>
                     </div>
-                    <h4>TMJ Therapy</h4>
-                    <p>Our clinic has advanced diagnostic and treatment facilities for TMJ dysfunction.</p>
-                    <a href="#services" class="service-preview-link">Learn More <i class="bi bi-arrow-right"></i></a>
+                    <h4 class="text-xl font-bold mb-2 text-gray-800">TMJ Therapy</h4>
+                    <p class="text-gray-600 mb-4">Our clinic has advanced diagnostic and treatment facilities for TMJ dysfunction.</p>
+                    <a href="#services" class="text-dental-teal hover:text-dental-teal-dark font-semibold flex items-center gap-2 transition-colors">
+                        Learn More <i class="bi bi-arrow-right"></i>
+                    </a>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="service-preview-card">
-                    <div class="service-preview-image">
-                        <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                             alt="Dental X-ray" 
-                             loading="lazy">
+            <div class="card-dental group hover:shadow-xl transition-shadow">
+                <div class="relative h-48 overflow-hidden rounded-t-2xl">
+                    <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                         alt="Dental X-ray" 
+                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                         loading="lazy">
                 </div>
-                    <div class="service-preview-icon">
+                <div class="p-6 relative -mt-8">
+                    <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-2xl mb-4 shadow-lg">
                         <i class="bi bi-camera"></i>
-            </div>
-                    <h4>CBCT and Dental X-ray</h4>
-                    <p>Dental imaging plays a crucial role in accurate diagnosis and treatment planning.</p>
-                    <a href="#services" class="service-preview-link">Learn More <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2 text-gray-800">CBCT and Dental X-ray</h4>
+                    <p class="text-gray-600 mb-4">Dental imaging plays a crucial role in accurate diagnosis and treatment planning.</p>
+                    <a href="#services" class="text-dental-teal hover:text-dental-teal-dark font-semibold flex items-center gap-2 transition-colors">
+                        Learn More <i class="bi bi-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -157,324 +164,296 @@
 </section>
 
 <!-- Services Section -->
-<section id="services" class="services-section">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Our Specialized Dental Solutions</h2>
-            <p class="section-subtitle">From routine check-ups to advanced procedures, we provide a full range of dental services designed to meet your individual goals.</p>
+<section id="services" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Our Specialized Dental Solutions</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">From routine check-ups to advanced procedures, we provide a full range of dental services designed to meet your individual goals.</p>
         </div>
-        <div class="row g-4">
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-clipboard-pulse"></i>
-                    </div>
-                    <h5 class="service-title">General Dentistry</h5>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
+                <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
+                    <i class="bi bi-clipboard-pulse"></i>
                 </div>
+                <h5 class="font-semibold text-gray-800">General Dentistry</h5>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-heart-pulse"></i>
-                    </div>
-                    <h5 class="service-title">Cosmetic Dentistry</h5>
+            <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
+                <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
+                    <i class="bi bi-heart-pulse"></i>
                 </div>
+                <h5 class="font-semibold text-gray-800">Cosmetic Dentistry</h5>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-shield-check"></i>
-                    </div>
-                    <h5 class="service-title">Orthodontics</h5>
+            <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
+                <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
+                    <i class="bi bi-shield-check"></i>
                 </div>
+                <h5 class="font-semibold text-gray-800">Orthodontics</h5>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-droplet"></i>
-                    </div>
-                    <h5 class="service-title">Root Canal Treatment</h5>
+            <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
+                <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
+                    <i class="bi bi-droplet"></i>
                 </div>
+                <h5 class="font-semibold text-gray-800">Root Canal Treatment</h5>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-stars"></i>
-                    </div>
-                    <h5 class="service-title">Dental Implants</h5>
+            <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
+                <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
+                    <i class="bi bi-stars"></i>
                 </div>
+                <h5 class="font-semibold text-gray-800">Dental Implants</h5>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-emoji-smile"></i>
-                    </div>
-                    <h5 class="service-title">Emergency Care</h5>
+            <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
+                <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
+                    <i class="bi bi-emoji-smile"></i>
                 </div>
+                <h5 class="font-semibold text-gray-800">Emergency Care</h5>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-hospital"></i>
-                    </div>
-                    <h5 class="service-title">Oral Surgery</h5>
+            <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
+                <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
+                    <i class="bi bi-hospital"></i>
                 </div>
+                <h5 class="font-semibold text-gray-800">Oral Surgery</h5>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="bi bi-brush"></i>
-                    </div>
-                    <h5 class="service-title">Teeth Whitening</h5>
+            <div class="card-dental text-center p-6 hover:shadow-xl transition-all hover:-translate-y-1">
+                <div class="w-16 h-16 bg-dental-teal/10 rounded-full flex items-center justify-center text-dental-teal text-3xl mx-auto mb-4">
+                    <i class="bi bi-brush"></i>
                 </div>
+                <h5 class="font-semibold text-gray-800">Teeth Whitening</h5>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Why Choose Us Section -->
-<section id="about" class="why-choose-section">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Why Choose Dental Care Clinic</h2>
-            <p class="section-subtitle">Extensive dental expertise, truly state-of-the-art technology, and the best locations. We guarantee you'll experience and enjoy every aspect of our world-class service.</p>
+<section id="about" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Why Choose Dental Care Clinic</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Extensive dental expertise, truly state-of-the-art technology, and the best locations. We guarantee you'll experience and enjoy every aspect of our world-class service.</p>
         </div>
-        <div class="row g-4 align-items-center mb-5">
-            <div class="col-lg-6">
-                <div class="clinic-image-wrapper">
-                    <img src="{{ asset('images/choose1.jpg') }}" 
-                         alt="Dental examination and patient care" 
-                         class="clinic-facility-image"
-                         loading="lazy">
-                </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+            <div class="rounded-2xl overflow-hidden shadow-lg">
+                <img src="{{ asset('images/choose1.jpg') }}" 
+                     alt="Dental examination and patient care" 
+                     class="w-full h-full object-cover"
+                     loading="lazy">
             </div>
-            <div class="col-lg-6">
-                <div class="clinic-image-wrapper">
-                    <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
-                         alt="Dental equipment and technology" 
-                         class="clinic-facility-image"
-                         loading="lazy">
-                </div>
+            <div class="rounded-2xl overflow-hidden shadow-lg">
+                <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                     alt="Dental equipment and technology" 
+                     class="w-full h-full object-cover"
+                     loading="lazy">
             </div>
         </div>
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-people"></i>
-                    </div>
-                    <h4>Skilled Dental Experts</h4>
-                    <p>Our experienced team provides top-quality care backed by advanced training and a passion for healthy smiles.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="card-dental p-6 text-center hover:shadow-xl transition-all">
+                <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-4">
+                    <i class="bi bi-people"></i>
                 </div>
+                <h4 class="text-xl font-bold mb-3 text-gray-800">Skilled Dental Experts</h4>
+                <p class="text-gray-600">Our experienced team provides top-quality care backed by advanced training and a passion for healthy smiles.</p>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-clipboard-check"></i>
-                    </div>
-                    <h4>Personalized Treatment Plans</h4>
-                    <p>Every smile is unique. We create customized care plans to meet your individual dental needs and goals.</p>
+            <div class="card-dental p-6 text-center hover:shadow-xl transition-all">
+                <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-4">
+                    <i class="bi bi-clipboard-check"></i>
                 </div>
+                <h4 class="text-xl font-bold mb-3 text-gray-800">Personalized Treatment Plans</h4>
+                <p class="text-gray-600">Every smile is unique. We create customized care plans to meet your individual dental needs and goals.</p>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-cpu"></i>
-                    </div>
-                    <h4>State-of-the-Art Technology</h4>
-                    <p>We use the latest dental equipment for accurate diagnoses, safer procedures, and more comfortable visits.</p>
+            <div class="card-dental p-6 text-center hover:shadow-xl transition-all">
+                <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-4">
+                    <i class="bi bi-cpu"></i>
                 </div>
+                <h4 class="text-xl font-bold mb-3 text-gray-800">State-of-the-Art Technology</h4>
+                <p class="text-gray-600">We use the latest dental equipment for accurate diagnoses, safer procedures, and more comfortable visits.</p>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-grid-3x3"></i>
-                    </div>
-                    <h4>Full Range of Services</h4>
-                    <p>From cleanings and fillings to cosmetic makeovers and implants—we offer dental care in one place.</p>
+            <div class="card-dental p-6 text-center hover:shadow-xl transition-all">
+                <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-4">
+                    <i class="bi bi-grid-3x3"></i>
                 </div>
+                <h4 class="text-xl font-bold mb-3 text-gray-800">Full Range of Services</h4>
+                <p class="text-gray-600">From cleanings and fillings to cosmetic makeovers and implants—we offer dental care in one place.</p>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-cash-coin"></i>
-                    </div>
-                    <h4>Transparent & Affordable</h4>
-                    <p>We offer honest pricing, flexible payment options, and no surprise fees—quality care within your reach.</p>
+            <div class="card-dental p-6 text-center hover:shadow-xl transition-all">
+                <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-4">
+                    <i class="bi bi-cash-coin"></i>
                 </div>
+                <h4 class="text-xl font-bold mb-3 text-gray-800">Transparent & Affordable</h4>
+                <p class="text-gray-600">We offer honest pricing, flexible payment options, and no surprise fees—quality care within your reach.</p>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-heart"></i>
-                    </div>
-                    <h4>Trusted by Families</h4>
-                    <p>We're proud to be the go-to dental provider for many families in our community, year after year.</p>
+            <div class="card-dental p-6 text-center hover:shadow-xl transition-all">
+                <div class="w-16 h-16 bg-dental-teal rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-4">
+                    <i class="bi bi-heart"></i>
                 </div>
+                <h4 class="text-xl font-bold mb-3 text-gray-800">Trusted by Families</h4>
+                <p class="text-gray-600">We're proud to be the go-to dental provider for many families in our community, year after year.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Testimonials Section -->
-<section id="testimonials" class="testimonials-section">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Happy Patients, Healthy Smiles</h2>
-            <p class="section-subtitle">Feel the difference—where expert care meets patient satisfaction.</p>
+<section id="testimonials" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Happy Patients, Healthy Smiles</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">Feel the difference—where expert care meets patient satisfaction.</p>
         </div>
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                    </div>
-                    <p class="testimonial-text">"Together with his excellent team of doctors, they showed me the perfect combination of professionalism and compassion. They were patient, gentle and very polite."</p>
-                    <div class="testimonial-author">
-                        <strong>Rosana Castaneda</strong>
-                    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="card-dental p-6">
+                <div class="flex gap-1 text-yellow-400 mb-4 text-xl">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
                 </div>
+                <p class="text-gray-700 mb-4 italic">"Together with his excellent team of doctors, they showed me the perfect combination of professionalism and compassion. They were patient, gentle and very polite."</p>
+                <div class="font-bold text-gray-800">Rosana Castaneda</div>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                    </div>
-                    <p class="testimonial-text">"Excellent service and professional staff. The clinic is modern and clean, and the dentists are very knowledgeable. Highly recommend!"</p>
-                    <div class="testimonial-author">
-                        <strong>Sarah Johnson</strong>
-                    </div>
+            <div class="card-dental p-6">
+                <div class="flex gap-1 text-yellow-400 mb-4 text-xl">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
                 </div>
+                <p class="text-gray-700 mb-4 italic">"Excellent service and professional staff. The clinic is modern and clean, and the dentists are very knowledgeable. Highly recommend!"</p>
+                <div class="font-bold text-gray-800">Sarah Johnson</div>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                    </div>
-                    <p class="testimonial-text">"I've been coming here for years. The team is friendly, the facilities are top-notch, and I always feel comfortable during my visits."</p>
-                    <div class="testimonial-author">
-                        <strong>Michael Chen</strong>
-                    </div>
+            <div class="card-dental p-6">
+                <div class="flex gap-1 text-yellow-400 mb-4 text-xl">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
                 </div>
+                <p class="text-gray-700 mb-4 italic">"I've been coming here for years. The team is friendly, the facilities are top-notch, and I always feel comfortable during my visits."</p>
+                <div class="font-bold text-gray-800">Michael Chen</div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- CTA Section -->
-<section class="cta-section">
-    <div class="container">
-        <div class="cta-content text-center">
-            <h2>Begin Your Journey to a Brighter, Healthier Smile Today!</h2>
-            <a href="https://www.facebook.com/messages/t/28771958192418167" target="_blank" class="btn btn-cta">Make an Appointment</a>
-        </div>
+<section class="py-16 bg-gradient-to-r from-dental-teal to-dental-teal-dark text-white">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">Begin Your Journey to a Brighter, Healthier Smile Today!</h2>
+        <a href="https://www.facebook.com/messages/t/28771958192418167" target="_blank" class="inline-block bg-white text-dental-teal hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            Make an Appointment
+        </a>
     </div>
 </section>
 
 <!-- Contact Section -->
-<section id="contact" class="contact-section">
-    <div class="container">
-        <div class="section-header">
-            <h2 class="section-title">Clinic Locations</h2>
+<section id="contact" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Clinic Locations</h2>
         </div>
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <div class="location-card">
-                    <h5><i class="bi bi-geo-alt-fill"></i> Main Clinic</h5>
-                    <p>123 Main Street<br>Your City, State 12345<br>United States</p>
-                    <p class="location-phone"><i class="bi bi-telephone"></i> (123) 456-7890</p>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="card-dental p-6">
+                <h5 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                    <i class="bi bi-geo-alt-fill text-dental-teal"></i> Main Clinic
+                </h5>
+                <p class="text-gray-600 mb-2">123 Main Street<br>Your City, State 12345<br>United States</p>
+                <p class="text-gray-700 font-medium flex items-center gap-2 mt-4">
+                    <i class="bi bi-telephone text-dental-teal"></i> (123) 456-7890
+                </p>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="location-card">
-                    <h5><i class="bi bi-geo-alt-fill"></i> Branch Office</h5>
-                    <p>456 Second Avenue<br>Your City, State 12345<br>United States</p>
-                    <p class="location-phone"><i class="bi bi-telephone"></i> (123) 456-7891</p>
-                </div>
+            <div class="card-dental p-6">
+                <h5 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                    <i class="bi bi-geo-alt-fill text-dental-teal"></i> Branch Office
+                </h5>
+                <p class="text-gray-600 mb-2">456 Second Avenue<br>Your City, State 12345<br>United States</p>
+                <p class="text-gray-700 font-medium flex items-center gap-2 mt-4">
+                    <i class="bi bi-telephone text-dental-teal"></i> (123) 456-7891
+                </p>
             </div>
-            <div class="col-lg-4 col-md-6">
-                <div class="location-card">
-                    <h5><i class="bi bi-info-circle-fill"></i> Patient Registration</h5>
-                    <p>To book an appointment, please use the registration link provided by our clinic staff.</p>
-                    <p class="location-hours"><i class="bi bi-clock"></i> Mon-Fri: 9AM-6PM<br>Sat: 9AM-2PM</p>
-                </div>
+            <div class="card-dental p-6">
+                <h5 class="text-xl font-bold mb-4 text-gray-800 flex items-center gap-2">
+                    <i class="bi bi-info-circle-fill text-dental-teal"></i> Patient Registration
+                </h5>
+                <p class="text-gray-600 mb-2">To book an appointment, please use the registration link provided by our clinic staff.</p>
+                <p class="text-gray-700 font-medium flex items-center gap-2 mt-4">
+                    <i class="bi bi-clock text-dental-teal"></i> Mon-Fri: 9AM-6PM<br>Sat: 9AM-2PM
+                </p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Newsletter Section -->
-<section class="newsletter-section">
-    <div class="container">
-        <div class="newsletter-content text-center">
-            <h3>Stay Updated</h3>
-            <p>Subscribe to our newsletter for dental care tips and special offers.</p>
-            <form class="newsletter-form">
-                <div class="input-group">
-                    <input type="email" class="form-control" placeholder="Enter your email address" required>
-                    <button class="btn btn-newsletter" type="submit">Subscribe</button>
-                </div>
-            </form>
-        </div>
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4 text-center">
+        <h3 class="text-2xl font-bold text-gray-800 mb-2">Stay Updated</h3>
+        <p class="text-gray-600 mb-6">Subscribe to our newsletter for dental care tips and special offers.</p>
+        <form class="max-w-md mx-auto flex gap-2">
+            <input type="email" class="input-dental flex-1" placeholder="Enter your email address" required>
+            <button class="btn-dental whitespace-nowrap" type="submit">Subscribe</button>
+        </form>
     </div>
 </section>
 
 <!-- Footer -->
-<footer class="main-footer">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-                <h5 class="footer-title">
-                    <i class="bi bi-tooth me-2"></i>Dental Care Clinic
+<footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+            <div>
+                <h5 class="text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="bi bi-tooth text-dental-teal"></i>Dental Care Clinic
                 </h5>
-                <p>Your trusted partner in dental health and wellness. We provide comprehensive dental care solutions for you and your family.</p>
+                <p class="text-gray-400">Your trusted partner in dental health and wellness. We provide comprehensive dental care solutions for you and your family.</p>
             </div>
-            <div class="col-lg-2 col-md-6">
-                <h6 class="footer-heading">Navigation</h6>
-                <ul class="footer-links">
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#testimonials">Testimonials</a></li>
-                    <li><a href="#contact">Contact</a></li>
+            <div>
+                <h6 class="font-semibold mb-4">Navigation</h6>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#services" class="hover:text-white transition-colors">Services</a></li>
+                    <li><a href="#about" class="hover:text-white transition-colors">About</a></li>
+                    <li><a href="#testimonials" class="hover:text-white transition-colors">Testimonials</a></li>
+                    <li><a href="#contact" class="hover:text-white transition-colors">Contact</a></li>
                 </ul>
             </div>
-            <div class="col-lg-3 col-md-6">
-                <h6 class="footer-heading">Contact</h6>
-                <ul class="footer-links">
-                    <li><i class="bi bi-telephone"></i> (123) 456-7890</li>
-                    <li><i class="bi bi-envelope"></i> info@dentalcare.com</li>
-                    <li><i class="bi bi-clock"></i> Mon-Sun 9:00AM-6:00PM</li>
+            <div>
+                <h6 class="font-semibold mb-4">Contact</h6>
+                <ul class="space-y-2 text-gray-400">
+                    <li class="flex items-center gap-2"><i class="bi bi-telephone"></i> (123) 456-7890</li>
+                    <li class="flex items-center gap-2"><i class="bi bi-envelope"></i> info@dentalcare.com</li>
+                    <li class="flex items-center gap-2"><i class="bi bi-clock"></i> Mon-Sun 9:00AM-6:00PM</li>
                 </ul>
             </div>
-            <div class="col-lg-3 col-md-6">
-                <h6 class="footer-heading">Social Media</h6>
-                <div class="social-links">
-                    <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+            <div>
+                <h6 class="font-semibold mb-4">Social Media</h6>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 bg-gray-700 hover:bg-dental-teal rounded-full flex items-center justify-center transition-colors">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-700 hover:bg-dental-teal rounded-full flex items-center justify-center transition-colors">
+                        <i class="bi bi-twitter"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-700 hover:bg-dental-teal rounded-full flex items-center justify-center transition-colors">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-gray-700 hover:bg-dental-teal rounded-full flex items-center justify-center transition-colors">
+                        <i class="bi bi-linkedin"></i>
+                    </a>
                 </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p class="mb-0">&copy; {{ date('Y') }} Dental Care Clinic. All rights reserved.</p>
+        <div class="border-t border-gray-700 pt-8 text-center text-gray-400">
+            <p>&copy; {{ date('Y') }} Dental Care Clinic. All rights reserved.</p>
         </div>
     </div>
 </footer>
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/welcome.js') }}"></script>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn')?.addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
 @endpush

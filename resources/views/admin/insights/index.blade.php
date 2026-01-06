@@ -3,192 +3,162 @@
 @section('title', 'Insights')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-pie-chart"></i> Insights & Analytics</h2>
-    <a href="{{ route('admin.reports.index') }}" class="btn btn-primary">
+<div class="flex justify-between items-center mb-6">
+    <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
+        <i class="bi bi-pie-chart"></i> Insights & Analytics
+    </h2>
+    <a href="{{ route('admin.reports.index') }}" class="btn-dental">
         <i class="bi bi-bar-chart"></i> View Reports
     </a>
 </div>
 
 <!-- Key Metrics -->
-<div class="row mb-4">
-    <div class="col-md-4 mb-3">
-        <div class="card bg-primary text-white">
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2">Renewal Rate</h6>
-                <h3 class="mb-0">{{ number_format($renewalRate, 1) }}%</h3>
-            </div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="card-dental bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+        <div class="p-6">
+            <h6 class="text-sm font-medium opacity-90 mb-2">Renewal Rate</h6>
+            <h3 class="text-3xl font-bold mb-0">{{ number_format($renewalRate, 1) }}%</h3>
         </div>
     </div>
-    <div class="col-md-4 mb-3">
-        <div class="card bg-success text-white">
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2">Average Subscription Value</h6>
-                <h3 class="mb-0">${{ number_format($avgSubscriptionValue, 2) }}</h3>
-            </div>
+    <div class="card-dental bg-gradient-to-br from-green-500 to-green-600 text-white">
+        <div class="p-6">
+            <h6 class="text-sm font-medium opacity-90 mb-2">Average Subscription Value</h6>
+            <h3 class="text-3xl font-bold mb-0">${{ number_format($avgSubscriptionValue, 2) }}</h3>
         </div>
     </div>
-    <div class="col-md-4 mb-3">
-        <div class="card bg-info text-white">
-            <div class="card-body">
-                <h6 class="card-subtitle mb-2">Total Subscriptions</h6>
-                <h3 class="mb-0">{{ $subscriptionStatus->sum('count') }}</h3>
-            </div>
+    <div class="card-dental bg-gradient-to-br from-cyan-500 to-cyan-600 text-white">
+        <div class="p-6">
+            <h6 class="text-sm font-medium opacity-90 mb-2">Total Subscriptions</h6>
+            <h3 class="text-3xl font-bold mb-0">{{ $subscriptionStatus->sum('count') }}</h3>
         </div>
     </div>
 </div>
 
 <!-- Subscription Status Distribution -->
-<div class="row mb-4">
-    <div class="col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="bi bi-pie-chart"></i> Subscription Status Distribution</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="subscriptionStatusChart" height="150"></canvas>
-            </div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div class="card-dental">
+        <div class="card-dental-header">
+            <h5 class="text-lg font-semibold flex items-center gap-2">
+                <i class="bi bi-pie-chart"></i> Subscription Status Distribution
+            </h5>
+        </div>
+        <div class="p-6">
+            <canvas id="subscriptionStatusChart" class="max-h-[250px]"></canvas>
         </div>
     </div>
 
     <!-- Plan Distribution -->
-    <div class="col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0"><i class="bi bi-diagram-3"></i> Plan Distribution</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="planDistributionChart" height="150"></canvas>
-            </div>
+    <div class="card-dental">
+        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-t-2xl">
+            <h5 class="text-lg font-semibold flex items-center gap-2">
+                <i class="bi bi-diagram-3"></i> Plan Distribution
+            </h5>
+        </div>
+        <div class="p-6">
+            <canvas id="planDistributionChart" class="max-h-[250px]"></canvas>
         </div>
     </div>
 </div>
 
 <!-- Billing Cycle & Subdomain Status -->
-<div class="row mb-4">
-    <div class="col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header bg-warning text-white">
-                <h5 class="mb-0"><i class="bi bi-credit-card"></i> Billing Cycle Distribution</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="billingCycleChart" height="150"></canvas>
-            </div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div class="card-dental">
+        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-6 py-4 rounded-t-2xl">
+            <h5 class="text-lg font-semibold flex items-center gap-2">
+                <i class="bi bi-credit-card"></i> Billing Cycle Distribution
+            </h5>
+        </div>
+        <div class="p-6">
+            <canvas id="billingCycleChart" class="max-h-[250px]"></canvas>
         </div>
     </div>
 
     <!-- Subdomain Status -->
-    <div class="col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0"><i class="bi bi-globe"></i> Subdomain Status</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="subdomainStatusChart" height="150"></canvas>
-            </div>
+    <div class="card-dental">
+        <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white px-6 py-4 rounded-t-2xl">
+            <h5 class="text-lg font-semibold flex items-center gap-2">
+                <i class="bi bi-globe"></i> Subdomain Status
+            </h5>
+        </div>
+        <div class="p-6">
+            <canvas id="subdomainStatusChart" class="max-h-[250px]"></canvas>
         </div>
     </div>
 </div>
 
 <!-- Revenue Trends -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-secondary text-white">
-                <h5 class="mb-0"><i class="bi bi-graph-up-arrow"></i> Revenue Trends (Last 6 Months)</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="revenueTrendsChart" height="60"></canvas>
-            </div>
-        </div>
+<div class="card-dental mb-6">
+    <div class="bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 py-4 rounded-t-2xl">
+        <h5 class="text-lg font-semibold flex items-center gap-2">
+            <i class="bi bi-graph-up-arrow"></i> Revenue Trends (Last 6 Months)
+        </h5>
+    </div>
+    <div class="p-6">
+        <canvas id="revenueTrendsChart" class="max-h-[300px]"></canvas>
     </div>
 </div>
 
 <!-- Top Revenue Generating Subdomains -->
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-dark text-white">
-                <h5 class="mb-0"><i class="bi bi-trophy"></i> Top Revenue Generating Subdomains</h5>
+<div class="card-dental">
+    <div class="bg-gradient-to-r from-gray-800 to-gray-900 text-white px-6 py-4 rounded-t-2xl">
+        <h5 class="text-lg font-semibold flex items-center gap-2">
+            <i class="bi bi-trophy"></i> Top Revenue Generating Subdomains
+        </h5>
+    </div>
+    <div class="p-6">
+        @if($topRevenueSubdomains->count() > 0)
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subdomain</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Revenue</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($topRevenueSubdomains as $index => $subdomain)
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1 rounded text-xs font-medium {{ $index < 3 ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800' }}">
+                                        #{{ $index + 1 }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{{ $subdomain->subdomain }}</td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900">{{ $subdomain->name }}</td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm font-bold text-green-600">${{ number_format($subdomain->subscriptions_sum_amount ?? 0, 2) }}</td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 rounded text-xs font-medium {{ $subdomain->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                        {{ $subdomain->is_active ? 'Active' : 'Inactive' }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-sm">
+                                    <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="btn-dental text-sm py-1.5 px-3">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-            <div class="card-body">
-                @if($topRevenueSubdomains->count() > 0)
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Rank</th>
-                                    <th>Subdomain</th>
-                                    <th>Name</th>
-                                    <th>Total Revenue</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($topRevenueSubdomains as $index => $subdomain)
-                                    <tr>
-                                        <td>
-                                            <span class="badge bg-{{ $index < 3 ? 'warning' : 'secondary' }}">
-                                                #{{ $index + 1 }}
-                                            </span>
-                                        </td>
-                                        <td>{{ $subdomain->subdomain }}</td>
-                                        <td>{{ $subdomain->name }}</td>
-                                        <td><strong>${{ number_format($subdomain->subscriptions_sum_amount ?? 0, 2) }}</strong></td>
-                                        <td>
-                                            <span class="badge bg-{{ $subdomain->is_active ? 'success' : 'danger' }}">
-                                                {{ $subdomain->is_active ? 'Active' : 'Inactive' }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="btn btn-sm btn-primary">
-                                                <i class="bi bi-eye"></i> View
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @else
-                    <p class="text-muted">No revenue data available.</p>
-                @endif
-            </div>
-        </div>
+        @else
+            <p class="text-gray-500 text-center py-8">No revenue data available.</p>
+        @endif
     </div>
 </div>
 
-@push('styles')
-<style>
-    .card-body canvas {
-        max-height: 300px !important;
-    }
-    
-    #revenueTrendsChart {
-        max-height: 200px !important;
-    }
-    
-    #subscriptionStatusChart,
-    #planDistributionChart,
-    #billingCycleChart,
-    #subdomainStatusChart {
-        max-height: 250px !important;
-    }
-</style>
-@endpush
-
 @push('scripts')
 <script>
-    // Wait for Chart.js to load
     function initCharts() {
         if (typeof Chart === 'undefined') {
-            console.error('Chart.js is not loaded');
             setTimeout(initCharts, 100);
             return;
         }
         
-        $(document).ready(function() {
         // Subscription Status Chart
         const subscriptionStatusCtx = document.getElementById('subscriptionStatusChart').getContext('2d');
         new Chart(subscriptionStatusCtx, {
@@ -226,7 +196,7 @@
                 datasets: [{
                     data: {!! json_encode($planDistribution->pluck('count')) !!},
                     backgroundColor: [
-                        'rgba(13, 110, 253, 0.8)',
+                        'rgba(32, 178, 170, 0.8)',
                         'rgba(40, 167, 69, 0.8)',
                         'rgba(111, 66, 193, 0.8)'
                     ],
@@ -309,8 +279,8 @@
                 datasets: [{
                     label: 'Revenue ($)',
                     data: {!! json_encode(collect($revenueTrends)->pluck('revenue')) !!},
-                    borderColor: 'rgb(108, 117, 125)',
-                    backgroundColor: 'rgba(108, 117, 125, 0.1)',
+                    borderColor: '#20b2aa',
+                    backgroundColor: 'rgba(32, 178, 170, 0.1)',
                     tension: 0.4,
                     fill: true
                 }]
@@ -335,10 +305,8 @@
                 }
             }
         });
-        });
     }
     
-    // Initialize charts when page loads
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initCharts);
     } else {
@@ -347,4 +315,3 @@
 </script>
 @endpush
 @endsection
-

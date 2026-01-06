@@ -24,7 +24,7 @@ class SubdomainController extends Controller
     {
         if (request()->ajax()) {
             return response()->json([
-                'html' => view('admin.subdomains.modals.create')->render()
+                'html' => view('admin.subdomains.partials.create-modal')->render()
             ]);
         }
         return view('admin.subdomains.create');
@@ -61,7 +61,7 @@ class SubdomainController extends Controller
         
         if (request()->ajax()) {
             return response()->json([
-                'html' => view('admin.subdomains.modals.show', compact('subdomain'))->render()
+                'html' => view('admin.subdomains.partials.show-modal', compact('subdomain'))->render()
             ]);
         }
         
@@ -72,7 +72,7 @@ class SubdomainController extends Controller
     {
         if (request()->ajax()) {
             return response()->json([
-                'html' => view('admin.subdomains.modals.edit-form', compact('subdomain'))->render()
+                'html' => view('admin.subdomains.partials.edit-form', compact('subdomain'))->render()
             ]);
         }
         return view('admin.subdomains.edit', compact('subdomain'));

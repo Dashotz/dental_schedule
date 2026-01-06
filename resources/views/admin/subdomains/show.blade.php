@@ -248,8 +248,8 @@
             Swal.fire({
                 title: 'Generate Registration Link',
                 html: `
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> 
+                    <div class="bg-cyan-50 border border-cyan-200 text-cyan-700 px-4 py-3 rounded-lg">
+                        <x-dental-icon name="info-circle" class="w-5 h-5 inline mr-2" />
                         The link will have unlimited uses and will expire when the subscription ends.
                     </div>
                 `,

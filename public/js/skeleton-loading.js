@@ -9,86 +9,55 @@ const SkeletonLoading = {
      */
     getViewSubdomainModal: function() {
         return `
-            <div class="modal fade" id="viewSubdomainModal" tabindex="-1" aria-labelledby="viewSubdomainModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl modal-dialog-scrollable">
-                    <div class="modal-content">
-                        <div class="modal-header bg-primary text-white">
-                            <h5 class="modal-title" id="viewSubdomainModalLabel">
-                                <i class="bi bi-globe me-2"></i><span class="skeleton" style="width: 200px; height: 1.5rem; display: inline-block; background: rgba(255,255,255,0.3); border-radius: 4px;"></span>
-                            </h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body p-4">
-                            <div class="row g-3 mb-4">
-                                <div class="col-md-6">
-                                    <div class="p-3 bg-light rounded">
-                                        <div class="skeleton" style="width: 80px; height: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                                        <div class="skeleton" style="width: 70%; height: 1rem; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="p-3 bg-light rounded">
-                                        <div class="skeleton" style="width: 100px; height: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                                        <div class="skeleton" style="width: 80%; height: 1rem; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="p-3 bg-light rounded">
-                                        <div class="skeleton" style="width: 60px; height: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                                        <div class="skeleton" style="width: 75%; height: 1rem; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="p-3 bg-light rounded">
-                                        <div class="skeleton" style="width: 70px; height: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                                        <div class="skeleton" style="width: 65%; height: 1rem; border-radius: 4px;"></div>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="p-3 bg-light rounded">
-                                        <div class="skeleton" style="width: 60px; height: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="skeleton" style="width: 56px; height: 28px; border-radius: 14px;"></div>
-                                            <div class="skeleton" style="width: 80px; height: 24px; border-radius: 12px;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row g-3">
-                                <div class="col-12 col-md-6">
-                                    <div class="card h-100">
-                                        <div class="card-header bg-success text-white">
-                                            <div class="skeleton" style="width: 120px; height: 0.75rem; background: rgba(255,255,255,0.3); border-radius: 4px;"></div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="skeleton" style="height: 38px; border-radius: 6px; margin-bottom: 0.5rem;"></div>
-                                            <div class="skeleton" style="height: 38px; border-radius: 6px;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="card h-100">
-                                        <div class="card-header bg-info text-white">
-                                            <div class="skeleton" style="width: 150px; height: 0.75rem; background: rgba(255,255,255,0.3); border-radius: 4px;"></div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="skeleton" style="width: 140px; height: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                                            <div class="skeleton" style="height: 45px; border-radius: 6px; margin-bottom: 0.5rem;"></div>
-                                            <div class="skeleton" style="width: 100px; height: 0.75rem; margin-top: 0.5rem; border-radius: 4px;"></div>
-                                            <div class="skeleton" style="width: 180px; height: 0.75rem; margin-top: 0.25rem; border-radius: 4px;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                <i class="bi bi-x-circle me-2"></i>Close
-                            </button>
+            <x-modal id="viewSubdomainModal" title="Loading..." size="xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="skeleton skeleton-text-sm"></div>
+                        <div class="skeleton skeleton-text"></div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="skeleton skeleton-text-sm"></div>
+                        <div class="skeleton skeleton-text"></div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="skeleton skeleton-text-sm"></div>
+                        <div class="skeleton skeleton-text"></div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="skeleton skeleton-text-sm"></div>
+                        <div class="skeleton skeleton-text"></div>
+                    </div>
+                    <div class="md:col-span-2 bg-gray-50 p-4 rounded-lg">
+                        <div class="skeleton skeleton-text-sm"></div>
+                        <div class="flex items-center gap-3">
+                            <div class="skeleton" style="width: 56px; height: 28px; border-radius: 14px;"></div>
+                            <div class="skeleton skeleton-badge"></div>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="card-dental">
+                        <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-3 rounded-t-2xl">
+                            <div class="skeleton" style="width: 120px; height: 0.75rem; background: rgba(255,255,255,0.3); border-radius: 4px;"></div>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <div class="skeleton skeleton-button"></div>
+                            <div class="skeleton skeleton-button"></div>
+                        </div>
+                    </div>
+                    <div class="card-dental">
+                        <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white px-4 py-3 rounded-t-2xl">
+                            <div class="skeleton" style="width: 150px; height: 0.75rem; background: rgba(255,255,255,0.3); border-radius: 4px;"></div>
+                        </div>
+                        <div class="p-4">
+                            <div class="skeleton skeleton-text-sm"></div>
+                            <div class="skeleton skeleton-input"></div>
+                            <div class="skeleton skeleton-text-sm mt-2"></div>
+                            <div class="skeleton skeleton-text-sm"></div>
+                        </div>
+                    </div>
+                </div>
+            </x-modal>
         `;
     },
 
@@ -97,30 +66,30 @@ const SkeletonLoading = {
      */
     getEditSubdomainModalBody: function() {
         return `
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <div class="skeleton" style="width: 100px; height: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 45px; border-radius: 6px;"></div>
-                    <div class="skeleton" style="width: 80%; height: 0.75rem; margin-top: 0.5rem; border-radius: 4px;"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <div class="skeleton skeleton-text-sm"></div>
+                    <div class="skeleton skeleton-input"></div>
+                    <div class="skeleton skeleton-text-sm mt-2"></div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <div class="skeleton" style="width: 90px; height: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 45px; border-radius: 6px;"></div>
+                <div class="md:col-span-2">
+                    <div class="skeleton skeleton-text-sm"></div>
+                    <div class="skeleton skeleton-input"></div>
                 </div>
-                <div class="col-12 mb-3">
-                    <div class="skeleton" style="width: 90px; height: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px;"></div>
+                <div class="md:col-span-2">
+                    <div class="skeleton skeleton-text-sm"></div>
                     <div class="skeleton" style="height: 80px; border-radius: 6px;"></div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="skeleton" style="width: 60px; height: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 45px; border-radius: 6px;"></div>
+                <div>
+                    <div class="skeleton skeleton-text-sm"></div>
+                    <div class="skeleton skeleton-input"></div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="skeleton" style="width: 60px; height: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px;"></div>
-                    <div class="skeleton" style="height: 45px; border-radius: 6px;"></div>
+                <div>
+                    <div class="skeleton skeleton-text-sm"></div>
+                    <div class="skeleton skeleton-input"></div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="skeleton" style="width: 70px; height: 0.75rem; margin-bottom: 0.5rem; border-radius: 4px;"></div>
+                <div class="md:col-span-2">
+                    <div class="skeleton skeleton-text-sm"></div>
                     <div class="skeleton" style="height: 80px; border-radius: 6px;"></div>
                 </div>
             </div>
@@ -134,4 +103,3 @@ const SkeletonLoading = {
         return this.getEditSubdomainModalBody(); // Same structure as edit modal
     }
 };
-

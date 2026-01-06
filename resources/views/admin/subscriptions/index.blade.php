@@ -2,114 +2,144 @@
 
 @section('title', 'Subscriptions Management')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/skeleton-loading.css') }}">
-@endpush
+{{-- Skeleton loading styles migrated to Tailwind in app.css --}}
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="flex justify-between items-center mb-6 flex-wrap gap-4">
     <div>
-        <h2 class="mb-1"><i class="bi bi-credit-card text-primary"></i> Subscriptions Management</h2>
-        <p class="text-muted mb-0">Manage all subscription plans and billing cycles</p>
+        <h2 class="text-3xl font-bold text-gray-800 mb-1 flex items-center gap-2">
+            <i class="bi bi-credit-card text-dental-teal"></i> Subscriptions Management
+        </h2>
+        <p class="text-gray-600">Manage all subscription plans and billing cycles</p>
     </div>
-    <button type="button" class="btn btn-primary btn-lg shadow-sm" data-bs-toggle="modal" data-bs-target="#createSubscriptionModal" id="openCreateSubscriptionModal">
+    <button type="button" class="btn-dental shadow-lg" onclick="openModal('createSubscriptionModal')" id="openCreateSubscriptionModal">
         <i class="bi bi-plus-circle"></i> Add Subscription
     </button>
 </div>
 
-<div class="card shadow-sm border-0">
-    <div class="card-header bg-white border-bottom">
-        <h5 class="mb-0"><i class="bi bi-list-ul text-primary"></i> All Subscriptions</h5>
+<div class="card-dental">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <h5 class="text-lg font-semibold flex items-center gap-2">
+            <i class="bi bi-list-ul text-dental-teal"></i> All Subscriptions
+        </h5>
     </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+    <div class="p-0">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
                     <tr>
-                        <th class="ps-4"><i class="bi bi-globe me-2"></i>Subdomain</th>
-                        <th><i class="bi bi-star me-2"></i>Plan</th>
-                        <th class="text-end"><i class="bi bi-currency-dollar me-2"></i>Amount</th>
-                        <th class="text-center"><i class="bi bi-calendar-range me-2"></i>Billing Cycle</th>
-                        <th><i class="bi bi-calendar-check me-2"></i>Start Date</th>
-                        <th><i class="bi bi-calendar-x me-2"></i>End Date</th>
-                        <th class="text-center"><i class="bi bi-info-circle me-2"></i>Status</th>
-                        <th class="text-end pe-4">Actions</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <i class="bi bi-globe mr-2"></i>Subdomain
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <i class="bi bi-star mr-2"></i>Plan
+                        </th>
+                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <i class="bi bi-currency-dollar mr-2"></i>Amount
+                        </th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <i class="bi bi-calendar-range mr-2"></i>Billing Cycle
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <i class="bi bi-calendar-check mr-2"></i>Start Date
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <i class="bi bi-calendar-x mr-2"></i>End Date
+                        </th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <i class="bi bi-info-circle mr-2"></i>Status
+                        </th>
+                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($subscriptions as $subscription)
-                        <tr class="border-bottom">
-                            <td class="ps-4">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                                        <i class="bi bi-globe text-primary"></i>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="bg-dental-teal/10 rounded-full p-2 mr-3">
+                                        <i class="bi bi-globe text-dental-teal"></i>
                                     </div>
                                     <div>
                                         <button type="button" 
-                                                class="btn btn-link text-decoration-none fw-semibold text-dark p-0 view-subdomain-from-subscription" 
+                                                class="text-left font-semibold text-gray-900 hover:text-dental-teal transition-colors view-subdomain-from-subscription" 
                                                 data-subdomain-id="{{ $subscription->subdomain->id }}">
                                             {{ $subscription->subdomain->name }}
                                         </button>
                                         <br>
-                                        <small class="text-muted">{{ $subscription->subdomain->subdomain }}.helioho.st</small>
+                                        <small class="text-gray-500">{{ $subscription->subdomain->subdomain }}.helioho.st</small>
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                <span class="badge bg-info px-3 py-2">
-                                    <i class="bi bi-star-fill me-1"></i>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <span class="px-3 py-1.5 rounded text-xs font-medium bg-cyan-100 text-cyan-800">
+                                    <i class="bi bi-star-fill mr-1"></i>
                                     {{ ucfirst($subscription->plan_name) }}
                                 </span>
                             </td>
-                            <td class="text-end">
-                                <strong class="text-success">${{ number_format($subscription->amount, 2) }}</strong>
+                            <td class="px-4 py-4 whitespace-nowrap text-right">
+                                <strong class="text-green-600">${{ number_format($subscription->amount, 2) }}</strong>
                             </td>
-                            <td class="text-center">
-                                <span class="badge bg-secondary px-3 py-2">
+                            <td class="px-4 py-4 whitespace-nowrap text-center">
+                                <span class="px-3 py-1.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                                     {{ ucfirst($subscription->billing_cycle) }}
                                 </span>
                             </td>
-                            <td>
-                                <i class="bi bi-calendar-check text-muted me-1"></i>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <i class="bi bi-calendar-check text-gray-400 mr-1"></i>
                                 {{ $subscription->start_date->format('M d, Y') }}
                             </td>
-                            <td>
-                                <i class="bi bi-calendar-x text-muted me-1"></i>
-                                <span class="{{ $subscription->end_date->isPast() ? 'text-danger' : '' }}">
+                            <td class="px-4 py-4 whitespace-nowrap text-sm">
+                                <i class="bi bi-calendar-x text-gray-400 mr-1"></i>
+                                <span class="{{ $subscription->end_date->isPast() ? 'text-red-600' : 'text-gray-500' }}">
                                     {{ $subscription->end_date->format('M d, Y') }}
                                 </span>
                             </td>
-                            <td class="text-center">
-                                <span class="badge bg-{{ $subscription->status === 'active' ? 'success' : ($subscription->status === 'expired' ? 'danger' : 'warning') }} px-3 py-2">
-                                    <i class="bi bi-{{ $subscription->status === 'active' ? 'check-circle' : ($subscription->status === 'expired' ? 'x-circle' : 'clock') }}"></i>
+                            <td class="px-4 py-4 whitespace-nowrap text-center">
+                                @php
+                                    $statusColors = [
+                                        'active' => 'bg-green-100 text-green-800',
+                                        'expired' => 'bg-red-100 text-red-800',
+                                        'cancelled' => 'bg-gray-100 text-gray-800',
+                                        'pending' => 'bg-yellow-100 text-yellow-800'
+                                    ];
+                                    $statusColor = $statusColors[$subscription->status] ?? 'bg-gray-100 text-gray-800';
+                                    $statusIcons = [
+                                        'active' => 'check-circle',
+                                        'expired' => 'x-circle',
+                                        'cancelled' => 'x-circle',
+                                        'pending' => 'clock'
+                                    ];
+                                    $statusIcon = $statusIcons[$subscription->status] ?? 'circle';
+                                @endphp
+                                <span class="px-3 py-1.5 rounded text-xs font-medium {{ $statusColor }}">
+                                    <i class="bi bi-{{ $statusIcon }}"></i>
                                     {{ ucfirst($subscription->status) }}
                                 </span>
                             </td>
-                            <td class="text-end pe-4">
-                                <div class="btn-group" role="group">
-                                    <button class="btn btn-sm btn-outline-primary update-status-btn" 
+                            <td class="px-4 py-4 whitespace-nowrap text-right text-sm space-x-2">
+                                <button class="btn-dental text-sm py-1.5 px-3 update-status-btn" 
+                                        data-id="{{ $subscription->id }}"
+                                        data-status="{{ $subscription->status }}"
+                                        title="Update Status">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                @if($subscription->status === 'active' && $subscription->end_date <= now()->addDays(7))
+                                    <button class="btn-dental-outline text-sm py-1.5 px-3 border-yellow-500 text-yellow-600 hover:bg-yellow-50 send-reminder" 
                                             data-id="{{ $subscription->id }}"
-                                            data-status="{{ $subscription->status }}"
-                                            title="Update Status">
-                                        <i class="bi bi-pencil"></i>
+                                            title="Send Payment Reminder">
+                                        <i class="bi bi-envelope"></i>
                                     </button>
-                                    @if($subscription->status === 'active' && $subscription->end_date <= now()->addDays(7))
-                                        <button class="btn btn-sm btn-outline-warning send-reminder" 
-                                                data-id="{{ $subscription->id }}"
-                                                title="Send Payment Reminder">
-                                            <i class="bi bi-envelope"></i>
-                                        </button>
-                                    @endif
-                                </div>
+                                @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center py-5">
+                            <td colspan="8" class="px-4 py-12 text-center">
                                 <div class="py-4">
-                                    <i class="bi bi-inbox display-1 text-muted"></i>
-                                    <p class="text-muted mt-3 mb-0">No subscriptions found.</p>
-                                    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createSubscriptionModal" id="openCreateSubscriptionModalEmpty">
+                                    <i class="bi bi-inbox text-6xl text-gray-300"></i>
+                                    <p class="text-gray-500 mt-3 mb-0">No subscriptions found.</p>
+                                    <button type="button" class="btn-dental mt-3" onclick="openModal('createSubscriptionModal')" id="openCreateSubscriptionModalEmpty">
                                         <i class="bi bi-plus-circle"></i> Create Your First Subscription
                                     </button>
                                 </div>
@@ -121,8 +151,8 @@
         </div>
 
         @if($subscriptions->hasPages())
-            <div class="card-footer bg-white border-top">
-                <div class="d-flex justify-content-center">
+            <div class="px-6 py-4 border-t border-gray-200 bg-white">
+                <div class="flex justify-center">
                     {{ $subscriptions->links() }}
                 </div>
             </div>
@@ -131,7 +161,7 @@
 </div>
 
 <!-- Modals -->
-@include('admin.subscriptions.modals.create')
+@include('admin.subscriptions.partials.create-modal')
 <div id="viewSubdomainModalContainer"></div>
 @endsection
 
@@ -141,7 +171,7 @@
     $(document).ready(function() {
         // Load create subscription modal content
         $('#openCreateSubscriptionModal, #openCreateSubscriptionModalEmpty').on('click', function() {
-            if ($('#createSubscriptionModal .modal-body form').length === 0 || $('#modal_subdomain_id').length === 0) {
+            if ($('#createSubscriptionModal .p-6 form').length === 0 || $('#modal_subdomain_id').length === 0) {
                 $.ajax({
                     url: '{{ route("admin.subscriptions.create") }}',
                     method: 'GET',
@@ -149,8 +179,7 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(response) {
-                        $('#createSubscriptionModal .modal-body').html($(response.html).find('.modal-body').html());
-                        $('#createSubscriptionModal .modal-footer').html($(response.html).find('.modal-footer').html());
+                        $('#createSubscriptionModal .p-6').html($(response.html).find('.p-6, .modal-body').html());
                     }
                 });
             }
@@ -196,7 +225,7 @@
             e.preventDefault();
             const form = $(this);
             const submitBtn = form.find('button[type="submit"]');
-            submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Creating...');
+            submitBtn.prop('disabled', true).html('<span class="inline-block animate-spin mr-2">⟳</span>Creating...');
 
             $.ajax({
                 url: '{{ route("admin.subscriptions.store") }}',
@@ -206,7 +235,7 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 success: function(response) {
-                    $('#createSubscriptionModal').modal('hide');
+                    closeModal('createSubscriptionModal');
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -222,8 +251,8 @@
                         const errors = xhr.responseJSON.errors;
                         Object.keys(errors).forEach(function(key) {
                             const input = form.find(`[name="${key}"]`);
-                            input.addClass('is-invalid');
-                            $(`#${key}_error`).text(errors[key][0]).removeClass('d-none');
+                            input.addClass('border-red-500');
+                            $(`#${key}_error`).text(errors[key][0]).removeClass('hidden');
                         });
                     } else {
                         Swal.fire({
@@ -232,43 +261,31 @@
                             text: xhr.responseJSON?.message || 'Failed to create subscription.'
                         });
                     }
-                    submitBtn.prop('disabled', false).html('<i class="bi bi-check-circle me-2"></i>Create Subscription');
+                    submitBtn.prop('disabled', false).html('<i class="bi bi-check-circle mr-2"></i>Create Subscription');
                 }
             });
         });
 
         // Reset form on modal close
-        $('#createSubscriptionModal').on('hidden.bs.modal', function() {
+        $('#createSubscriptionModal').on('hidden', function() {
             $(this).find('form')[0]?.reset();
-            $(this).find('.is-invalid').removeClass('is-invalid');
-            $(this).find('.invalid-feedback').addClass('d-none');
+            $(this).find('.border-red-500').removeClass('border-red-500');
+            $(this).find('.text-red-500').addClass('hidden');
             $('#modal_end_date').val('');
-        });
-
-        // Clean up view modal container when closed
-        $(document).on('hidden.bs.modal', '#viewSubdomainModal', function() {
-            $('#viewSubdomainModalContainer').empty();
-            // Remove any lingering modal backdrops
-            $('.modal-backdrop').remove();
-            $('body').removeClass('modal-open');
-            $('body').css('padding-right', '');
         });
 
         // View subdomain from subscriptions page
         $(document).on('click', '.view-subdomain-from-subscription', function() {
             const subdomainId = $(this).data('subdomain-id');
             
-            // Create a temporary container if it doesn't exist
             if ($('#viewSubdomainModalContainer').length === 0) {
                 $('body').append('<div id="viewSubdomainModalContainer"></div>');
             }
             
-            // Show modal immediately with skeleton loading
             const loadingHtml = SkeletonLoading.getViewSubdomainModal();
             $('#viewSubdomainModalContainer').html(loadingHtml);
-            $('#viewSubdomainModal').modal('show');
+            openModal('viewSubdomainModal');
             
-            // Load content asynchronously
             $.ajax({
                 url: `/admin/subdomains/${subdomainId}`,
                 method: 'GET',
@@ -277,31 +294,14 @@
                 },
                 success: function(response) {
                     $('#viewSubdomainModalContainer').html(response.html);
-                    // Re-initialize modal if needed
-                    if (!$('#viewSubdomainModal').hasClass('show')) {
-                        $('#viewSubdomainModal').modal('show');
-                    }
                 },
                 error: function(xhr) {
                     $('#viewSubdomainModalContainer').html(`
-                        <div class="modal fade" id="viewSubdomainModal" tabindex="-1" aria-labelledby="viewSubdomainModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl modal-dialog-scrollable">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title">Error</h5>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p class="text-danger">Failed to load subdomain details. Please try again.</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <x-modal id="viewSubdomainModal" title="Error">
+                            <p class="text-red-600">Failed to load subdomain details. Please try again.</p>
+                        </x-modal>
                     `);
-                    $('#viewSubdomainModal').modal('show');
+                    openModal('viewSubdomainModal');
                 }
             });
         });
@@ -315,8 +315,8 @@
                 title: 'Update Subscription Status',
                 html: `
                     <div class="mb-3">
-                        <label class="form-label">Select New Status:</label>
-                        <select class="form-select" id="statusSelect">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select New Status:</label>
+                        <select class="input-dental" id="statusSelect">
                             <option value="active" ${currentStatus === 'active' ? 'selected' : ''}>Active</option>
                             <option value="expired" ${currentStatus === 'expired' ? 'selected' : ''}>Expired</option>
                             <option value="cancelled" ${currentStatus === 'cancelled' ? 'selected' : ''}>Cancelled</option>
@@ -327,7 +327,7 @@
                 showCancelButton: true,
                 confirmButtonText: 'Update Status',
                 cancelButtonText: 'Cancel',
-                confirmButtonColor: '#0d6efd',
+                confirmButtonColor: '#20b2aa',
                 cancelButtonColor: '#6c757d',
                 preConfirm: () => {
                     return document.getElementById('statusSelect').value;
@@ -410,4 +410,3 @@
     });
 </script>
 @endpush
-

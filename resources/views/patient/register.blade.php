@@ -2,9 +2,7 @@
 
 @section('title', 'Patient Registration & Appointment Booking')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/register.css') }}">
-@endpush
+{{-- Registration styles migrated to Tailwind in app.css --}}
 
 @section('content')
 <div class="registration-container">

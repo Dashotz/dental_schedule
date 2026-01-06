@@ -23,7 +23,7 @@ class SubscriptionController extends Controller
         
         if (request()->ajax()) {
             return response()->json([
-                'html' => view('admin.subscriptions.modals.create', compact('subdomains'))->render()
+                'html' => view('admin.subscriptions.partials.create-modal', compact('subdomains'))->render()
             ]);
         }
         

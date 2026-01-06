@@ -3,129 +3,99 @@
 @section('title', 'Reports')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-bar-chart"></i> Reports</h2>
-    <a href="{{ route('admin.insights.index') }}" class="btn btn-primary">
+<div class="flex justify-between items-center mb-6">
+    <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
+        <i class="bi bi-bar-chart"></i> Reports
+    </h2>
+    <a href="{{ route('admin.insights.index') }}" class="btn-dental">
         <i class="bi bi-pie-chart"></i> View Insights
     </a>
 </div>
 
 <!-- Revenue Over Time Chart -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="bi bi-graph-up"></i> Revenue Over Time (Last 12 Months)</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="revenueChart" height="60"></canvas>
-            </div>
-        </div>
+<div class="card-dental mb-6">
+    <div class="card-dental-header">
+        <h5 class="text-lg font-semibold flex items-center gap-2">
+            <i class="bi bi-graph-up"></i> Revenue Over Time (Last 12 Months)
+        </h5>
+    </div>
+    <div class="p-6">
+        <canvas id="revenueChart" class="max-h-[300px]"></canvas>
     </div>
 </div>
 
 <!-- Monthly Revenue Breakdown -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0"><i class="bi bi-calendar-month"></i> Monthly Revenue Breakdown</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="monthlyRevenueChart" height="60"></canvas>
-            </div>
-        </div>
+<div class="card-dental mb-6">
+    <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-t-2xl">
+        <h5 class="text-lg font-semibold flex items-center gap-2">
+            <i class="bi bi-calendar-month"></i> Monthly Revenue Breakdown
+        </h5>
+    </div>
+    <div class="p-6">
+        <canvas id="monthlyRevenueChart" class="max-h-[300px]"></canvas>
     </div>
 </div>
 
-<div class="row">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
     <!-- Subscription Growth -->
-    <div class="col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0"><i class="bi bi-arrow-up-circle"></i> Subscription Growth</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="subscriptionGrowthChart" height="150"></canvas>
-            </div>
+    <div class="card-dental">
+        <div class="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white px-6 py-4 rounded-t-2xl">
+            <h5 class="text-lg font-semibold flex items-center gap-2">
+                <i class="bi bi-arrow-up-circle"></i> Subscription Growth
+            </h5>
+        </div>
+        <div class="p-6">
+            <canvas id="subscriptionGrowthChart" class="max-h-[250px]"></canvas>
         </div>
     </div>
 
     <!-- Subdomain Growth -->
-    <div class="col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header bg-warning text-white">
-                <h5 class="mb-0"><i class="bi bi-globe"></i> Subdomain Growth</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="subdomainGrowthChart" height="150"></canvas>
-            </div>
+    <div class="card-dental">
+        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-6 py-4 rounded-t-2xl">
+            <h5 class="text-lg font-semibold flex items-center gap-2">
+                <i class="bi bi-globe"></i> Subdomain Growth
+            </h5>
+        </div>
+        <div class="p-6">
+            <canvas id="subdomainGrowthChart" class="max-h-[250px]"></canvas>
         </div>
     </div>
 </div>
 
 <!-- Revenue by Plan -->
-<div class="row mb-4">
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-header bg-secondary text-white">
-                <h5 class="mb-0"><i class="bi bi-pie-chart"></i> Revenue by Plan</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="revenueByPlanChart" height="150"></canvas>
-            </div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="card-dental">
+        <div class="bg-gradient-to-r from-gray-600 to-gray-700 text-white px-6 py-4 rounded-t-2xl">
+            <h5 class="text-lg font-semibold flex items-center gap-2">
+                <i class="bi bi-pie-chart"></i> Revenue by Plan
+            </h5>
+        </div>
+        <div class="p-6">
+            <canvas id="revenueByPlanChart" class="max-h-[250px]"></canvas>
         </div>
     </div>
 
     <!-- Revenue by Billing Cycle -->
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-header bg-dark text-white">
-                <h5 class="mb-0"><i class="bi bi-credit-card"></i> Revenue by Billing Cycle</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="revenueByBillingChart" height="150"></canvas>
-            </div>
+    <div class="card-dental">
+        <div class="bg-gradient-to-r from-gray-800 to-gray-900 text-white px-6 py-4 rounded-t-2xl">
+            <h5 class="text-lg font-semibold flex items-center gap-2">
+                <i class="bi bi-credit-card"></i> Revenue by Billing Cycle
+            </h5>
+        </div>
+        <div class="p-6">
+            <canvas id="revenueByBillingChart" class="max-h-[250px]"></canvas>
         </div>
     </div>
 </div>
 
-@push('styles')
-<style>
-    .card-body canvas {
-        max-height: 300px !important;
-    }
-    
-    #revenueChart,
-    #monthlyRevenueChart,
-    #revenueTrendsChart {
-        max-height: 200px !important;
-    }
-    
-    #subscriptionGrowthChart,
-    #subdomainGrowthChart,
-    #revenueByPlanChart,
-    #revenueByBillingChart,
-    #subscriptionStatusChart,
-    #planDistributionChart,
-    #billingCycleChart,
-    #subdomainStatusChart {
-        max-height: 250px !important;
-    }
-</style>
-@endpush
-
 @push('scripts')
 <script>
-    // Wait for Chart.js to load
     function initCharts() {
         if (typeof Chart === 'undefined') {
-            console.error('Chart.js is not loaded');
             setTimeout(initCharts, 100);
             return;
         }
         
-        $(document).ready(function() {
         // Revenue Over Time Chart
         const revenueCtx = document.getElementById('revenueChart').getContext('2d');
         new Chart(revenueCtx, {
@@ -135,8 +105,8 @@
                 datasets: [{
                     label: 'Revenue ($)',
                     data: {!! json_encode($revenueData->pluck('total')) !!},
-                    borderColor: 'rgb(13, 110, 253)',
-                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    borderColor: '#20b2aa',
+                    backgroundColor: 'rgba(32, 178, 170, 0.1)',
                     tension: 0.4,
                     fill: true
                 }]
@@ -268,12 +238,12 @@
                 datasets: [{
                     data: {!! json_encode($revenueByPlan->pluck('total')) !!},
                     backgroundColor: [
-                        'rgba(13, 110, 253, 0.8)',
+                        'rgba(32, 178, 170, 0.8)',
                         'rgba(40, 167, 69, 0.8)',
                         'rgba(111, 66, 193, 0.8)'
                     ],
                     borderColor: [
-                        'rgb(13, 110, 253)',
+                        '#20b2aa',
                         'rgb(40, 167, 69)',
                         'rgb(111, 66, 193)'
                     ],
@@ -336,10 +306,8 @@
                 }
             }
         });
-        });
     }
     
-    // Initialize charts when page loads
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initCharts);
     } else {
@@ -348,4 +316,3 @@
 </script>
 @endpush
 @endsection
-

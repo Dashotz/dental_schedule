@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    const modal = new bootstrap.Modal(document.getElementById('teethRecordModal'));
     const form = $('#teethRecordForm');
     const patientId = window.patientId || null;
 
@@ -24,12 +23,12 @@ $(document).ready(function() {
                     $('#condition').val('');
                     $('#remarks').val('');
                 }
-                modal.show();
+                openModal('teethRecordModal');
             },
             error: function() {
                 $('#condition').val('');
                 $('#remarks').val('');
-                modal.show();
+                openModal('teethRecordModal');
             }
         });
     });
@@ -57,7 +56,7 @@ $(document).ready(function() {
                     showConfirmButton: false
                 });
                 
-                modal.hide();
+                closeModal('teethRecordModal');
                 setTimeout(() => {
                     window.location.reload();
                 }, 500);
@@ -72,4 +71,3 @@ $(document).ready(function() {
         });
     });
 });
-

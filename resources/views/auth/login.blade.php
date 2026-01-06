@@ -3,51 +3,50 @@
 @section('title', 'Login - Dental System')
 
 @section('content')
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">
+<div class="flex justify-center items-center min-h-[60vh]">
+    <div class="w-full max-w-md">
+        <div class="card-dental shadow-xl">
+            <div class="card-dental-header">
+                <h4 class="text-xl font-semibold flex items-center gap-2">
                     <i class="bi bi-box-arrow-in-right"></i> Login
                 </h4>
             </div>
-            <div class="card-body">
+            <div class="p-6">
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                     
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" class="input-dental @error('email') border-red-500 @enderror" 
                                id="email" name="email" value="{{ old('email') }}" required autofocus>
                         @error('email')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" class="input-dental @error('password') border-red-500 @enderror" 
                                id="password" name="password" required>
                         @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                        <label class="form-check-label" for="remember">Remember me</label>
+                    <div class="mb-4 flex items-center">
+                        <input type="checkbox" class="w-4 h-4 text-dental-teal border-gray-300 rounded focus:ring-dental-teal" id="remember" name="remember">
+                        <label class="ml-2 text-sm text-gray-700" for="remember">Remember me</label>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100">
+                    <button type="submit" class="btn-dental w-full">
                         <i class="bi bi-box-arrow-in-right"></i> Login
                     </button>
                 </form>
             </div>
-            <div class="card-footer text-center text-muted">
+            <div class="px-6 py-4 border-t border-gray-200 text-center text-gray-500 text-sm">
                 <small>Only doctors and staff can access this system</small>
             </div>
         </div>
     </div>
 </div>
 @endsection
-

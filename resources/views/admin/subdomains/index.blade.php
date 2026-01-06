@@ -2,65 +2,77 @@
 
 @section('title', 'Subdomains Management')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/skeleton-loading.css') }}">
-@endpush
+{{-- Skeleton loading styles migrated to Tailwind in app.css --}}
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="flex justify-between items-center mb-6 flex-wrap gap-4">
     <div>
-        <h2 class="mb-1"><i class="bi bi-globe text-primary"></i> Subdomains Management</h2>
-        <p class="text-muted mb-0">Manage all dental clinic subdomains and their settings</p>
+        <h2 class="text-3xl font-bold text-gray-800 mb-1 flex items-center gap-2">
+            <i class="bi bi-globe text-dental-teal"></i> Subdomains Management
+        </h2>
+        <p class="text-gray-600">Manage all dental clinic subdomains and their settings</p>
     </div>
-    <button type="button" class="btn btn-primary btn-lg shadow-sm" data-bs-toggle="modal" data-bs-target="#createSubdomainModal" id="openCreateModal">
+    <button type="button" class="btn-dental shadow-lg" onclick="openModal('createSubdomainModal')" id="openCreateModal">
         <i class="bi bi-plus-circle"></i> Add New Subdomain
     </button>
 </div>
 
-<div class="card shadow-sm border-0">
-    <div class="card-header bg-white border-bottom">
-        <h5 class="mb-0"><i class="bi bi-list-ul text-primary"></i> All Subdomains</h5>
+<div class="card-dental">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <h5 class="text-lg font-semibold flex items-center gap-2">
+            <i class="bi bi-list-ul text-dental-teal"></i> All Subdomains
+        </h5>
     </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+    <div class="p-0">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
                     <tr>
-                        <th class="ps-4"><i class="bi bi-globe me-2"></i>Subdomain</th>
-                        <th><i class="bi bi-building me-2"></i>Name</th>
-                        <th><i class="bi bi-envelope me-2"></i>Email</th>
-                        <th class="text-center"><i class="bi bi-toggle-on me-2"></i>Status</th>
-                        <th class="text-center"><i class="bi bi-credit-card me-2"></i>Subscription</th>
-                        <th class="text-end pe-4">Actions</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <i class="bi bi-globe mr-2"></i>Subdomain
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <i class="bi bi-building mr-2"></i>Name
+                        </th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <i class="bi bi-envelope mr-2"></i>Email
+                        </th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <i class="bi bi-toggle-on mr-2"></i>Status
+                        </th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <i class="bi bi-credit-card mr-2"></i>Subscription
+                        </th>
+                        <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($subdomains as $subdomain)
-                        <tr class="border-bottom">
-                            <td class="ps-4">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                                        <i class="bi bi-globe text-primary"></i>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="bg-dental-teal/10 rounded-full p-2 mr-3">
+                                        <i class="bi bi-globe text-dental-teal"></i>
                                     </div>
                                     <div>
-                                        <strong class="d-block">{{ $subdomain->subdomain }}</strong>
-                                        <small class="text-muted">.helioho.st</small>
+                                        <strong class="block text-gray-900">{{ $subdomain->subdomain }}</strong>
+                                        <small class="text-gray-500">.helioho.st</small>
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                <span class="fw-medium">{{ $subdomain->name }}</span>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <span class="font-medium text-gray-900">{{ $subdomain->name }}</span>
                             </td>
-                            <td>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                 @if($subdomain->email)
-                                    <i class="bi bi-envelope text-muted me-1"></i>
-                                    <span>{{ $subdomain->email }}</span>
+                                    <i class="bi bi-envelope text-gray-400 mr-1"></i>
+                                    {{ $subdomain->email }}
                                 @else
-                                    <span class="text-muted fst-italic">N/A</span>
+                                    <span class="text-gray-400 italic">N/A</span>
                                 @endif
                             </td>
-                            <td class="text-center">
-                                <div class="d-flex align-items-center justify-content-center gap-2">
+                            <td class="px-4 py-4 whitespace-nowrap text-center">
+                                <div class="flex items-center justify-center gap-2">
                                     <div class="form-check form-switch">
                                         <input class="form-check-input toggle-status" 
                                                type="checkbox" 
@@ -68,13 +80,13 @@
                                                {{ $subdomain->is_active ? 'checked' : '' }}
                                                style="width: 3rem; height: 1.5rem; cursor: pointer;">
                                     </div>
-                                    <span class="badge bg-{{ $subdomain->is_active ? 'success' : 'danger' }} px-3 py-2">
+                                    <span class="px-3 py-1.5 rounded text-xs font-medium {{ $subdomain->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                         <i class="bi bi-{{ $subdomain->is_active ? 'check-circle' : 'x-circle' }}"></i>
                                         {{ $subdomain->is_active ? 'Active' : 'Inactive' }}
                                     </span>
                                 </div>
                             </td>
-                            <td class="text-center">
+                            <td class="px-4 py-4 whitespace-nowrap text-center">
                                 @php
                                     $activeSub = $subdomain->subscriptions
                                         ->where('status', 'active')
@@ -83,32 +95,32 @@
                                         ->first();
                                 @endphp
                                 @if($activeSub)
-                                    <span class="badge bg-success px-3 py-2">
-                                        <i class="bi bi-check-circle me-1"></i>
+                                    <span class="px-3 py-1.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                        <i class="bi bi-check-circle mr-1"></i>
                                         {{ ucfirst($activeSub->plan_name) }}
                                     </span>
                                 @else
-                                    <span class="badge bg-danger px-3 py-2">
-                                        <i class="bi bi-x-circle me-1"></i>
+                                    <span class="px-3 py-1.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                        <i class="bi bi-x-circle mr-1"></i>
                                         No Subscription
                                     </span>
                                 @endif
                             </td>
-                            <td class="text-end pe-4">
+                            <td class="px-4 py-4 whitespace-nowrap text-right text-sm space-x-2">
                                 <button type="button" 
-                                        class="btn btn-sm btn-outline-primary view-subdomain-btn" 
+                                        class="btn-dental text-sm py-1.5 px-3 view-subdomain-btn" 
                                         data-subdomain-id="{{ $subdomain->id }}"
                                         title="View Details">
                                     <i class="bi bi-eye"></i> View
                                 </button>
                                 <button type="button" 
-                                        class="btn btn-sm btn-outline-warning edit-subdomain-btn ms-1" 
+                                        class="btn-dental-outline text-sm py-1.5 px-3 border-yellow-500 text-yellow-600 hover:bg-yellow-50 edit-subdomain-btn" 
                                         data-subdomain-id="{{ $subdomain->id }}"
                                         title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </button>
                                 <button type="button" 
-                                        class="btn btn-sm btn-outline-danger delete-subdomain-btn ms-1" 
+                                        class="btn-dental-outline text-sm py-1.5 px-3 border-red-500 text-red-600 hover:bg-red-50 delete-subdomain-btn" 
                                         data-subdomain-id="{{ $subdomain->id }}"
                                         data-subdomain-name="{{ $subdomain->name }}"
                                         title="Delete">
@@ -118,11 +130,11 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center py-5">
+                            <td colspan="6" class="px-4 py-12 text-center">
                                 <div class="py-4">
-                                    <i class="bi bi-inbox display-1 text-muted"></i>
-                                    <p class="text-muted mt-3 mb-0">No subdomains found.</p>
-                                    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#createSubdomainModal" id="openCreateModalEmpty">
+                                    <i class="bi bi-inbox text-6xl text-gray-300"></i>
+                                    <p class="text-gray-500 mt-3 mb-0">No subdomains found.</p>
+                                    <button type="button" class="btn-dental mt-3" onclick="openModal('createSubdomainModal')" id="openCreateModalEmpty">
                                         <i class="bi bi-plus-circle"></i> Create Your First Subdomain
                                     </button>
                                 </div>
@@ -134,8 +146,8 @@
         </div>
 
         @if($subdomains->hasPages())
-            <div class="card-footer bg-white border-top">
-                <div class="d-flex justify-content-center">
+            <div class="px-6 py-4 border-t border-gray-200 bg-white">
+                <div class="flex justify-center">
                     {{ $subdomains->links() }}
                 </div>
             </div>
@@ -144,8 +156,8 @@
 </div>
 
 <!-- Modals -->
-@include('admin.subdomains.modals.create')
-@include('admin.subdomains.modals.edit')
+@include('admin.subdomains.partials.create-modal')
+@include('admin.subdomains.partials.edit-modal')
 <div id="viewSubdomainModalContainer"></div>
 @endsection
 
@@ -158,13 +170,10 @@
             e.preventDefault();
             const modal = $('#createSubdomainModal');
             
-            // Show modal immediately if form not loaded
-            if ($('#createSubdomainModal .modal-body form').length === 0) {
-                // Show skeleton loading
-                modal.find('.modal-body').html(SkeletonLoading.getCreateSubdomainModalBody());
-                modal.modal('show');
+            if ($('#createSubdomainModal .p-6 form').length === 0) {
+                modal.find('.p-6').html(SkeletonLoading.getCreateSubdomainModalBody());
+                openModal('createSubdomainModal');
                 
-                // Load content asynchronously
                 $.ajax({
                     url: '{{ route("admin.subdomains.create") }}',
                     method: 'GET',
@@ -172,18 +181,18 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     },
                     success: function(response) {
-                        modal.find('.modal-body').html($(response.html).find('.modal-body').html());
+                        modal.find('.p-6').html($(response.html).find('.p-6, .modal-body').html());
                     },
                     error: function(xhr) {
-                        modal.find('.modal-body').html(`
-                            <div class="alert alert-danger">
+                        modal.find('.p-6').html(`
+                            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
                                 <i class="bi bi-exclamation-triangle"></i> Failed to load form. Please try again.
                             </div>
                         `);
                     }
                 });
             } else {
-                modal.modal('show');
+                openModal('createSubdomainModal');
             }
         });
 
@@ -192,7 +201,7 @@
             e.preventDefault();
             const form = $(this);
             const submitBtn = form.find('button[type="submit"]');
-            submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Creating...');
+            submitBtn.prop('disabled', true).html('<span class="inline-block animate-spin mr-2">⟳</span>Creating...');
 
             $.ajax({
                 url: '{{ route("admin.subdomains.store") }}',
@@ -202,7 +211,7 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 success: function(response) {
-                    $('#createSubdomainModal').modal('hide');
+                    closeModal('createSubdomainModal');
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -218,8 +227,8 @@
                         const errors = xhr.responseJSON.errors;
                         Object.keys(errors).forEach(function(key) {
                             const input = form.find(`[name="${key}"]`);
-                            input.addClass('is-invalid');
-                            $(`#${key}_error`).text(errors[key][0]).removeClass('d-none');
+                            input.addClass('border-red-500');
+                            $(`#${key}_error`).text(errors[key][0]).removeClass('hidden');
                         });
                     } else {
                         Swal.fire({
@@ -228,7 +237,7 @@
                             text: xhr.responseJSON?.message || 'Failed to create subdomain.'
                         });
                     }
-                    submitBtn.prop('disabled', false).html('<i class="bi bi-check-circle me-2"></i>Create Subdomain');
+                    submitBtn.prop('disabled', false).html('<i class="bi bi-check-circle mr-2"></i>Create Subdomain');
                 }
             });
         });
@@ -236,14 +245,10 @@
         // View subdomain modal
         $(document).on('click', '.view-subdomain-btn', function() {
             const subdomainId = $(this).data('subdomain-id');
-            const btn = $(this);
-            
-            // Show modal immediately with skeleton loading
             const loadingHtml = SkeletonLoading.getViewSubdomainModal();
             $('#viewSubdomainModalContainer').html(loadingHtml);
-            $('#viewSubdomainModal').modal('show');
+            openModal('viewSubdomainModal');
             
-            // Load content asynchronously
             $.ajax({
                 url: `/admin/subdomains/${subdomainId}`,
                 method: 'GET',
@@ -252,31 +257,14 @@
                 },
                 success: function(response) {
                     $('#viewSubdomainModalContainer').html(response.html);
-                    // Re-initialize modal if needed
-                    if (!$('#viewSubdomainModal').hasClass('show')) {
-                        $('#viewSubdomainModal').modal('show');
-                    }
                 },
                 error: function(xhr) {
                     $('#viewSubdomainModalContainer').html(`
-                        <div class="modal fade" id="viewSubdomainModal" tabindex="-1" aria-labelledby="viewSubdomainModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl modal-dialog-scrollable">
-                                <div class="modal-content">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title">Error</h5>
-                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p class="text-danger">Failed to load subdomain details. Please try again.</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <x-modal id="viewSubdomainModal" title="Error">
+                            <p class="text-red-600">Failed to load subdomain details. Please try again.</p>
+                        </x-modal>
                     `);
-                    $('#viewSubdomainModal').modal('show');
+                    openModal('viewSubdomainModal');
                 }
             });
         });
@@ -287,11 +275,9 @@
             window.currentEditSubdomainId = subdomainId;
             $('#edit_subdomain_id').val(subdomainId);
             
-            // Show modal immediately with skeleton loading
             $('#editSubdomainModalBody').html(SkeletonLoading.getEditSubdomainModalBody());
-            $('#editSubdomainModal').modal('show');
+            openModal('editSubdomainModal');
             
-            // Load content asynchronously
             $.ajax({
                 url: `/admin/subdomains/${subdomainId}/edit`,
                 method: 'GET',
@@ -303,7 +289,7 @@
                 },
                 error: function(xhr) {
                     $('#editSubdomainModalBody').html(`
-                        <div class="alert alert-danger">
+                        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
                             <i class="bi bi-exclamation-triangle"></i> Failed to load edit form. Please try again.
                         </div>
                     `);
@@ -317,7 +303,7 @@
             const form = $(this);
             const subdomainId = window.currentEditSubdomainId;
             const submitBtn = form.find('button[type="submit"]');
-            submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Updating...');
+            submitBtn.prop('disabled', true).html('<span class="inline-block animate-spin mr-2">⟳</span>Updating...');
 
             $.ajax({
                 url: `/admin/subdomains/${subdomainId}`,
@@ -327,7 +313,7 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 },
                 success: function(response) {
-                    $('#editSubdomainModal').modal('hide');
+                    closeModal('editSubdomainModal');
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
@@ -343,10 +329,10 @@
                         const errors = xhr.responseJSON.errors;
                         Object.keys(errors).forEach(function(key) {
                             const input = form.find(`[name="${key}"]`);
-                            input.addClass('is-invalid');
-                            const errorDiv = input.closest('.mb-3, .mb-4').find('.invalid-feedback');
+                            input.addClass('border-red-500');
+                            const errorDiv = input.closest('.mb-3, .mb-4').find('.text-red-500');
                             if (errorDiv.length) {
-                                errorDiv.text(errors[key][0]).removeClass('d-none');
+                                errorDiv.text(errors[key][0]).removeClass('hidden');
                             }
                         });
                     } else {
@@ -356,7 +342,7 @@
                             text: xhr.responseJSON?.message || 'Failed to update subdomain.'
                         });
                     }
-                    submitBtn.prop('disabled', false).html('<i class="bi bi-check-circle me-2"></i>Update Subdomain');
+                    submitBtn.prop('disabled', false).html('<i class="bi bi-check-circle mr-2"></i>Update Subdomain');
                 }
             });
         });
@@ -417,7 +403,7 @@
             Swal.fire({
                 title: 'Generate Registration Link',
                 html: `
-                    <div class="alert alert-info">
+                    <div class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded">
                         <i class="bi bi-info-circle"></i> 
                         The link will have unlimited uses and will expire when the subscription ends.
                     </div>
@@ -441,8 +427,7 @@
                                 timer: 2000,
                                 showConfirmButton: false
                             }).then(() => {
-                                $('#viewSubdomainModal').modal('hide');
-                                // Reload the view modal
+                                closeModal('viewSubdomainModal');
                                 $.ajax({
                                     url: `/admin/subdomains/${subdomainId}`,
                                     method: 'GET',
@@ -451,7 +436,7 @@
                                     },
                                     success: function(response) {
                                         $('#viewSubdomainModalContainer').html(response.html);
-                                        $('#viewSubdomainModal').modal('show');
+                                        openModal('viewSubdomainModal');
                                     }
                                 });
                             });
@@ -470,15 +455,13 @@
 
         $(document).on('click', '#editSubdomainBtnModal', function() {
             const subdomainId = $(this).data('subdomain-id');
-            $('#viewSubdomainModal').modal('hide');
+            closeModal('viewSubdomainModal');
             window.currentEditSubdomainId = subdomainId;
             $('#edit_subdomain_id').val(subdomainId);
             
-            // Show modal immediately with skeleton loading
             $('#editSubdomainModalBody').html(SkeletonLoading.getEditSubdomainModalBody());
-            $('#editSubdomainModal').modal('show');
+            openModal('editSubdomainModal');
             
-            // Load content asynchronously
             $.ajax({
                 url: `/admin/subdomains/${subdomainId}/edit`,
                 method: 'GET',
@@ -490,7 +473,7 @@
                 },
                 error: function(xhr) {
                     $('#editSubdomainModalBody').html(`
-                        <div class="alert alert-danger">
+                        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
                             <i class="bi bi-exclamation-triangle"></i> Failed to load edit form. Please try again.
                         </div>
                     `);
@@ -557,7 +540,7 @@
                                 timer: 2000,
                                 showConfirmButton: false
                             }).then(() => {
-                                $('#viewSubdomainModal').modal('hide');
+                                closeModal('viewSubdomainModal');
                                 window.location.reload();
                             });
                         },
@@ -593,7 +576,7 @@
                 cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    deleteBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span>');
+                    deleteBtn.prop('disabled', true).html('<span class="inline-block animate-spin">⟳</span>');
 
                     $.ajax({
                         url: `/admin/subdomains/${subdomainId}`,
@@ -630,45 +613,11 @@
         });
 
         // Reset form on modal close
-        $('#createSubdomainModal, #editSubdomainModal').on('hidden.bs.modal', function() {
+        $('#createSubdomainModal, #editSubdomainModal').on('hidden', function() {
             $(this).find('form')[0]?.reset();
-            $(this).find('.is-invalid').removeClass('is-invalid');
-            $(this).find('.invalid-feedback').addClass('d-none');
-        });
-
-        // Clean up view modal container when closed
-        $(document).on('hidden.bs.modal', '#viewSubdomainModal', function() {
-            $('#viewSubdomainModalContainer').empty();
-            // Remove any lingering modal backdrops
-            $('.modal-backdrop').remove();
-            $('body').removeClass('modal-open');
-            $('body').css('padding-right', '');
-        });
-
-        // Clean up edit modal body when closed (remove skeleton if present)
-        $(document).on('hidden.bs.modal', '#editSubdomainModal', function() {
-            // Only clear if it's skeleton content (has .skeleton class)
-            if ($('#editSubdomainModalBody').find('.skeleton').length > 0) {
-                $('#editSubdomainModalBody').empty();
-            }
-            // Remove any lingering modal backdrops
-            $('.modal-backdrop').remove();
-            $('body').removeClass('modal-open');
-            $('body').css('padding-right', '');
-        });
-
-        // Clean up create modal body when closed (remove skeleton if present)
-        $(document).on('hidden.bs.modal', '#createSubdomainModal', function() {
-            // Only clear if it's skeleton content (has .skeleton class)
-            if ($('#createSubdomainModal .modal-body').find('.skeleton').length > 0) {
-                $('#createSubdomainModal .modal-body').empty();
-            }
-            // Remove any lingering modal backdrops
-            $('.modal-backdrop').remove();
-            $('body').removeClass('modal-open');
-            $('body').css('padding-right', '');
+            $(this).find('.border-red-500').removeClass('border-red-500');
+            $(this).find('.text-red-500').addClass('hidden');
         });
     });
 </script>
 @endpush
-

@@ -3,83 +3,90 @@
 @section('title', 'Appointment Calendar')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-calendar3"></i> Appointment Calendar</h2>
-    <div class="d-flex gap-2">
-        <a href="{{ route('appointments.index') }}" class="btn btn-secondary">
+<div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+    <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
+        <i class="bi bi-calendar3"></i> Appointment Calendar
+    </h2>
+    <div class="flex gap-2">
+        <a href="{{ route('appointments.index') }}" class="btn-dental-outline">
             <i class="bi bi-list"></i> List View
         </a>
-        <a href="{{ route('appointments.create') }}" class="btn btn-primary">
+        <a href="{{ route('appointments.create') }}" class="btn-dental">
             <i class="bi bi-plus-circle"></i> New Appointment
         </a>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-header bg-primary text-white">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">
+<div class="card-dental">
+    <div class="card-dental-header">
+        <div class="flex justify-between items-center">
+            <h5 class="text-lg font-semibold flex items-center gap-2">
                 <i class="bi bi-calendar-month"></i> {{ $startDate->format('F Y') }}
             </h5>
-            <div class="d-flex gap-2">
+            <div class="flex gap-2">
                 <a href="{{ route('calendar.index', ['year' => $prevMonth->year, 'month' => $prevMonth->month]) }}" 
-                   class="btn btn-sm btn-light">
+                   class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded text-sm transition-colors">
                     <i class="bi bi-chevron-left"></i> Previous
                 </a>
-                <a href="{{ route('calendar.index') }}" class="btn btn-sm btn-light">
+                <a href="{{ route('calendar.index') }}" class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded text-sm transition-colors">
                     Today
                 </a>
                 <a href="{{ route('calendar.index', ['year' => $nextMonth->year, 'month' => $nextMonth->month]) }}" 
-                   class="btn btn-sm btn-light">
+                   class="bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded text-sm transition-colors">
                     Next <i class="bi bi-chevron-right"></i>
                 </a>
             </div>
         </div>
     </div>
-    <div class="card-body">
+    <div class="p-6">
         <!-- Calendar Grid -->
-        <div class="calendar-grid">
+        <div class="flex flex-col">
             <!-- Day Headers -->
-            <div class="calendar-weekdays">
-                <div class="calendar-day-header">Sun</div>
-                <div class="calendar-day-header">Mon</div>
-                <div class="calendar-day-header">Tue</div>
-                <div class="calendar-day-header">Wed</div>
-                <div class="calendar-day-header">Thu</div>
-                <div class="calendar-day-header">Fri</div>
-                <div class="calendar-day-header">Sat</div>
+            <div class="grid grid-cols-7 gap-px bg-gray-300 border border-gray-300">
+                <div class="bg-dental-teal text-white p-2.5 text-center font-bold text-sm">Sun</div>
+                <div class="bg-dental-teal text-white p-2.5 text-center font-bold text-sm">Mon</div>
+                <div class="bg-dental-teal text-white p-2.5 text-center font-bold text-sm">Tue</div>
+                <div class="bg-dental-teal text-white p-2.5 text-center font-bold text-sm">Wed</div>
+                <div class="bg-dental-teal text-white p-2.5 text-center font-bold text-sm">Thu</div>
+                <div class="bg-dental-teal text-white p-2.5 text-center font-bold text-sm">Fri</div>
+                <div class="bg-dental-teal text-white p-2.5 text-center font-bold text-sm">Sat</div>
             </div>
 
             <!-- Calendar Days -->
-            <div class="calendar-days">
+            <div class="grid grid-cols-7 gap-px bg-gray-300 border border-gray-300">
                 @foreach($calendar as $day)
                     @if($day === null)
-                        <div class="calendar-day empty"></div>
+                        <div class="bg-gray-100 min-h-[120px]"></div>
                     @else
-                        <div class="calendar-day {{ $day['isToday'] ? 'today' : '' }} {{ $day['count'] > 0 ? 'has-appointments' : '' }} {{ isset($day['isBlocked']) && $day['isBlocked'] ? 'blocked' : '' }}"
+                        <div class="calendar-day bg-white min-h-[120px] p-2 relative cursor-pointer transition-colors hover:bg-gray-50
+                            {{ $day['isToday'] ? 'bg-blue-50 border-2 border-blue-500' : '' }}
+                            {{ $day['count'] > 0 ? 'bg-yellow-50' : '' }}
+                            {{ isset($day['isBlocked']) && $day['isBlocked'] ? 'bg-red-50 opacity-70 hover:bg-red-100' : '' }}"
                              data-date="{{ $day['date']->format('Y-m-d') }}"
                              onclick="openAvailabilityModal('{{ $day['date']->format('Y-m-d') }}', '{{ $day['date']->format('M d, Y') }}')">
-                            <div class="calendar-day-number">
+                            <div class="font-bold text-lg mb-1 flex items-center gap-1">
                                 {{ $day['date']->format('j') }}
                                 @if(isset($day['isBlocked']) && $day['isBlocked'])
-                                    <i class="bi bi-x-circle-fill text-danger ms-1" title="Blocked"></i>
+                                    <i class="bi bi-x-circle-fill text-red-500 text-sm" title="Blocked"></i>
                                 @endif
                             </div>
                             @if($day['count'] > 0)
-                                <div class="calendar-appointments" onclick="event.stopPropagation();">
+                                <div class="flex flex-col gap-0.5" onclick="event.stopPropagation();">
                                     @foreach($day['appointments']->take(3) as $appointment)
-                                        <div class="calendar-appointment" 
+                                        <div class="bg-dental-teal text-white px-1.5 py-1 rounded text-xs cursor-pointer hover:opacity-80 transition-opacity"
                                              onclick="window.location='{{ route('appointments.show', $appointment) }}'"
                                              title="{{ $appointment->patient->first_name }} {{ $appointment->patient->last_name }} - {{ $appointment->appointment_date->format('g:i A') }}">
-                                            <small>
-                                                <i class="bi bi-clock"></i> {{ $appointment->appointment_date->format('g:i A') }}
-                                                <br>
+                                            <div class="flex items-center gap-1">
+                                                <i class="bi bi-clock text-xs"></i>
+                                                <span class="text-xs">{{ $appointment->appointment_date->format('g:i A') }}</span>
+                                            </div>
+                                            <div class="text-xs truncate">
                                                 {{ \Illuminate\Support\Str::limit($appointment->patient->first_name . ' ' . $appointment->patient->last_name, 15) }}
-                                            </small>
+                                            </div>
                                         </div>
                                     @endforeach
                                     @if($day['count'] > 3)
-                                        <div class="calendar-appointment-more">
+                                        <div class="bg-gray-600 text-white px-1.5 py-1 rounded text-xs text-center font-bold">
                                             +{{ $day['count'] - 3 }} more
                                         </div>
                                     @endif
@@ -93,195 +100,70 @@
     </div>
 </div>
 
-@push('styles')
-<style>
-    .calendar-grid {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .calendar-weekdays {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 1px;
-        background-color: #dee2e6;
-        border: 1px solid #dee2e6;
-    }
-
-    .calendar-day-header {
-        background-color: #0d6efd;
-        color: white;
-        padding: 10px;
-        text-align: center;
-        font-weight: bold;
-        font-size: 0.9rem;
-    }
-
-    .calendar-days {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 1px;
-        background-color: #dee2e6;
-        border: 1px solid #dee2e6;
-    }
-
-    .calendar-day {
-        min-height: 120px;
-        background-color: white;
-        padding: 8px;
-        position: relative;
-        cursor: pointer;
-        transition: background-color 0.2s;
-    }
-
-    .calendar-day:hover {
-        background-color: #f8f9fa;
-    }
-
-    .calendar-day.today {
-        background-color: #e7f3ff;
-        border: 2px solid #0d6efd;
-    }
-
-    .calendar-day.has-appointments {
-        background-color: #fff3cd;
-    }
-
-    .calendar-day.blocked {
-        background-color: #f8d7da;
-        opacity: 0.7;
-    }
-
-    .calendar-day.blocked:hover {
-        background-color: #f5c2c7;
-    }
-
-    .calendar-day.empty {
-        background-color: #f8f9fa;
-        cursor: default;
-    }
-
-    .calendar-day-number {
-        font-weight: bold;
-        font-size: 1.1rem;
-        margin-bottom: 5px;
-    }
-
-    .calendar-appointments {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-    }
-
-    .calendar-appointment {
-        background-color: #0d6efd;
-        color: white;
-        padding: 4px 6px;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        cursor: pointer;
-        transition: opacity 0.2s;
-    }
-
-    .calendar-appointment:hover {
-        opacity: 0.8;
-    }
-
-    .calendar-appointment-more {
-        background-color: #6c757d;
-        color: white;
-        padding: 4px 6px;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        text-align: center;
-        font-weight: bold;
-    }
-
-    @media (max-width: 768px) {
-        .calendar-day {
-            min-height: 80px;
-            padding: 4px;
-        }
-
-        .calendar-day-number {
-            font-size: 0.9rem;
-        }
-
-        .calendar-appointment {
-            font-size: 0.65rem;
-            padding: 2px 4px;
-        }
-
-        .calendar-day-header {
-            padding: 5px;
-            font-size: 0.8rem;
-        }
-    }
-</style>
-@endpush
-
 @if(auth()->check() && auth()->user()->isDoctor())
 <!-- Availability Modal -->
-<div class="modal fade" id="availabilityModal" tabindex="-1" aria-labelledby="availabilityModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="availabilityModalLabel">Manage Availability</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center" id="availabilityModal">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="card-dental-header flex justify-between items-center">
+            <h5 class="text-lg font-semibold">Manage Availability</h5>
+            <button type="button" class="text-white hover:text-gray-200 text-2xl" onclick="document.getElementById('availabilityModal').classList.add('hidden')">
+                &times;
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="mb-4">
+                <strong>Date:</strong> <span id="modalDate"></span>
             </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <strong>Date:</strong> <span id="modalDate"></span>
-                </div>
-                
-                <div id="currentAvailability" class="mb-3">
-                    <small class="text-muted">Loading...</small>
-                </div>
+            
+            <div id="currentAvailability" class="mb-4">
+                <small class="text-gray-500">Loading...</small>
+            </div>
 
-                <hr>
+            <hr class="my-4">
 
-                <div class="mb-3">
-                    <label class="form-label">Quick Actions:</label>
-                    <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-danger" onclick="blockDay()">
-                            <i class="bi bi-x-circle"></i> Block Entire Day
-                        </button>
-                        <button type="button" class="btn btn-warning" onclick="showBlockHours()">
-                            <i class="bi bi-clock"></i> Block Specific Hours
-                        </button>
-                        <button type="button" class="btn btn-success" onclick="unblockDay()">
-                            <i class="bi bi-check-circle"></i> Unblock Day
-                        </button>
-                    </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Quick Actions:</label>
+                <div class="space-y-2">
+                    <button type="button" class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors" onclick="blockDay()">
+                        <i class="bi bi-x-circle"></i> Block Entire Day
+                    </button>
+                    <button type="button" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors" onclick="showBlockHours()">
+                        <i class="bi bi-clock"></i> Block Specific Hours
+                    </button>
+                    <button type="button" class="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors" onclick="unblockDay()">
+                        <i class="bi bi-check-circle"></i> Unblock Day
+                    </button>
                 </div>
+            </div>
 
-                <div id="blockHoursForm" style="display: none;">
-                    <hr>
-                    <div class="mb-3">
-                        <label for="blockStartTime" class="form-label">Start Time</label>
-                        <select class="form-select" id="blockStartTime">
-                            <option value="">Select start time...</option>
-                        </select>
-                        <small class="text-muted">Times are in 30-minute intervals to match appointment slots</small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="blockEndTime" class="form-label">End Time</label>
-                        <select class="form-select" id="blockEndTime">
-                            <option value="">Select end time...</option>
-                        </select>
-                        <small class="text-muted">Select the end of the time range to block</small>
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="blockHours()">
+            <div id="blockHoursForm" class="hidden">
+                <hr class="my-4">
+                <div class="mb-4">
+                    <label for="blockStartTime" class="block text-sm font-medium text-gray-700 mb-2">Start Time</label>
+                    <select class="input-dental" id="blockStartTime">
+                        <option value="">Select start time...</option>
+                    </select>
+                    <small class="text-gray-500 text-xs">Times are in 30-minute intervals to match appointment slots</small>
+                </div>
+                <div class="mb-4">
+                    <label for="blockEndTime" class="block text-sm font-medium text-gray-700 mb-2">End Time</label>
+                    <select class="input-dental" id="blockEndTime">
+                        <option value="">Select end time...</option>
+                    </select>
+                    <small class="text-gray-500 text-xs">Select the end of the time range to block</small>
+                </div>
+                <div class="flex gap-2">
+                    <button type="button" class="btn-dental flex-1" onclick="blockHours()">
                         <i class="bi bi-check"></i> Block Hours
                     </button>
-                    <button type="button" class="btn btn-secondary" onclick="hideBlockHours()">
+                    <button type="button" class="btn-dental-outline flex-1" onclick="hideBlockHours()">
                         Cancel
                     </button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
+        </div>
+        <div class="px-6 py-4 border-t border-gray-200 flex justify-end">
+            <button type="button" class="btn-dental-outline" onclick="document.getElementById('availabilityModal').classList.add('hidden')">Close</button>
         </div>
     </div>
 </div>
@@ -293,14 +175,19 @@
     function openAvailabilityModal(date, dateDisplay) {
         selectedDate = date;
         document.getElementById('modalDate').textContent = dateDisplay;
-        document.getElementById('blockHoursForm').style.display = 'none';
+        document.getElementById('blockHoursForm').classList.add('hidden');
         
         // Load current availability
         loadDateAvailability(date);
         
         // Show modal
-        const modal = new bootstrap.Modal(document.getElementById('availabilityModal'));
-        modal.show();
+        document.getElementById('availabilityModal').classList.remove('hidden');
+        document.getElementById('availabilityModal').classList.add('flex');
+    }
+
+    function closeModal() {
+        document.getElementById('availabilityModal').classList.add('hidden');
+        document.getElementById('availabilityModal').classList.remove('flex');
     }
 
     function loadDateAvailability(date) {
@@ -312,7 +199,6 @@
         })
         .then(response => {
             if (!response.ok) {
-                // If response is not ok, try to parse error
                 return response.json().then(err => {
                     throw new Error(err.message || err.error || `HTTP error! status: ${response.status}`);
                 });
@@ -322,9 +208,8 @@
         .then(data => {
             const container = document.getElementById('currentAvailability');
             
-            // Check for error in response
             if (data.error) {
-                container.innerHTML = `<small class="text-danger">Error: ${data.message || data.error}</small>`;
+                container.innerHTML = `<small class="text-red-500">Error: ${data.message || data.error}</small>`;
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -334,50 +219,44 @@
             }
             
             if (data.availabilities && data.availabilities.length > 0) {
-                // Separate available and blocked entries
-                // Handle both boolean and string values
                 const available = data.availabilities.filter(a => a.is_available === true || a.is_available === '1' || a.is_available === 1);
                 const blocked = data.availabilities.filter(a => a.is_available === false || a.is_available === '0' || a.is_available === 0);
                 
-                // Store blocked slots globally for filtering dropdowns
-                blockedSlots = blocked;
-                
-                // Store blocked slots globally for filtering dropdowns
                 blockedSlots = blocked;
                 
                 let html = '';
                 
                 if (blocked.length > 0) {
-                    html += '<strong class="text-danger">Blocked Hours:</strong><ul class="list-unstyled mt-2 mb-3">';
+                    html += '<strong class="text-red-600">Blocked Hours:</strong><ul class="list-none mt-2 mb-3 space-y-1">';
                     blocked.forEach(avail => {
                         if (avail.start_time && avail.end_time) {
                             const startTime = formatTimeForDisplay(avail.start_time);
                             const endTime = formatTimeForDisplay(avail.end_time);
-                            html += `<li class="mb-1"><i class="bi bi-x-circle text-danger"></i> <strong>${startTime} - ${endTime}</strong> <span class="badge bg-danger">Blocked</span></li>`;
+                            html += `<li class="flex items-center gap-2"><i class="bi bi-x-circle text-red-500"></i> <strong>${startTime} - ${endTime}</strong> <span class="px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Blocked</span></li>`;
                         }
                     });
                     html += '</ul>';
                 }
                 
                 if (available.length > 0) {
-                    html += '<strong class="text-success">Available Hours:</strong><ul class="list-unstyled mt-2">';
+                    html += '<strong class="text-green-600">Available Hours:</strong><ul class="list-none mt-2 space-y-1">';
                     available.forEach(avail => {
                         if (avail.start_time && avail.end_time) {
                             const startTime = formatTimeForDisplay(avail.start_time);
                             const endTime = formatTimeForDisplay(avail.end_time);
-                            html += `<li class="mb-1"><i class="bi bi-check-circle text-success"></i> ${startTime} - ${endTime} <span class="badge bg-success">Available</span></li>`;
+                            html += `<li class="flex items-center gap-2"><i class="bi bi-check-circle text-green-500"></i> ${startTime} - ${endTime} <span class="px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Available</span></li>`;
                         }
                     });
                     html += '</ul>';
                 }
                 
                 if (blocked.length === 0 && available.length === 0) {
-                    html = '<small class="text-muted">No specific availability set for this date. Default hours (9 AM - 5 PM) apply.</small>';
+                    html = '<small class="text-gray-500">No specific availability set for this date. Default hours (9 AM - 5 PM) apply.</small>';
                 }
                 
                 container.innerHTML = html;
             } else {
-                container.innerHTML = '<small class="text-muted">No specific availability set for this date. Default hours (9 AM - 5 PM) apply.</small>';
+                container.innerHTML = '<small class="text-gray-500">No specific availability set for this date. Default hours (9 AM - 5 PM) apply.</small>';
             }
         })
         .catch(error => {
@@ -386,7 +265,7 @@
                 title: 'Error',
                 text: 'Failed to load availability. Please try again.'
             });
-            document.getElementById('currentAvailability').innerHTML = '<small class="text-danger">Error loading availability. Please try again.</small>';
+            document.getElementById('currentAvailability').innerHTML = '<small class="text-red-500">Error loading availability. Please try again.</small>';
         });
     }
 
@@ -399,17 +278,15 @@
         return `${displayHour}:${minutes} ${ampm}`;
     }
 
-    // Convert time string (HH:MM) to minutes for comparison
     function timeToMinutes(timeString) {
         const [hours, minutes] = timeString.split(':').map(Number);
         return hours * 60 + minutes;
     }
 
-    // Generate 30-minute time slots (matching registration form)
     function generateTimeSlots() {
         const slots = [];
-        const startHour = 9; // 9 AM
-        const endHour = 17; // 5 PM (17:00)
+        const startHour = 9;
+        const endHour = 17;
         
         for (let hour = startHour; hour < endHour; hour++) {
             for (let minute = 0; minute < 60; minute += 30) {
@@ -421,34 +298,27 @@
             }
         }
         
-        // Add the end time (5:00 PM)
         slots.push({ value: '17:00', display: '5:00 PM' });
         
         return slots;
     }
 
-    // Store blocked slots globally to filter dropdowns
     let blockedSlots = [];
 
-    // Populate time select dropdowns with 30-minute intervals (excluding already blocked slots)
     function populateTimeSelects() {
         const slots = generateTimeSlots();
         const startSelect = document.getElementById('blockStartTime');
         const endSelect = document.getElementById('blockEndTime');
         
-        // Get blocked time ranges from current availability data
         const blockedRanges = getBlockedTimeRanges();
         
-        // Filter out slots that are already blocked
         const availableSlots = slots.filter(slot => {
             return !isSlotBlocked(slot.value, blockedRanges);
         });
         
-        // Clear existing options (except first)
         startSelect.innerHTML = '<option value="">Select start time...</option>';
         endSelect.innerHTML = '<option value="">Select end time...</option>';
         
-        // Populate start time (exclude last slot as it's the end time, and already blocked slots)
         const startSlots = availableSlots.slice(0, -1);
         startSlots.forEach(slot => {
             const option = document.createElement('option');
@@ -457,7 +327,6 @@
             startSelect.appendChild(option);
         });
         
-        // Populate end time (exclude first slot, start from second, and already blocked slots)
         const endSlots = availableSlots.slice(1);
         endSlots.forEach(slot => {
             const option = document.createElement('option');
@@ -467,7 +336,6 @@
         });
     }
 
-    // Get blocked time ranges from the availability data
     function getBlockedTimeRanges() {
         const ranges = [];
         if (blockedSlots && blockedSlots.length > 0) {
@@ -483,7 +351,6 @@
         return ranges;
     }
 
-    // Check if a time slot is blocked
     function isSlotBlocked(slotTime, blockedRanges) {
         if (!blockedRanges || blockedRanges.length === 0) return false;
         
@@ -492,7 +359,6 @@
         return blockedRanges.some(range => {
             const rangeStart = timeToMinutes(range.start);
             const rangeEnd = timeToMinutes(range.end);
-            // Check if slot time falls within any blocked range
             return slotMinutes >= rangeStart && slotMinutes < rangeEnd;
         });
     }
@@ -515,7 +381,6 @@
     }
     
     function performBlockDay() {
-
         fetch('/availability/quick-set', {
             method: 'POST',
             headers: {
@@ -558,8 +423,7 @@
     }
 
     function showBlockHours() {
-        document.getElementById('blockHoursForm').style.display = 'block';
-        // Refresh availability data first, then populate selects
+        document.getElementById('blockHoursForm').classList.remove('hidden');
         if (selectedDate) {
             loadDateAvailability(selectedDate).then(() => {
                 populateTimeSelects();
@@ -570,7 +434,7 @@
     }
 
     function hideBlockHours() {
-        document.getElementById('blockHoursForm').style.display = 'none';
+        document.getElementById('blockHoursForm').classList.add('hidden');
         document.getElementById('blockStartTime').value = '';
         document.getElementById('blockEndTime').value = '';
     }
@@ -588,7 +452,6 @@
             return;
         }
 
-        // Convert to comparable format
         const startMinutes = timeToMinutes(startTime);
         const endMinutes = timeToMinutes(endTime);
 
@@ -601,17 +464,6 @@
             return;
         }
         
-        // Validate minimum block duration (at least 30 minutes)
-        if (endMinutes - startMinutes < 30) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Validation Error',
-                text: 'Minimum block duration is 30 minutes'
-            });
-            return;
-        }
-        
-        // Validate minimum block duration (at least 30 minutes)
         if (endMinutes - startMinutes < 30) {
             Swal.fire({
                 icon: 'warning',
@@ -647,7 +499,7 @@
                 });
                 hideBlockHours();
                 loadDateAvailability(selectedDate).then(() => {
-                    populateTimeSelects(); // Refresh dropdowns to hide newly blocked slots
+                    populateTimeSelects();
                 });
                 setTimeout(() => location.reload(), 2000);
             } else {
@@ -703,7 +555,6 @@
                         showConfirmButton: false
                     });
                     loadDateAvailability(selectedDate);
-                    // Refresh time selects to show newly available slots
                     populateTimeSelects();
                     setTimeout(() => location.reload(), 2000);
                 } else {
@@ -723,8 +574,14 @@
             });
         });
     }
+
+    // Close modal when clicking outside
+    document.getElementById('availabilityModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
 </script>
 @endpush
 @endif
 @endsection
-
