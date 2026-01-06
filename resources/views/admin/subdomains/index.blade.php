@@ -8,19 +8,19 @@
 <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
     <div>
         <h2 class="text-3xl font-bold text-gray-800 mb-1 flex items-center gap-2">
-            <i class="bi bi-globe text-dental-teal"></i> Subdomains Management
+            <x-dental-icon name="globe" class="w-8 h-8 text-dental-teal" /> Subdomains Management
         </h2>
         <p class="text-gray-600">Manage all dental clinic subdomains and their settings</p>
     </div>
-    <button type="button" class="btn-dental shadow-lg" onclick="openModal('createSubdomainModal')" id="openCreateModal">
-        <i class="bi bi-plus-circle"></i> Add New Subdomain
+    <button type="button" class="inline-flex items-center gap-2 btn-dental shadow-lg" onclick="openModal('createSubdomainModal')" id="openCreateModal">
+        <x-dental-icon name="plus-circle" class="w-5 h-5" /> Add New Subdomain
     </button>
 </div>
 
 <div class="card-dental">
     <div class="px-6 py-4 border-b border-gray-200">
         <h5 class="text-lg font-semibold flex items-center gap-2">
-            <i class="bi bi-list-ul text-dental-teal"></i> All Subdomains
+            <x-dental-icon name="list-ul" class="w-5 h-5 text-dental-teal" /> All Subdomains
         </h5>
     </div>
     <div class="p-0">
@@ -29,19 +29,19 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <i class="bi bi-globe mr-2"></i>Subdomain
+                            <span class="flex items-center"><x-dental-icon name="globe" class="w-4 h-4 mr-2" />Subdomain</span>
                         </th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <i class="bi bi-building mr-2"></i>Name
+                            <span class="flex items-center"><x-dental-icon name="building" class="w-4 h-4 mr-2" />Name</span>
                         </th>
                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <i class="bi bi-envelope mr-2"></i>Email
+                            <span class="flex items-center"><x-dental-icon name="envelope" class="w-4 h-4 mr-2" />Email</span>
                         </th>
                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <i class="bi bi-toggle-on mr-2"></i>Status
+                            <span class="flex items-center justify-center"><x-dental-icon name="toggle-on" class="w-4 h-4 mr-2" />Status</span>
                         </th>
                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <i class="bi bi-credit-card mr-2"></i>Subscription
+                            <span class="flex items-center justify-center"><x-dental-icon name="credit-card" class="w-4 h-4 mr-2" />Subscription</span>
                         </th>
                         <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
@@ -52,7 +52,7 @@
                             <td class="px-4 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="bg-dental-teal/10 rounded-full p-2 mr-3">
-                                        <i class="bi bi-globe text-dental-teal"></i>
+                                        <x-dental-icon name="globe" class="w-5 h-5 text-dental-teal" />
                                     </div>
                                     <div>
                                         <strong class="block text-gray-900">{{ $subdomain->subdomain }}</strong>
@@ -65,7 +65,7 @@
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                                 @if($subdomain->email)
-                                    <i class="bi bi-envelope text-gray-400 mr-1"></i>
+                                    <x-dental-icon name="envelope" class="w-4 h-4 text-gray-400 mr-1 inline" />
                                     {{ $subdomain->email }}
                                 @else
                                     <span class="text-gray-400 italic">N/A</span>
@@ -80,8 +80,8 @@
                                                {{ $subdomain->is_active ? 'checked' : '' }}
                                                style="width: 3rem; height: 1.5rem; cursor: pointer;">
                                     </div>
-                                    <span class="px-3 py-1.5 rounded text-xs font-medium {{ $subdomain->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                        <i class="bi bi-{{ $subdomain->is_active ? 'check-circle' : 'x-circle' }}"></i>
+                                    <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded text-xs font-medium {{ $subdomain->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                        <x-dental-icon name="{{ $subdomain->is_active ? 'check-circle' : 'x-circle' }}" class="w-3 h-3" />
                                         {{ $subdomain->is_active ? 'Active' : 'Inactive' }}
                                     </span>
                                 </div>
@@ -95,36 +95,36 @@
                                         ->first();
                                 @endphp
                                 @if($activeSub)
-                                    <span class="px-3 py-1.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                        <i class="bi bi-check-circle mr-1"></i>
+                                    <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                        <x-dental-icon name="check-circle" class="w-3 h-3" />
                                         {{ ucfirst($activeSub->plan_name) }}
                                     </span>
                                 @else
-                                    <span class="px-3 py-1.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                                        <i class="bi bi-x-circle mr-1"></i>
+                                    <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                        <x-dental-icon name="x-circle" class="w-3 h-3" />
                                         No Subscription
                                     </span>
                                 @endif
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-right text-sm space-x-2">
                                 <button type="button" 
-                                        class="btn-dental text-sm py-1.5 px-3 view-subdomain-btn" 
+                                        class="inline-flex items-center gap-2 btn-dental text-sm py-1.5 px-3 view-subdomain-btn" 
                                         data-subdomain-id="{{ $subdomain->id }}"
                                         title="View Details">
-                                    <i class="bi bi-eye"></i> View
+                                    <x-dental-icon name="eye" class="w-4 h-4" /> View
                                 </button>
                                 <button type="button" 
-                                        class="btn-dental-outline text-sm py-1.5 px-3 border-yellow-500 text-yellow-600 hover:bg-yellow-50 edit-subdomain-btn" 
+                                        class="inline-flex items-center justify-center btn-dental-outline text-sm py-1.5 px-3 border-yellow-500 text-yellow-600 hover:bg-yellow-50 edit-subdomain-btn" 
                                         data-subdomain-id="{{ $subdomain->id }}"
                                         title="Edit">
-                                    <i class="bi bi-pencil"></i>
+                                    <x-dental-icon name="pencil" class="w-4 h-4" />
                                 </button>
                                 <button type="button" 
-                                        class="btn-dental-outline text-sm py-1.5 px-3 border-red-500 text-red-600 hover:bg-red-50 delete-subdomain-btn" 
+                                        class="inline-flex items-center justify-center btn-dental-outline text-sm py-1.5 px-3 border-red-500 text-red-600 hover:bg-red-50 delete-subdomain-btn" 
                                         data-subdomain-id="{{ $subdomain->id }}"
                                         data-subdomain-name="{{ $subdomain->name }}"
                                         title="Delete">
-                                    <i class="bi bi-trash"></i>
+                                    <x-dental-icon name="trash" class="w-4 h-4" />
                                 </button>
                             </td>
                         </tr>
@@ -132,10 +132,10 @@
                         <tr>
                             <td colspan="6" class="px-4 py-12 text-center">
                                 <div class="py-4">
-                                    <i class="bi bi-inbox text-6xl text-gray-300"></i>
+                                    <x-dental-icon name="inbox" class="w-16 h-16 text-gray-300 mx-auto" />
                                     <p class="text-gray-500 mt-3 mb-0">No subdomains found.</p>
-                                    <button type="button" class="btn-dental mt-3" onclick="openModal('createSubdomainModal')" id="openCreateModalEmpty">
-                                        <i class="bi bi-plus-circle"></i> Create Your First Subdomain
+                                    <button type="button" class="inline-flex items-center gap-2 btn-dental mt-3" onclick="openModal('createSubdomainModal')" id="openCreateModalEmpty">
+                                        <x-dental-icon name="plus-circle" class="w-5 h-5" /> Create Your First Subdomain
                                     </button>
                                 </div>
                             </td>
@@ -185,8 +185,8 @@
                     },
                     error: function(xhr) {
                         modal.find('.p-6').html(`
-                            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                                <i class="bi bi-exclamation-triangle"></i> Failed to load form. Please try again.
+                            <div class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                                <x-dental-icon name="exclamation-triangle" class="w-5 h-5" /> Failed to load form. Please try again.
                             </div>
                         `);
                     }
@@ -237,7 +237,7 @@
                             text: xhr.responseJSON?.message || 'Failed to create subdomain.'
                         });
                     }
-                    submitBtn.prop('disabled', false).html('<i class="bi bi-check-circle mr-2"></i>Create Subdomain');
+                    submitBtn.prop('disabled', false).html('<svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Create Subdomain');
                 }
             });
         });
@@ -289,8 +289,8 @@
                 },
                 error: function(xhr) {
                     $('#editSubdomainModalBody').html(`
-                        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                            <i class="bi bi-exclamation-triangle"></i> Failed to load edit form. Please try again.
+                        <div class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg> Failed to load edit form. Please try again.
                         </div>
                     `);
                 }
@@ -342,7 +342,7 @@
                             text: xhr.responseJSON?.message || 'Failed to update subdomain.'
                         });
                     }
-                    submitBtn.prop('disabled', false).html('<i class="bi bi-check-circle mr-2"></i>Update Subdomain');
+                    submitBtn.prop('disabled', false).html('<svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Update Subdomain');
                 }
             });
         });
@@ -403,9 +403,9 @@
             Swal.fire({
                 title: 'Generate Registration Link',
                 html: `
-                    <div class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded">
-                        <i class="bi bi-info-circle"></i> 
-                        The link will have unlimited uses and will expire when the subscription ends.
+                    <div class="flex items-start gap-2 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded">
+                        <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>The link will have unlimited uses and will expire when the subscription ends.</span>
                     </div>
                 `,
                 showCancelButton: true,
@@ -473,8 +473,8 @@
                 },
                 error: function(xhr) {
                     $('#editSubdomainModalBody').html(`
-                        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                            <i class="bi bi-exclamation-triangle"></i> Failed to load edit form. Please try again.
+                        <div class="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg> Failed to load edit form. Please try again.
                         </div>
                     `);
                 }
@@ -605,7 +605,7 @@
                                 title: 'Error!',
                                 text: xhr.responseJSON?.message || 'Failed to delete subdomain.'
                             });
-                            deleteBtn.prop('disabled', false).html('<i class="bi bi-trash"></i>');
+                            deleteBtn.prop('disabled', false).html('<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>');
                         }
                     });
                 }

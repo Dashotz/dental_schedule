@@ -5,7 +5,7 @@
 @section('content')
 <div class="mb-6">
     <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
-        <i class="bi bi-speedometer2"></i> Admin Dashboard
+        <x-dental-icon name="speedometer2" class="w-8 h-8 text-dental-teal" /> Admin Dashboard
     </h2>
     <p class="text-gray-600 mt-2">Welcome back, {{ auth()->user()->name }}!</p>
 </div>
@@ -19,7 +19,7 @@
                     <h6 class="text-sm font-medium opacity-90 mb-2">Total Subdomains</h6>
                     <h3 class="text-3xl font-bold mb-0">{{ $totalSubdomains }}</h3>
                 </div>
-                <i class="bi bi-globe text-5xl opacity-50"></i>
+                <x-dental-icon name="globe" class="w-12 h-12 opacity-50" />
             </div>
         </div>
     </div>
@@ -30,7 +30,7 @@
                     <h6 class="text-sm font-medium opacity-90 mb-2">Active Subdomains</h6>
                     <h3 class="text-3xl font-bold mb-0">{{ $activeSubdomains }}</h3>
                 </div>
-                <i class="bi bi-check-circle text-5xl opacity-50"></i>
+                <x-dental-icon name="check-circle" class="w-12 h-12 opacity-50" />
             </div>
         </div>
     </div>
@@ -41,7 +41,7 @@
                     <h6 class="text-sm font-medium opacity-90 mb-2">Active Subscriptions</h6>
                     <h3 class="text-3xl font-bold mb-0">{{ $activeSubscriptions }}</h3>
                 </div>
-                <i class="bi bi-credit-card text-5xl opacity-50"></i>
+                <x-dental-icon name="credit-card" class="w-12 h-12 opacity-50" />
             </div>
         </div>
     </div>
@@ -52,7 +52,7 @@
                     <h6 class="text-sm font-medium opacity-90 mb-2">Expiring Soon</h6>
                     <h3 class="text-3xl font-bold mb-0">{{ $expiringSubscriptions }}</h3>
                 </div>
-                <i class="bi bi-exclamation-triangle text-5xl opacity-50"></i>
+                <x-dental-icon name="exclamation-triangle" class="w-12 h-12 opacity-50" />
             </div>
         </div>
     </div>
@@ -79,7 +79,7 @@
     <div class="card-dental">
         <div class="card-dental-header">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-globe"></i> Recent Subdomains
+                <x-dental-icon name="globe" class="w-5 h-5" /> Recent Subdomains
             </h5>
         </div>
         <div class="p-6">
@@ -109,8 +109,8 @@
                                         </span>
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm">
-                                        <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="btn-dental text-sm py-1.5 px-3">
-                                            <i class="bi bi-eye"></i>
+                                        <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="inline-flex items-center justify-center btn-dental text-sm py-1.5 px-3">
+                                            <x-dental-icon name="eye" class="w-4 h-4" />
                                         </a>
                                     </td>
                                 </tr>
@@ -128,7 +128,7 @@
     <div class="card-dental">
         <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-6 py-4 rounded-t-2xl">
             <h5 class="text-lg font-semibold flex items-center gap-2">
-                <i class="bi bi-exclamation-triangle"></i> Subscriptions Expiring Soon
+                <x-dental-icon name="exclamation-triangle" class="w-5 h-5" /> Subscriptions Expiring Soon
             </h5>
         </div>
         <div class="p-6">
@@ -141,8 +141,8 @@
                                     <h6 class="font-semibold text-gray-800 mb-1">{{ $subdomain->name }}</h6>
                                     <small class="text-gray-500">{{ $subdomain->subdomain }}</small>
                                 </div>
-                                <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="btn-dental-outline text-sm py-1.5 px-3">
-                                    <i class="bi bi-eye"></i> View
+                                <a href="{{ route('admin.subdomains.show', $subdomain) }}" class="inline-flex items-center gap-2 btn-dental-outline text-sm py-1.5 px-3">
+                                    <x-dental-icon name="eye" class="w-4 h-4" /> View
                                 </a>
                             </div>
                         </div>
