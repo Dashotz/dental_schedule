@@ -22,7 +22,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
         'phone',
         'address',
         'photo',
@@ -95,14 +94,9 @@ class User extends Authenticatable
     }
 
     // Helper methods
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
-
     public function isDoctor(): bool
     {
-        return $this->role === 'doctor';
+        return true; // All users in this table are doctors now
     }
 
     public function availabilities()

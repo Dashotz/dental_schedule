@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Login - Dental System')
+@section('title', 'Admin Login - Dental System')
 
 @section('content')
 <div class="min-h-screen bg-gradient-to-br from-dental-teal-lighter via-white to-dental-teal-lighter flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -22,12 +22,12 @@
                 </div>
                 <h4 class="text-xl font-semibold flex items-center gap-3 relative z-10">
                     <x-dental-icon name="box-arrow-in-right" class="w-6 h-6" /> 
-                    <span>Login to System</span>
+                    <span>Admin Login</span>
                 </h4>
             </div>
             
             <div class="p-8">
-                <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                <form method="POST" action="{{ route('admin.login') }}" class="space-y-6">
                     @csrf
                     
                     <!-- Email Field -->
@@ -98,7 +98,7 @@
                     <!-- Submit Button -->
                     <button type="submit" class="btn-dental w-full flex items-center justify-center gap-3 py-3 text-base font-semibold">
                         <x-dental-icon name="box-arrow-in-right" class="w-5 h-5" />
-                        <span>Sign In</span>
+                        <span>Sign In as Admin</span>
                     </button>
                 </form>
             </div>
@@ -107,7 +107,7 @@
             <div class="px-8 py-5 border-t border-gray-100 bg-gray-50">
                 <div class="flex items-center justify-center gap-2 text-gray-600 text-sm">
                     <x-dental-icon name="info-circle" class="w-4 h-4 text-dental-teal" />
-                    <span class="text-center">Only authorized doctors and staff can access this system</span>
+                    <span class="text-center">Only authorized administrators can access this system</span>
                 </div>
             </div>
         </div>
@@ -124,3 +124,4 @@
     </div>
 </div>
 @endsection
+

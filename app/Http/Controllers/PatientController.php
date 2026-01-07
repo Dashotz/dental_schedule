@@ -17,7 +17,7 @@ class PatientController extends Controller
 
     public function showRegistrationForm()
     {
-        return view('patient.register');
+        return view('subdomain-template.register');
     }
 
     public function store(Request $request, $token = null)
@@ -27,11 +27,26 @@ class PatientController extends Controller
                 ->with('error', 'Registration is only available through a valid registration link.');
         }
 
+        // Security: Validate token format first
+        if (!RegistrationLink::isValidTokenFormat($token)) {
+            \Log::warning('Invalid registration token format in store attempt', [
+                'token_length' => strlen($token),
+                'ip' => $request->ip(),
+            ]);
+            return redirect()->route('home')
+                ->with('error', 'Invalid or expired registration link.');
+        }
+
         $registrationLink = RegistrationLink::where('token', $token)
             ->where('is_active', true)
             ->first();
 
         if (!$registrationLink || !$registrationLink->isUsable()) {
+            \Log::warning('Registration link validation failed in store', [
+                'token_exists' => $registrationLink !== null,
+                'is_usable' => $registrationLink ? $registrationLink->isUsable() : false,
+                'ip' => $request->ip(),
+            ]);
             return redirect()->route('home')
                 ->with('error', 'Invalid or expired registration link.');
         }
@@ -113,7 +128,7 @@ class PatientController extends Controller
         $appointmentDateTime = $appointmentDate->format('Y-m-d') . ' ' . $appointmentTime;
 
         // Get all active doctors
-        $doctors = \App\Models\User::where('role', 'doctor')
+        $doctors = \App\Models\User::where('is_active', true)
             ->where('is_active', true)
             ->get();
 
@@ -186,12 +201,24 @@ class PatientController extends Controller
                 'duration' => 30, // Default 30 minutes
             ]);
 
-            // Increment registration link usage
+            // Increment registration link usage and log
             if ($token && $registrationLink) {
                 $registrationLink->increment('used_count');
+                
+                \Log::info('Registration link used successfully', [
+                    'link_id' => $registrationLink->id,
+                    'subdomain_id' => $registrationLink->subdomain_id,
+                    'used_count' => $registrationLink->used_count,
+                    'max_uses' => $registrationLink->max_uses,
+                    'ip' => $request->ip(),
+                ]);
             }
 
             DB::commit();
+
+            // Clear caches
+            cache()->forget('patients_list');
+            cache()->forget('dashboard_stats');
 
             return redirect()->route('home')
                 ->with('success', 'Registration and appointment booking successful! Your appointment is scheduled for ' . $appointment->appointment_date->format('F d, Y \a\t g:i A'));
@@ -471,17 +498,27 @@ class PatientController extends Controller
             ->latest()
             ->paginate(15);
         
-        return view('patient.index', compact('patients'));
+        return view('subdomain-template.patient.index', compact('patients'));
     }
 
     public function show(Patient $patient)
     {
+        // Authorization: Ensure user is authenticated (doctor)
+        // Note: Route already has auth:web middleware, but adding explicit check for security
+        if (!auth()->check()) {
+            \Log::warning('Unauthorized patient view attempt', [
+                'patient_id' => $patient->id,
+                'ip' => request()->ip(),
+            ]);
+            abort(403, 'Unauthorized access.');
+        }
+        
         $patient->load(['appointments', 'treatmentPlans', 'teethRecords', 'treatments']);
         
         // If AJAX request, return modal content
         if (request()->ajax()) {
             return response()->json([
-                'html' => view('patient.partials.view-modal', compact('patient'))->render()
+                'html' => view('subdomain-template.patient.partials.view-modal', compact('patient'))->render()
             ]);
         }
         
@@ -494,11 +531,11 @@ class PatientController extends Controller
         // If AJAX request, return modal content
         if (request()->ajax()) {
             return response()->json([
-                'html' => view('patient.partials.edit-modal', compact('patient'))->render()
+                'html' => view('subdomain-template.patient.partials.edit-modal', compact('patient'))->render()
             ]);
         }
         
-        return view('patient.edit', compact('patient'));
+        return view('subdomain-template.patient.edit', compact('patient'));
     }
 
     public function update(Request $request, Patient $patient)
@@ -528,6 +565,10 @@ class PatientController extends Controller
         // Sanitize inputs
         $sanitized = $this->sanitizeInput($validated);
         $patient->update($sanitized);
+
+        // Clear caches
+        cache()->forget('patients_list');
+        cache()->forget('dashboard_stats');
 
         // If AJAX request, return JSON response
         if (request()->ajax()) {

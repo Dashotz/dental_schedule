@@ -15,6 +15,28 @@
         body:has(.welcome-page) main,
         .welcome-page-wrapper main {
             padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        body:has(.welcome-page) {
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        body:has(.welcome-page) footer {
+            margin-bottom: 0 !important;
+            margin-top: 0 !important;
+        }
+        html:has(.welcome-page) {
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
+        }
+        /* Remove any white space after footer */
+        body:has(.welcome-page) main::after {
+            display: none !important;
+        }
+        /* Ensure footer is flush with bottom */
+        body:has(.welcome-page) footer {
+            position: relative;
         }
     </style>
 @endpush
@@ -68,9 +90,6 @@
             </div>
         </div>
     </div>
-    <a href="{{ route('login') }}" class="fixed bottom-6 right-6 bg-dental-teal hover:bg-dental-teal-dark text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-110 z-40" title="Staff Login">
-        <x-dental-icon name="person-circle" class="w-6 h-6 text-2xl" />
-    </a>
 </nav>
 
 <!-- Hero Banner Section -->
@@ -400,7 +419,7 @@
 </section>
 
 <!-- Footer -->
-<footer class="bg-gray-800 text-white py-12">
+<footer class="bg-gray-800 text-white py-12 mb-0" style="margin-bottom: 0 !important;">
     <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>

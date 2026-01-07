@@ -21,7 +21,7 @@ class CheckSubdomainStatus
         $baseDomain = config('subdomain.base_domain');
         
         // Allow admin routes to bypass subdomain checks (admins can access from anywhere)
-        if ($request->is('admin/*') && auth()->check() && auth()->user()->isAdmin()) {
+        if ($request->is('admin/*') && auth('admin')->check()) {
             return $next($request);
         }
         
@@ -50,7 +50,7 @@ class CheckSubdomainStatus
         
         // Check if subdomain is active
         if (!$subdomain->is_active) {
-            return response()->view('subscription-required', [
+            return response()->view('subdomain-template.subscription-required', [
                 'subdomain' => $subdomain,
                 'reason' => 'disabled'
             ], 403);
@@ -58,7 +58,7 @@ class CheckSubdomainStatus
         
         // Check if subdomain has active subscription
         if (!$subdomain->isSubscriptionActive()) {
-            return response()->view('subscription-required', [
+            return response()->view('subdomain-template.subscription-required', [
                 'subdomain' => $subdomain,
                 'reason' => 'subscription_expired'
             ], 403);

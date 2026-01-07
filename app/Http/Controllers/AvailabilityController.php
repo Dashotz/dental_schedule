@@ -26,7 +26,7 @@ class AvailabilityController extends Controller
             ->orderBy('start_time')
             ->get();
 
-        return view('availability.index', compact('availabilities', 'doctor'));
+        return view('subdomain-template.availability.index', compact('availabilities', 'doctor'));
     }
 
     public function create()
@@ -37,7 +37,7 @@ class AvailabilityController extends Controller
             abort(403, 'Only doctors can manage availability');
         }
 
-        return view('availability.create');
+        return view('subdomain-template.availability.create');
     }
 
     public function store(Request $request)
@@ -75,10 +75,15 @@ class AvailabilityController extends Controller
         $doctor = auth()->user();
         
         if (!$doctor->isDoctor() || $availability->doctor_id !== $doctor->id) {
+            \Log::warning('Unauthorized availability edit attempt', [
+                'user_id' => $doctor->id ?? 'unknown',
+                'availability_id' => $availability->id,
+                'ip' => request()->ip(),
+            ]);
             abort(403, 'Unauthorized');
         }
 
-        return view('availability.edit', compact('availability'));
+        return view('subdomain-template.availability.edit', compact('availability'));
     }
 
     public function update(Request $request, DoctorAvailability $availability)
@@ -86,6 +91,11 @@ class AvailabilityController extends Controller
         $doctor = auth()->user();
         
         if (!$doctor->isDoctor() || $availability->doctor_id !== $doctor->id) {
+            \Log::warning('Unauthorized availability update attempt', [
+                'user_id' => $doctor->id ?? 'unknown',
+                'availability_id' => $availability->id,
+                'ip' => request()->ip(),
+            ]);
             abort(403, 'Unauthorized');
         }
 
@@ -115,6 +125,11 @@ class AvailabilityController extends Controller
         $doctor = auth()->user();
         
         if (!$doctor->isDoctor() || $availability->doctor_id !== $doctor->id) {
+            \Log::warning('Unauthorized availability delete attempt', [
+                'user_id' => $doctor->id ?? 'unknown',
+                'availability_id' => $availability->id,
+                'ip' => request()->ip(),
+            ]);
             abort(403, 'Unauthorized');
         }
 
@@ -126,9 +141,17 @@ class AvailabilityController extends Controller
 
     public function getAvailableSlots(Request $request)
     {
+        // Rate limiting is handled by route middleware, but add validation
         $request->validate([
             'doctor_id' => ['required', 'integer', 'exists:users,id'],
             'date' => ['required', 'date', 'after_or_equal:today'],
+        ]);
+        
+        // Log public endpoint usage for security monitoring
+        \Log::info('Public availability slots requested', [
+            'doctor_id' => $request->doctor_id,
+            'date' => $request->date,
+            'ip' => $request->ip(),
         ]);
 
         $doctor = User::findOrFail($request->doctor_id);
@@ -344,8 +367,12 @@ class AvailabilityController extends Controller
     {
         $doctor = auth()->user();
         
-        if (!$doctor->isDoctor()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+        if (!$doctor || !$doctor->isDoctor()) {
+            \Log::warning('Unauthorized quick set availability attempt', [
+                'user_id' => $doctor->id ?? 'unknown',
+                'ip' => $request->ip(),
+            ]);
+            return response()->json(['error' => 'Unauthorized', 'message' => 'Only doctors can access this'], 403);
         }
 
         $validated = $request->validate([
@@ -590,13 +617,16 @@ class AvailabilityController extends Controller
             ], 422);
         } catch (\Exception $e) {
             \Log::error('getDateAvailability error: ' . $e->getMessage());
-            \Log::error('getDateAvailability file: ' . $e->getFile() . ':' . $e->getLine());
-            \Log::error('getDateAvailability trace: ' . substr($e->getTraceAsString(), 0, 1000)); // Limit trace length
             
-            $errorMessage = 'An error occurred while loading availability';
+            // Only log detailed info in debug mode
             if (config('app.debug')) {
-                $errorMessage = $e->getMessage() . ' in ' . basename($e->getFile()) . ':' . $e->getLine();
+                \Log::error('getDateAvailability file: ' . $e->getFile() . ':' . $e->getLine());
+                \Log::error('getDateAvailability trace: ' . substr($e->getTraceAsString(), 0, 1000));
             }
+            
+            $errorMessage = config('app.debug') 
+                ? $e->getMessage() . ' in ' . basename($e->getFile()) . ':' . $e->getLine()
+                : 'An error occurred while loading availability. Please try again.';
             
             return response()->json([
                 'error' => 'Failed to load availability',

@@ -51,9 +51,12 @@ class Subdomain extends Model
 
     public function isSubscriptionActive(): bool
     {
-        return $this->subscriptions()
-            ->where('status', 'active')
-            ->where('end_date', '>=', now())
-            ->exists();
+        // Cache the result for 5 minutes to avoid repeated queries
+        return cache()->remember("subdomain_{$this->id}_subscription_active", 300, function() {
+            return $this->subscriptions()
+                ->where('status', 'active')
+                ->where('end_date', '>=', now())
+                ->exists();
+        });
     }
 }

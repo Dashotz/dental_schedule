@@ -161,7 +161,7 @@
 </div>
 
 <!-- Modals -->
-@include('admin.subscriptions.partials.create-modal')
+@include('main-site.admin.subscriptions.partials.create-modal')
 <div id="viewSubdomainModalContainer"></div>
 @endsection
 

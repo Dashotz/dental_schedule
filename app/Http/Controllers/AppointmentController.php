@@ -18,17 +18,23 @@ class AppointmentController extends Controller
             ->latest('appointment_date')
             ->paginate(20);
         
-        return view('appointment.index', compact('appointments'));
+        return view('subdomain-template.appointment.index', compact('appointments'));
     }
 
     public function create()
     {
-        $patients = Patient::orderBy('first_name')->get();
-        $doctors = User::where('role', 'doctor')->where('is_active', true)->get();
+        // Cache patients and doctors lists since they're used in dropdowns
+        $patients = cache()->remember('patients_list', 1800, function() {
+            return Patient::orderBy('first_name')->get(['id', 'first_name', 'last_name']);
+        });
+        
+        $doctors = cache()->remember('doctors_list', 1800, function() {
+            return User::where('is_active', true)->get(['id', 'name']);
+        });
         
         $selectedPatientId = request('patient_id');
         
-        return view('appointment.create', compact('patients', 'doctors', 'selectedPatientId'));
+        return view('subdomain-template.appointment.create', compact('patients', 'doctors', 'selectedPatientId'));
     }
 
     public function store(Request $request)
@@ -61,26 +67,56 @@ class AppointmentController extends Controller
             'created_by' => auth()->id(),
         ]);
 
+        // Clear dashboard cache if exists
+        cache()->forget('dashboard_stats');
+
         return redirect()->route('appointments.show', $appointment)
             ->with('success', 'Appointment created successfully.');
     }
 
     public function show(Appointment $appointment)
     {
+        // Authorization check: Only allow access if user is the doctor or created the appointment
+        $user = auth()->user();
+        if ($appointment->doctor_id && $appointment->doctor_id !== $user->id && 
+            $appointment->created_by !== $user->id) {
+            abort(403, 'Unauthorized access to this appointment.');
+        }
+        
         $appointment->load(['patient', 'doctor', 'createdBy', 'treatments']);
-        return view('appointment.show', compact('appointment'));
+        return view('subdomain-template.appointment.show', compact('appointment'));
     }
 
     public function edit(Appointment $appointment)
     {
-        $patients = Patient::orderBy('first_name')->get();
-        $doctors = User::where('role', 'doctor')->where('is_active', true)->get();
+        // Authorization check: Only allow access if user is the doctor or created the appointment
+        $user = auth()->user();
+        if ($appointment->doctor_id && $appointment->doctor_id !== $user->id && 
+            $appointment->created_by !== $user->id) {
+            abort(403, 'Unauthorized access to this appointment.');
+        }
         
-        return view('appointment.edit', compact('appointment', 'patients', 'doctors'));
+        // Use cached lists
+        $patients = cache()->remember('patients_list', 1800, function() {
+            return Patient::orderBy('first_name')->get(['id', 'first_name', 'last_name']);
+        });
+        
+        $doctors = cache()->remember('doctors_list', 1800, function() {
+            return User::where('is_active', true)->get(['id', 'name']);
+        });
+        
+        return view('subdomain-template.appointment.edit', compact('appointment', 'patients', 'doctors'));
     }
 
     public function update(Request $request, Appointment $appointment)
     {
+        // Authorization check: Only allow access if user is the doctor or created the appointment
+        $user = auth()->user();
+        if ($appointment->doctor_id && $appointment->doctor_id !== $user->id && 
+            $appointment->created_by !== $user->id) {
+            abort(403, 'Unauthorized access to this appointment.');
+        }
+        
         $validated = $request->validate([
             'patient_id' => ['required', 'exists:patients,id'],
             'doctor_id' => ['nullable', 'exists:users,id'],
@@ -108,13 +144,26 @@ class AppointmentController extends Controller
             'notes' => $sanitized['notes'] ?? null,
         ]);
 
+        // Clear dashboard cache if exists
+        cache()->forget('dashboard_stats');
+
         return redirect()->route('appointments.show', $appointment)
             ->with('success', 'Appointment updated successfully.');
     }
 
     public function destroy(Appointment $appointment)
     {
+        // Authorization check: Only allow access if user is the doctor or created the appointment
+        $user = auth()->user();
+        if ($appointment->doctor_id && $appointment->doctor_id !== $user->id && 
+            $appointment->created_by !== $user->id) {
+            abort(403, 'Unauthorized access to this appointment.');
+        }
+        
         $appointment->delete();
+
+        // Clear dashboard cache if exists
+        cache()->forget('dashboard_stats');
 
         return redirect()->route('appointments.index')
             ->with('success', 'Appointment deleted successfully.');

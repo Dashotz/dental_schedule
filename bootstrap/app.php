@@ -11,10 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Add security headers globally
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
+        
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'subdomain.check' => \App\Http\Middleware\CheckSubdomainStatus::class,
             'parent.domain' => \App\Http\Middleware\EnsureParentDomain::class,
+            'restrict.login.port' => \App\Http\Middleware\RestrictLoginToPort::class,
+            'restrict.port' => \App\Http\Middleware\RestrictToPort::class,
+            'account.lockout' => \App\Http\Middleware\AccountLockout::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

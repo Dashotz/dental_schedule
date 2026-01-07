@@ -46,20 +46,24 @@ class ReportsController extends Controller
             ->groupBy('billing_cycle')
             ->get();
 
-        // Monthly revenue breakdown
-        $monthlyRevenue = [];
-        for ($i = 11; $i >= 0; $i--) {
-            $month = now()->subMonths($i);
-            $revenue = Subscription::whereMonth('last_payment_date', $month->month)
-                ->whereYear('last_payment_date', $month->year)
-                ->sum('amount');
-            $monthlyRevenue[] = [
-                'month' => $month->format('M Y'),
-                'revenue' => $revenue
+        // Monthly revenue breakdown - optimized with single query
+        $monthlyRevenue = Subscription::selectRaw('
+            DATE_FORMAT(last_payment_date, "%Y-%m") as month,
+            SUM(amount) as revenue
+        ')
+        ->where('last_payment_date', '>=', now()->subMonths(11)->startOfMonth())
+        ->whereNotNull('last_payment_date')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get()
+        ->map(function($item) {
+            return [
+                'month' => Carbon::createFromFormat('Y-m', $item->month)->format('M Y'),
+                'revenue' => $item->revenue
             ];
-        }
+        })->toArray();
 
-        return view('admin.reports.index', compact(
+        return view('main-site.admin.reports.index', compact(
             'revenueData',
             'subscriptionGrowth',
             'subdomainGrowth',
@@ -107,20 +111,24 @@ class ReportsController extends Controller
         // Average subscription value
         $avgSubscriptionValue = Subscription::avg('amount');
 
-        // Revenue trends (last 6 months)
-        $revenueTrends = [];
-        for ($i = 5; $i >= 0; $i--) {
-            $month = now()->subMonths($i);
-            $revenue = Subscription::whereMonth('last_payment_date', $month->month)
-                ->whereYear('last_payment_date', $month->year)
-                ->sum('amount');
-            $revenueTrends[] = [
-                'month' => $month->format('M'),
-                'revenue' => $revenue
+        // Revenue trends (last 6 months) - optimized with single query
+        $revenueTrends = Subscription::selectRaw('
+            DATE_FORMAT(last_payment_date, "%Y-%m") as month,
+            SUM(amount) as revenue
+        ')
+        ->where('last_payment_date', '>=', now()->subMonths(5)->startOfMonth())
+        ->whereNotNull('last_payment_date')
+        ->groupBy('month')
+        ->orderBy('month')
+        ->get()
+        ->map(function($item) {
+            return [
+                'month' => Carbon::createFromFormat('Y-m', $item->month)->format('M'),
+                'revenue' => $item->revenue
             ];
-        }
+        })->toArray();
 
-        return view('admin.insights.index', compact(
+        return view('main-site.admin.insights.index', compact(
             'subscriptionStatus',
             'planDistribution',
             'billingCycleDistribution',

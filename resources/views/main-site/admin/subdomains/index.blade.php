@@ -88,11 +88,8 @@
                             </td>
                             <td class="px-4 py-4 whitespace-nowrap text-center">
                                 @php
-                                    $activeSub = $subdomain->subscriptions
-                                        ->where('status', 'active')
-                                        ->where('end_date', '>=', now())
-                                        ->sortByDesc('end_date')
-                                        ->first();
+                                    // Use already eager-loaded subscriptions (already filtered in controller)
+                                    $activeSub = $subdomain->subscriptions->first();
                                 @endphp
                                 @if($activeSub)
                                     <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded text-xs font-medium bg-green-100 text-green-800">
@@ -143,8 +140,8 @@
 </div>
 
 <!-- Modals -->
-@include('admin.subdomains.partials.create-modal')
-@include('admin.subdomains.partials.edit-modal')
+@include('main-site.admin.subdomains.partials.create-modal')
+@include('main-site.admin.subdomains.partials.edit-modal')
 <div id="viewSubdomainModalContainer"></div>
 @endsection
 

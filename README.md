@@ -50,11 +50,60 @@ This system provides a complete solution for managing dental clinic operations, 
 
 ## Technology Stack
 
-- **Backend Framework**: Modern PHP framework
-- **Database**: MySQL
-- **Frontend**: Bootstrap, jQuery
+- **Backend Framework**: Laravel (Modern PHP framework)
+- **Database**: SQLite (development) / MySQL (production)
+- **Frontend**: Tailwind CSS, Blade Templates
 - **UI Components**: Modern responsive design
 - **Security**: Role-based authentication and authorization
+
+## Running the Application
+
+This application requires **two separate servers** to run:
+
+### Port Configuration
+- **Port 8000**: Public/Index page (accessible to everyone)
+- **Port 9000**: Login and Admin Panel (restricted access)
+
+### Quick Start
+
+#### Windows
+Run the batch file:
+```bash
+start-servers.bat
+```
+
+#### Linux/Mac
+Run the shell script:
+```bash
+chmod +x start-servers.sh
+./start-servers.sh
+```
+
+### Manual Start
+
+Start both servers in separate terminal windows:
+
+**Terminal 1 (Public Site - Port 8000):**
+```bash
+php artisan serve --port=8000
+```
+
+**Terminal 2 (Login/Admin - Port 9000):**
+```bash
+php artisan serve --port=9000
+```
+
+### Access Points
+
+- **Public Site**: http://127.0.0.1:8000
+- **Login Page**: http://127.0.0.1:9000/login
+- **Admin Dashboard**: http://127.0.0.1:9000/admin/dashboard (after login)
+
+### Important Notes
+
+- Login routes are **only accessible on port 9000**
+- Attempting to access `/login` on port 8000 will result in a 403 error
+- The login button on the public site (port 8000) automatically redirects to port 9000
 
 ## Project Structure
 

@@ -34,9 +34,16 @@ class RegistrationLink extends Model
         return $this->belongsTo(Subdomain::class);
     }
 
-    public function createdBy(): BelongsTo
+    public function createdBy()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        // Check if created_by exists in admins table first, then users
+        // This is a workaround since created_by can reference either admins or users
+        $admin = \App\Models\Admin::find($this->created_by);
+        if ($admin) {
+            return $admin;
+        }
+        $user = \App\Models\User::find($this->created_by);
+        return $user;
     }
 
     public function isUsable(): bool
@@ -55,6 +62,15 @@ class RegistrationLink extends Model
         }
 
         return true;
+    }
+
+    /**
+     * Check if token is cryptographically secure (minimum length check)
+     */
+    public static function isValidTokenFormat(string $token): bool
+    {
+        // Token should be at least 32 characters for security
+        return strlen($token) >= 32 && ctype_alnum($token);
     }
 
     public static function generateToken(): string

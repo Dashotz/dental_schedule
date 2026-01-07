@@ -9,17 +9,38 @@ class RegistrationLinkController extends Controller
 {
     public function showRegistrationForm($token)
     {
+        // Security: Validate token format first
+        if (!RegistrationLink::isValidTokenFormat($token)) {
+            \Log::warning('Invalid registration token format attempted', [
+                'token_length' => strlen($token),
+                'ip' => request()->ip(),
+            ]);
+            abort(404, 'Registration link not found or expired.');
+        }
+
         $registrationLink = RegistrationLink::where('token', $token)
             ->where('is_active', true)
             ->first();
 
         // Guard: Check if link exists
         if (!$registrationLink) {
+            \Log::warning('Registration link not found', [
+                'token_prefix' => substr($token, 0, 8) . '...',
+                'ip' => request()->ip(),
+            ]);
             abort(404, 'Registration link not found or expired.');
         }
 
         // Guard: Check if link is usable
         if (!$registrationLink->isUsable()) {
+            \Log::info('Registration link access denied - not usable', [
+                'link_id' => $registrationLink->id,
+                'is_active' => $registrationLink->is_active,
+                'used_count' => $registrationLink->used_count,
+                'max_uses' => $registrationLink->max_uses,
+                'expires_at' => $registrationLink->expires_at,
+                'ip' => request()->ip(),
+            ]);
             abort(403, 'This registration link has expired or reached its usage limit.');
         }
 
@@ -42,10 +63,10 @@ class RegistrationLinkController extends Controller
         }
 
         // Get available doctors for this subdomain (or all active doctors if no subdomain)
-        $doctors = \App\Models\User::where('role', 'doctor')
+        $doctors = \App\Models\User::where('is_active', true)
             ->where('is_active', true)
             ->get();
 
-        return view('patient.register', compact('registrationLink', 'doctors'));
+        return view('subdomain-template.register', compact('registrationLink', 'doctors'));
     }
 }
