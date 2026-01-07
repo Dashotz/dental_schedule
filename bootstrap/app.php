@@ -14,7 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         // Add security headers globally
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
         
+        // Use custom authenticate middleware
         $middleware->alias([
+            'auth' => \App\Http\Middleware\Authenticate::class,
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'subdomain.check' => \App\Http\Middleware\CheckSubdomainStatus::class,
             'subdomain.view' => \App\Http\Middleware\SetSubdomainViewPath::class,
@@ -26,5 +28,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Handle unauthenticated exceptions - redirect to appropriate login
+        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, \Illuminate\Http\Request $request) {
+            if ($request->is('admin/*')) {
+                return redirect()->route('admin.login');
+            }
+            return redirect()->route('doctor.login');
+        });
     })->create();

@@ -5,15 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\Invoice;
+use App\Services\Tenant\TenantContext;
 use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
     use UsesSubdomainViews;
     public function index()
     {
+        $subdomainId = TenantContext::getSubdomainId();
+        $cacheKey = TenantContext::getCacheKey('dashboard_stats', $subdomainId);
+        
+        // Try to get cached dashboard stats (cache for 5 minutes)
+        $cachedStats = Cache::get($cacheKey);
+        
+        if ($cachedStats) {
+            return $this->subdomainView('dashboard', $cachedStats);
+        }
+        
         $today = Carbon::today();
         $startOfWeek = $today->copy()->startOfWeek();
         $endOfWeek = $today->copy()->endOfWeek();
@@ -55,8 +67,8 @@ class DashboardController extends Controller
 
         // Recent patients
         $recentPatients = Patient::latest()->limit(5)->get();
-
-        return $this->subdomainView('dashboard', compact(
+        
+        $data = compact(
             'todayAppointments',
             'weekAppointments',
             'upcomingAppointments',
@@ -65,6 +77,11 @@ class DashboardController extends Controller
             'todayAppointmentsCount',
             'pendingAppointments',
             'recentPatients'
-        ));
+        );
+        
+        // Cache the dashboard stats for 5 minutes
+        Cache::put($cacheKey, $data, 300);
+
+        return $this->subdomainView('dashboard', $data);
     }
 }

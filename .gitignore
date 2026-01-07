@@ -25,3 +25,18 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Test files
+test_*.php
+tests/EndpointTest.php
+
+# Temporary/development files
+replace-bootstrap-icons.php
+scripts/generate-tooth-assets.php
+
+# Database files (development)
+database/*.sqlite
+database/*.sqlite-journal
+
+# Documentation (keep only essential)
+IMPLEMENTATION_PROGRESS.md

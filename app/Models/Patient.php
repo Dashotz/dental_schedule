@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\HasSubdomain;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Patient extends Model
 {
+    use HasSubdomain;
+
     protected $fillable = [
+        'subdomain_id',
         'first_name',
         'last_name',
         'date_of_birth',

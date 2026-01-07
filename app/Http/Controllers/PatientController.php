@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Patient;
 use App\Models\Appointment;
 use App\Models\RegistrationLink;
+use App\Services\Tenant\TenantContext;
+use App\Services\Patient\PatientService;
+use App\Http\Requests\Patient\UpdateRequest;
 use App\Traits\SanitizesInput;
 use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
@@ -15,6 +18,13 @@ use Illuminate\Validation\Rule;
 class PatientController extends Controller
 {
     use SanitizesInput, UsesSubdomainViews;
+
+    protected PatientService $patientService;
+
+    public function __construct(PatientService $patientService)
+    {
+        $this->patientService = $patientService;
+    }
 
     public function showRegistrationForm()
     {
@@ -168,8 +178,15 @@ class PatientController extends Controller
         try {
             DB::beginTransaction();
 
+            // Get current subdomain
+            $subdomain = TenantContext::getCurrentSubdomain();
+            if (!$subdomain && $registrationLink) {
+                $subdomain = $registrationLink->subdomain;
+            }
+
             // Create patient with sanitized data
             $patient = Patient::create([
+                'subdomain_id' => $subdomain?->id,
                 'first_name' => $sanitized['first_name'],
                 'last_name' => $sanitized['last_name'],
                 'date_of_birth' => $sanitized['date_of_birth'] ?? null,
@@ -192,6 +209,7 @@ class PatientController extends Controller
 
             // Create appointment with assigned doctor
             $appointment = Appointment::create([
+                'subdomain_id' => $subdomain?->id,
                 'patient_id' => $patient->id,
                 'doctor_id' => $availableDoctor->id,
                 'appointment_date' => $appointmentDateTime,
@@ -217,9 +235,12 @@ class PatientController extends Controller
 
             DB::commit();
 
-            // Clear caches
-            cache()->forget('patients_list');
-            cache()->forget('dashboard_stats');
+            // Clear tenant-specific caches
+            $subdomainId = TenantContext::getSubdomainId();
+            if ($subdomainId) {
+                cache()->forget(TenantContext::getCacheKey('patients_list', $subdomainId));
+                cache()->forget(TenantContext::getCacheKey('dashboard_stats', $subdomainId));
+            }
 
             return redirect()->route('home')
                 ->with('success', 'Registration and appointment booking successful! Your appointment is scheduled for ' . $appointment->appointment_date->format('F d, Y \a\t g:i A'));
@@ -305,11 +326,19 @@ class PatientController extends Controller
             return [];
         }
 
+        // Get current subdomain for filtering
+        $subdomain = TenantContext::getCurrentSubdomain();
+        
         // Get blocked slots from the new blocked_slots table
-        $blockedSlots = \DB::table('blocked_slots')
+        $blockedSlotsQuery = \DB::table('blocked_slots')
             ->where('doctor_id', $doctorId)
-            ->where('slot_date', $date->format('Y-m-d'))
-            ->get()
+            ->where('slot_date', $date->format('Y-m-d'));
+        
+        if ($subdomain) {
+            $blockedSlotsQuery->where('subdomain_id', $subdomain->id);
+        }
+        
+        $blockedSlots = $blockedSlotsQuery->get()
             ->map(function($block) {
                 $startTime = $block->slot_start_time;
                 $endTime = $block->slot_end_time;
@@ -504,15 +533,8 @@ class PatientController extends Controller
 
     public function show(Patient $patient)
     {
-        // Authorization: Ensure user is authenticated (doctor)
-        // Note: Route already has auth:web middleware, but adding explicit check for security
-        if (!auth()->check()) {
-            \Log::warning('Unauthorized patient view attempt', [
-                'patient_id' => $patient->id,
-                'ip' => request()->ip(),
-            ]);
-            abort(403, 'Unauthorized access.');
-        }
+        // Authorization via policy
+        $this->authorize('view', $patient);
         
         $patient->load(['appointments', 'treatmentPlans', 'teethRecords', 'treatments']);
         
@@ -529,6 +551,9 @@ class PatientController extends Controller
 
     public function edit(Patient $patient)
     {
+        // Authorization via policy
+        $this->authorize('update', $patient);
+        
         // If AJAX request, return modal content
         if (request()->ajax()) {
             return response()->json([
@@ -539,37 +564,16 @@ class PatientController extends Controller
         return $this->subdomainView('patient.edit', compact('patient'));
     }
 
-    public function update(Request $request, Patient $patient)
+    public function update(UpdateRequest $request, Patient $patient)
     {
-        $validated = $request->validate([
-            'first_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s\-\']+$/'],
-            'last_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s\-\']+$/'],
-            'date_of_birth' => ['nullable', 'date', 'before:today'],
-            'gender' => ['nullable', Rule::in(['male', 'female', 'other'])],
-            'email' => ['nullable', 'email', 'max:255'],
-            'phone' => ['required', 'string', 'max:20', 'regex:/^[\d\s\-\+\(\)]+$/'],
-            'phone_alt' => ['nullable', 'string', 'max:20', 'regex:/^[\d\s\-\+\(\)]+$/'],
-            'address' => ['nullable', 'string', 'max:500'],
-            'city' => ['nullable', 'string', 'max:255', 'regex:/^[a-zA-Z\s\-\']+$/'],
-            'state' => ['nullable', 'string', 'max:255', 'regex:/^[a-zA-Z\s\-\']+$/'],
-            'zip_code' => ['nullable', 'string', 'max:20', 'regex:/^[\d\w\s\-]+$/'],
-            'emergency_contact_name' => ['nullable', 'string', 'max:255', 'regex:/^[a-zA-Z\s\-\']+$/'],
-            'emergency_contact_phone' => ['nullable', 'string', 'max:20', 'regex:/^[\d\s\-\+\(\)]+$/'],
-            'medical_history' => ['nullable', 'string', 'max:2000'],
-            'allergies' => ['nullable', 'string', 'max:1000'],
-            'medications' => ['nullable', 'string', 'max:1000'],
-            'insurance_provider' => ['nullable', 'string', 'max:255'],
-            'insurance_policy_number' => ['nullable', 'string', 'max:255'],
-            'notes' => ['nullable', 'string', 'max:1000'],
-        ]);
+        // Authorization via policy
+        $this->authorize('update', $patient);
 
         // Sanitize inputs
-        $sanitized = $this->sanitizeInput($validated);
-        $patient->update($sanitized);
-
-        // Clear caches
-        cache()->forget('patients_list');
-        cache()->forget('dashboard_stats');
+        $sanitized = $this->sanitizeInput($request->validated());
+        
+        // Use service to update patient
+        $this->patientService->update($patient, $sanitized);
 
         // If AJAX request, return JSON response
         if (request()->ajax()) {

@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\HasSubdomain;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TeethRecord extends Model
 {
+    use HasSubdomain;
+
     protected $fillable = [
+        'subdomain_id',
         'patient_id',
         'tooth_number',
         'condition',

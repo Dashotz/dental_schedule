@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\HasSubdomain;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Quote extends Model
 {
+    use HasSubdomain;
+
     protected $fillable = [
+        'subdomain_id',
         'patient_id',
         'treatment_plan_id',
         'created_by',

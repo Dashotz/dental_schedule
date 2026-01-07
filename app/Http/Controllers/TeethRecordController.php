@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Patient;
 use App\Models\TeethRecord;
+use App\Services\Tenant\TenantContext;
 use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -17,6 +18,9 @@ class TeethRecordController extends Controller
         if (!auth()->check()) {
             abort(403, 'Unauthorized access.');
         }
+        
+        // Explicit subdomain ownership check
+        TenantContext::verifyOwnership($patient, 'Patient');
         
         $teethRecords = TeethRecord::where('patient_id', $patient->id)->get()->keyBy('tooth_number');
         return $this->subdomainView('patient.teeth-chart', compact('patient', 'teethRecords'));
@@ -32,6 +36,9 @@ class TeethRecordController extends Controller
             ]);
             abort(403, 'Unauthorized access.');
         }
+        
+        // Explicit subdomain ownership check
+        TenantContext::verifyOwnership($patient, 'Patient');
         
         $validated = $request->validate([
             'tooth_number' => ['required', 'integer', 'in:11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48'],
@@ -73,6 +80,9 @@ class TeethRecordController extends Controller
             ]);
             return response()->json(['error' => 'Unauthorized'], 403);
         }
+        
+        // Explicit subdomain ownership check
+        TenantContext::verifyOwnership($patient, 'Patient');
         
         // Validate tooth number format
         $validToothNumbers = [11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48];
