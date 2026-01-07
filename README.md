@@ -58,11 +58,25 @@ This system provides a complete solution for managing dental clinic operations, 
 
 ## Running the Application
 
-This application requires **two separate servers** to run:
+### Development Mode (Port-Based)
 
-### Port Configuration
+This application can run with **two separate servers** for development:
+
+#### Port Configuration
 - **Port 8000**: Public/Index page (accessible to everyone)
 - **Port 9000**: Login and Admin Panel (restricted access)
+- **Port 10000+**: Individual clinic subdomains
+
+### Production Mode (Subdomain-Based)
+
+For production hosting, the application uses **subdomain-based routing**:
+- **yourdomain.com**: Main site
+- **admin.yourdomain.com**: Admin panel
+- **clinic1.yourdomain.com**: Clinic 1 subdomain
+- **clinic2.yourdomain.com**: Clinic 2 subdomain
+- etc.
+
+See `FREE_HOSTING_ALTERNATIVES.md` for free hosting options and `MIGRATION_TO_FREE_HOSTING.md` for migration guide.
 
 ### Quick Start
 
