@@ -11,6 +11,7 @@ class Subdomain extends Model
 {
     protected $fillable = [
         'subdomain',
+        'port',
         'name',
         'description',
         'email',

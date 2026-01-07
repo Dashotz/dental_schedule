@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Subdomain;
 use App\Models\Subscription;
+use App\Services\SubdomainServerService;
+use App\Services\SubdomainTemplateService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -36,29 +38,66 @@ class SubdomainController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'subdomain' => ['required', 'string', 'max:63', 'min:3', 'unique:subdomains,subdomain', 'regex:/^[a-z0-9\-]+$/', 'not_in:www,mail,ftp,localhost,admin,api,app,test,dev,staging,production'],
+            'subdomain' => [
+                'required', 
+                'string', 
+                'max:63', 
+                'min:3', 
+                'unique:subdomains,subdomain', 
+                'regex:/^[a-z0-9\-]+$/', 
+                'not_in:www,mail,ftp,localhost,admin,api,app,test,dev,staging,production'
+            ],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
+        ], [
+            'subdomain.regex' => 'The subdomain may only contain lowercase letters, numbers, and hyphens.',
+            'subdomain.not_in' => 'The subdomain name "test" is reserved and cannot be used. Please choose a different name.',
+            'subdomain.unique' => 'This subdomain name is already taken. Please choose a different name.',
+            'subdomain.min' => 'The subdomain must be at least 3 characters long.',
+            'subdomain.max' => 'The subdomain may not be greater than 63 characters.',
         ]);
 
+        // Automatically assign port (starting at 10000, incrementing by 1000)
+        $port = SubdomainServerService::getNextAvailablePort(10000, 1000);
+        $validated['port'] = $port;
+
         $subdomain = Subdomain::create($validated);
+        
+        // Duplicate subdomain-template folder for this subdomain
+        $templateDuplicated = SubdomainTemplateService::duplicateTemplate($subdomain);
+        
+        // Automatically start server for the new subdomain
+        $serverStarted = SubdomainServerService::startServer($subdomain);
         
         // Clear subdomains cache when new subdomain is created
         cache()->forget('subdomains_list');
 
+        $message = 'Subdomain created successfully.';
+        if ($templateDuplicated) {
+            $templateFolder = SubdomainTemplateService::getViewPath($subdomain);
+            $message .= " Template folder created: {$templateFolder}.";
+        }
+        if ($serverStarted) {
+            $message .= " Server started on port {$port}. Access at: http://127.0.0.1:{$port}";
+        } else {
+            $message .= " Port {$port} assigned, but server could not be started automatically.";
+        }
+
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Subdomain created successfully.',
-                'subdomain' => $subdomain
+                'message' => $message,
+                'subdomain' => $subdomain->fresh(),
+                'port' => $port,
+                'url' => "http://127.0.0.1:{$port}"
             ]);
         }
 
         return redirect()->route('admin.subdomains.index')
-            ->with('success', 'Subdomain created successfully.');
+            ->with('success', $message);
     }
 
     public function show(Subdomain $subdomain)
@@ -88,12 +127,26 @@ class SubdomainController extends Controller
     public function update(Request $request, Subdomain $subdomain)
     {
         $validated = $request->validate([
-            'subdomain' => ['required', 'string', 'max:63', 'min:3', 'unique:subdomains,subdomain,' . $subdomain->id, 'regex:/^[a-z0-9\-]+$/', 'not_in:www,mail,ftp,localhost,admin,api,app,test,dev,staging,production'],
+            'subdomain' => [
+                'required', 
+                'string', 
+                'max:63', 
+                'min:3', 
+                'unique:subdomains,subdomain,' . $subdomain->id, 
+                'regex:/^[a-z0-9\-]+$/', 
+                'not_in:www,mail,ftp,localhost,admin,api,app,test,dev,staging,production'
+            ],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
             'address' => ['nullable', 'string', 'max:500'],
+        ], [
+            'subdomain.regex' => 'The subdomain may only contain lowercase letters, numbers, and hyphens.',
+            'subdomain.not_in' => 'The subdomain name "test" is reserved and cannot be used. Please choose a different name.',
+            'subdomain.unique' => 'This subdomain name is already taken. Please choose a different name.',
+            'subdomain.min' => 'The subdomain must be at least 3 characters long.',
+            'subdomain.max' => 'The subdomain may not be greater than 63 characters.',
         ]);
 
         $subdomain->update($validated);
@@ -188,6 +241,9 @@ class SubdomainController extends Controller
 
     public function destroy(Subdomain $subdomain)
     {
+        // Delete the subdomain template folder
+        SubdomainTemplateService::deleteTemplate($subdomain);
+        
         // Delete related registration links
         $subdomain->registrationLinks()->delete();
         

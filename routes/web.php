@@ -22,6 +22,15 @@ Route::get('/', function () {
         return view('main-site.index');
     } elseif ($port == 8000) {
         return view('subdomain-template.index');
+    } elseif ($port >= 10000) {
+        // Port-based subdomain access (10000+)
+        // The CheckSubdomainStatus middleware will handle finding the subdomain by port
+        $subdomain = request()->attributes->get('current_subdomain');
+        if ($subdomain) {
+            $viewPath = \App\Services\SubdomainTemplateService::getViewPath($subdomain);
+            return view($viewPath . '.index');
+        }
+        return view('subdomain-template.index');
     }
     abort(403, 'Invalid port access');
 })->middleware('subdomain.check')->name('home');
@@ -34,16 +43,16 @@ Route::middleware(['restrict.port:9000'])->group(function () {
     Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 });
 
-// Doctor authentication routes (restricted to port 8000 only - subdomain-template)
-Route::middleware(['restrict.port:8000'])->group(function () {
+// Doctor authentication routes (accessible on port 8000 or subdomain-specific ports 10000+)
+Route::middleware(['allow.subdomain.ports'])->group(function () {
     Route::get('/doctor/login', [DoctorLoginController::class, 'showLoginForm'])->name('doctor.login');
     Route::post('/doctor/login', [DoctorLoginController::class, 'login'])
         ->middleware(['throttle:5,1', 'account.lockout']); // 5 attempts per minute + account lockout
     Route::post('/doctor/logout', [DoctorLoginController::class, 'logout'])->name('doctor.logout');
 });
 
-// Public routes (subdomain-template - restricted to port 8000)
-Route::middleware(['restrict.port:8000', 'subdomain.check'])->group(function () {
+// Public routes (accessible on port 8000 or subdomain-specific ports 10000+)
+Route::middleware(['allow.subdomain.ports', 'subdomain.check'])->group(function () {
 
     // Patient registration via special link only
     Route::get('/register/{token}', [RegistrationLinkController::class, 'showRegistrationForm'])
@@ -101,8 +110,8 @@ Route::middleware(['auth:admin', 'restrict.port:9000', 'role:admin'])->prefix('a
         Route::get('/insights', [ReportsController::class, 'insights'])->name('insights.index');
 });
 
-// Doctor routes (subdomain-template - restricted to port 8000)
-Route::middleware(['auth:web', 'restrict.port:8000', 'subdomain.check'])->group(function () {
+// Doctor routes (accessible on port 8000 or subdomain-specific ports 10000+)
+Route::middleware(['auth:web', 'allow.subdomain.ports', 'subdomain.check'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         
         // Patients
@@ -116,8 +125,8 @@ Route::middleware(['auth:web', 'restrict.port:8000', 'subdomain.check'])->group(
         Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
 });
 
-// Doctor only routes (subdomain-template - restricted to port 8000)
-Route::middleware(['auth:web', 'restrict.port:8000', 'subdomain.check', 'role:doctor'])->group(function () {
+// Doctor only routes (accessible on port 8000 or subdomain-specific ports 10000+)
+Route::middleware(['auth:web', 'allow.subdomain.ports', 'subdomain.check', 'role:doctor'])->group(function () {
         // Availability management - specific routes must come BEFORE resource route
         Route::get('/availability/date-availability', [AvailabilityController::class, 'getDateAvailability'])->name('availability.date-availability');
         Route::post('/availability/quick-set', [AvailabilityController::class, 'quickSetAvailability'])->name('availability.quick-set');

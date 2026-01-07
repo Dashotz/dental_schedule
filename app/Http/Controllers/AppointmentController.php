@@ -6,11 +6,12 @@ use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\User;
 use App\Traits\SanitizesInput;
+use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 
 class AppointmentController extends Controller
 {
-    use SanitizesInput;
+    use SanitizesInput, UsesSubdomainViews;
 
     public function index()
     {
@@ -18,7 +19,7 @@ class AppointmentController extends Controller
             ->latest('appointment_date')
             ->paginate(20);
         
-        return view('subdomain-template.appointment.index', compact('appointments'));
+        return $this->subdomainView('appointment.index', compact('appointments'));
     }
 
     public function create()
@@ -34,7 +35,7 @@ class AppointmentController extends Controller
         
         $selectedPatientId = request('patient_id');
         
-        return view('subdomain-template.appointment.create', compact('patients', 'doctors', 'selectedPatientId'));
+        return $this->subdomainView('appointment.create', compact('patients', 'doctors', 'selectedPatientId'));
     }
 
     public function store(Request $request)
@@ -84,7 +85,7 @@ class AppointmentController extends Controller
         }
         
         $appointment->load(['patient', 'doctor', 'createdBy', 'treatments']);
-        return view('subdomain-template.appointment.show', compact('appointment'));
+        return $this->subdomainView('appointment.show', compact('appointment'));
     }
 
     public function edit(Appointment $appointment)
@@ -105,7 +106,7 @@ class AppointmentController extends Controller
             return User::where('is_active', true)->get(['id', 'name']);
         });
         
-        return view('subdomain-template.appointment.edit', compact('appointment', 'patients', 'doctors'));
+        return $this->subdomainView('appointment.edit', compact('appointment', 'patients', 'doctors'));
     }
 
     public function update(Request $request, Appointment $appointment)

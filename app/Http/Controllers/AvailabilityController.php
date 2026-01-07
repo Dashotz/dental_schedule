@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DoctorAvailability;
 use App\Models\User;
+use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Schema;
@@ -12,6 +13,7 @@ use Carbon\Carbon;
 
 class AvailabilityController extends Controller
 {
+    use UsesSubdomainViews;
     public function index()
     {
         $doctor = auth()->user();
@@ -26,7 +28,7 @@ class AvailabilityController extends Controller
             ->orderBy('start_time')
             ->get();
 
-        return view('subdomain-template.availability.index', compact('availabilities', 'doctor'));
+        return $this->subdomainView('availability.index', compact('availabilities', 'doctor'));
     }
 
     public function create()
@@ -37,7 +39,7 @@ class AvailabilityController extends Controller
             abort(403, 'Only doctors can manage availability');
         }
 
-        return view('subdomain-template.availability.create');
+        return $this->subdomainView('availability.create');
     }
 
     public function store(Request $request)
@@ -83,7 +85,7 @@ class AvailabilityController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        return view('subdomain-template.availability.edit', compact('availability'));
+        return $this->subdomainView('availability.edit', compact('availability'));
     }
 
     public function update(Request $request, DoctorAvailability $availability)

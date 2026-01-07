@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\Invoice;
+use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
+    use UsesSubdomainViews;
     public function index()
     {
         $today = Carbon::today();
@@ -54,7 +56,7 @@ class DashboardController extends Controller
         // Recent patients
         $recentPatients = Patient::latest()->limit(5)->get();
 
-        return view('subdomain-template.dashboard', compact(
+        return $this->subdomainView('dashboard', compact(
             'todayAppointments',
             'weekAppointments',
             'upcomingAppointments',

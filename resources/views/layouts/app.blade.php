@@ -14,17 +14,24 @@
     @stack('styles')
 </head>
 <body class="bg-gray-50">
-    @if(auth('admin')->check() || auth('web')->check())
+    @php
+        $port = request()->getPort();
+        $isSubdomainPort = $port >= 10000;
+        $showAdminSidebar = auth('admin')->check() && !$isSubdomainPort;
+        $showDoctorSidebar = auth('web')->check();
+    @endphp
+    
+    @if($showAdminSidebar || $showDoctorSidebar)
         <!-- Sidebar Overlay for Mobile -->
         <div class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden transition-opacity duration-300" id="sidebarOverlay"></div>
 
         <!-- Sidebar -->
-        <aside class="fixed top-0 left-0 h-screen w-64 text-white transition-all duration-300 z-50 shadow-2xl overflow-y-auto scrollbar-dental lg:translate-x-0 -translate-x-full {{ (auth('admin')->check() && auth('admin')->user()->isAdmin()) ? 'bg-gradient-to-b from-gray-800 to-gray-900' : 'bg-gradient-to-b from-dental-teal to-dental-teal-dark' }}" id="sidebar">
+        <aside class="fixed top-0 left-0 h-screen w-64 text-white transition-all duration-300 z-50 shadow-2xl overflow-y-auto scrollbar-dental lg:translate-x-0 -translate-x-full {{ $showAdminSidebar ? 'bg-gradient-to-b from-gray-800 to-gray-900' : 'bg-gradient-to-b from-dental-teal to-dental-teal-dark' }}" id="sidebar">
             <div class="flex items-center justify-between p-4 border-b border-white/10">
                 <div class="flex items-center flex-1 min-w-0">
                     <x-dental-icon name="tooth" class="w-8 h-8 flex-shrink-0 sidebar-tooth-icon" />
                     <span class="sidebar-title ml-2 font-bold text-lg whitespace-nowrap overflow-hidden">
-                        @if(auth('admin')->check() && auth('admin')->user()->isAdmin())
+                        @if($showAdminSidebar)
                             Admin Panel
                         @else
                             Dental System
@@ -37,7 +44,7 @@
             </div>
 
             <ul class="list-none p-0 m-0">
-                @if(auth('admin')->check() && auth('admin')->user()->isAdmin())
+                @if($showAdminSidebar)
                     <li class="border-b border-white/10">
                         <a href="{{ route('admin.dashboard') }}" class="nav-link-dental {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                             <x-dental-icon name="speedometer2" class="w-6 h-6" />
@@ -113,9 +120,9 @@
                 <div class="flex items-center mb-3">
                     <x-dental-icon name="person-circle" class="w-8 h-8 flex-shrink-0" />
                     <div class="ml-2 user-info-text flex-1 min-w-0">
-                        <div class="text-sm font-bold truncate">{{ auth('admin')->check() ? auth('admin')->user()->name : auth('web')->user()->name }}</div>
+                        <div class="text-sm font-bold truncate">{{ $showAdminSidebar ? auth('admin')->user()->name : auth('web')->user()->name }}</div>
                         <div class="text-xs text-white/70 truncate">
-                            @if(auth('admin')->check() && auth('admin')->user()->isAdmin())
+                            @if($showAdminSidebar)
                                 Admin
                             @else
                                 Doctor
@@ -123,7 +130,7 @@
                         </div>
                     </div>
                 </div>
-                <form action="{{ (auth('admin')->check() && auth('admin')->user()->isAdmin()) ? route('admin.logout') : route('doctor.logout') }}" method="POST">
+                <form action="{{ $showAdminSidebar ? route('admin.logout') : route('doctor.logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-2 px-4 rounded-lg transition-colors border border-white/20 flex items-center justify-center">
                         <x-dental-icon name="box-arrow-right" class="w-5 h-5 mr-2 flex-shrink-0" />
@@ -170,13 +177,13 @@
         <div data-validation-errors style="display: none;">{{ json_encode($errors->all()) }}</div>
     @endif
 
-    <!-- External Dependencies (with defer for better performance) -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js" defer></script>
+    <!-- External Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     
     <!-- Core Application JavaScript -->
-    <script src="{{ asset('js/app-core.js') }}" defer></script>
+    <script src="{{ asset('js/app-core.js') }}"></script>
     
     @stack('scripts')
 </body>

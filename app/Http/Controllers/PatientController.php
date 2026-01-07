@@ -6,6 +6,7 @@ use App\Models\Patient;
 use App\Models\Appointment;
 use App\Models\RegistrationLink;
 use App\Traits\SanitizesInput;
+use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -13,7 +14,7 @@ use Illuminate\Validation\Rule;
 
 class PatientController extends Controller
 {
-    use SanitizesInput;
+    use SanitizesInput, UsesSubdomainViews;
 
     public function showRegistrationForm()
     {
@@ -498,7 +499,7 @@ class PatientController extends Controller
             ->latest()
             ->paginate(15);
         
-        return view('subdomain-template.patient.index', compact('patients'));
+        return $this->subdomainView('patient.index', compact('patients'));
     }
 
     public function show(Patient $patient)
@@ -518,7 +519,7 @@ class PatientController extends Controller
         // If AJAX request, return modal content
         if (request()->ajax()) {
             return response()->json([
-                'html' => view('subdomain-template.patient.partials.view-modal', compact('patient'))->render()
+                'html' => view($this->getSubdomainViewPath() . '.patient.partials.view-modal', compact('patient'))->render()
             ]);
         }
         
@@ -531,11 +532,11 @@ class PatientController extends Controller
         // If AJAX request, return modal content
         if (request()->ajax()) {
             return response()->json([
-                'html' => view('subdomain-template.patient.partials.edit-modal', compact('patient'))->render()
+                'html' => view($this->getSubdomainViewPath() . '.patient.partials.edit-modal', compact('patient'))->render()
             ]);
         }
         
-        return view('subdomain-template.patient.edit', compact('patient'));
+        return $this->subdomainView('patient.edit', compact('patient'));
     }
 
     public function update(Request $request, Patient $patient)

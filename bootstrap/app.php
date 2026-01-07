@@ -17,9 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'subdomain.check' => \App\Http\Middleware\CheckSubdomainStatus::class,
+            'subdomain.view' => \App\Http\Middleware\SetSubdomainViewPath::class,
             'parent.domain' => \App\Http\Middleware\EnsureParentDomain::class,
             'restrict.login.port' => \App\Http\Middleware\RestrictLoginToPort::class,
             'restrict.port' => \App\Http\Middleware\RestrictToPort::class,
+            'allow.subdomain.ports' => \App\Http\Middleware\AllowSubdomainPorts::class,
             'account.lockout' => \App\Http\Middleware\AccountLockout::class,
         ]);
     })

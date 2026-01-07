@@ -4,7 +4,15 @@
             <label class="text-gray-500 text-xs mb-1 block flex items-center gap-1.5">
                 <x-dental-icon name="globe" class="w-4 h-4 flex-shrink-0" />Subdomain
             </label>
-            <strong class="block text-gray-900">{{ $subdomain->subdomain }}.helioho.st</strong>
+            <strong class="block text-gray-900">
+                @if($subdomain->port)
+                    <a href="http://127.0.0.1:{{ $subdomain->port }}" target="_blank" class="text-dental-teal hover:text-dental-teal-dark underline">
+                        http://127.0.0.1:{{ $subdomain->port }}
+                    </a>
+                @else
+                    <span class="text-gray-400">Port not assigned</span>
+                @endif
+            </strong>
         </div>
         <div class="bg-gray-50 p-4 rounded-lg">
             <label class="text-gray-500 text-xs mb-1 block flex items-center gap-1">

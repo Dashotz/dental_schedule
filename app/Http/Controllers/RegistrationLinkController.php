@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\RegistrationLink;
+use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 
 class RegistrationLinkController extends Controller
 {
+    use UsesSubdomainViews;
     public function showRegistrationForm($token)
     {
         // Security: Validate token format first
@@ -67,6 +69,6 @@ class RegistrationLinkController extends Controller
             ->where('is_active', true)
             ->get();
 
-        return view('subdomain-template.register', compact('registrationLink', 'doctors'));
+        return $this->subdomainView('register', compact('registrationLink', 'doctors'));
     }
 }

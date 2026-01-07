@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\DoctorAvailability;
+use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class CalendarController extends Controller
 {
+    use UsesSubdomainViews;
     public function index(Request $request)
     {
         // Authorization: Ensure user is authenticated (doctor)
@@ -155,7 +157,7 @@ class CalendarController extends Controller
         $prevMonth = $startDate->copy()->subMonth();
         $nextMonth = $startDate->copy()->addMonth();
         
-        return view('subdomain-template.calendar.index', compact(
+        return $this->subdomainView('calendar.index', compact(
             'calendar',
             'startDate',
             'year',

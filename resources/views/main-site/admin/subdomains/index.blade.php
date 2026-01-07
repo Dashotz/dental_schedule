@@ -56,7 +56,11 @@
                                     </div>
                                     <div>
                                         <strong class="block text-gray-900">{{ $subdomain->subdomain }}</strong>
-                                        <small class="text-gray-500">.helioho.st</small>
+                                        @if($subdomain->port)
+                                            <small class="text-gray-500">:{{ $subdomain->port }}</small>
+                                        @else
+                                            <small class="text-gray-400">No port</small>
+                                        @endif
                                     </div>
                                 </div>
                             </td>
@@ -148,7 +152,16 @@
 @push('scripts')
 <script src="{{ asset('js/skeleton-loading.js') }}"></script>
 <script>
-    $(document).ready(function() {
+    // Ensure jQuery is loaded before executing scripts
+    (function() {
+        if (typeof jQuery === 'undefined') {
+            console.error('jQuery is not loaded');
+            return;
+        }
+        
+        var $ = jQuery;
+        
+        $(document).ready(function() {
         // Load create modal content
         $('#openCreateModal, #openCreateModalEmpty').on('click', function(e) {
             e.preventDefault();
@@ -824,5 +837,6 @@
             $(this).find('.text-red-500').addClass('hidden');
         });
     });
+    })();
 </script>
 @endpush

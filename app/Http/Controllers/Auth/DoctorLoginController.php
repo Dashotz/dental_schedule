@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class DoctorLoginController extends Controller
 {
+    use UsesSubdomainViews;
     public function showLoginForm()
     {
-        return view('subdomain-template.auth.doctor-login');
+        return $this->subdomainView('auth.doctor-login');
     }
 
     public function login(Request $request)

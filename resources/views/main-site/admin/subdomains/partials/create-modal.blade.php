@@ -13,7 +13,10 @@
                            name="subdomain" 
                            placeholder="clinic-name" 
                            required>
-                    <span class="bg-gray-100 border border-l-0 border-gray-300 rounded-r-lg px-4 py-2.5 text-gray-600 flex items-center">.helioho.st</span>
+                    <span class="bg-gray-100 border border-l-0 border-gray-300 rounded-r-lg px-4 py-2.5 text-gray-600 flex items-center">
+                        <x-dental-icon name="info-circle" class="w-4 h-4 mr-1" />
+                        <span class="text-xs">Port auto-assigned</span>
+                    </span>
                 </div>
                 <small class="text-gray-500 block mt-2">
                     <x-dental-icon name="info-circle" class="w-4 h-4 inline" /> Only lowercase letters, numbers, and hyphens allowed.

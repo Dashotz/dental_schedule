@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Patient;
 use App\Models\TeethRecord;
+use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class TeethRecordController extends Controller
 {
+    use UsesSubdomainViews;
     public function showChart(Patient $patient)
     {
         // Authorization: Ensure user is authenticated (doctor)
@@ -17,7 +19,7 @@ class TeethRecordController extends Controller
         }
         
         $teethRecords = TeethRecord::where('patient_id', $patient->id)->get()->keyBy('tooth_number');
-        return view('subdomain-template.patient.teeth-chart', compact('patient', 'teethRecords'));
+        return $this->subdomainView('patient.teeth-chart', compact('patient', 'teethRecords'));
     }
 
     public function store(Request $request, Patient $patient)

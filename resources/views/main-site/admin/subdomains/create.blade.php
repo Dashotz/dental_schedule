@@ -36,7 +36,7 @@
                                        value="{{ old('subdomain') }}" 
                                        placeholder="clinic-name" 
                                        required>
-                                <span class="input-group-text bg-light border-start-0">.helioho.st</span>
+                                <span class="input-group-text bg-light border-start-0">:{{ config('subdomain.subdomain_port', 10000) }}</span>
                             </div>
                             <small class="text-muted d-block mt-2">
                                 <x-dental-icon name="info-circle" class="w-5 h-5" /> Only lowercase letters, numbers, and hyphens allowed.
