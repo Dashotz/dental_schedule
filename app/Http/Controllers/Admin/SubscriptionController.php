@@ -13,21 +13,27 @@ class SubscriptionController extends Controller
     public function index()
     {
         $subscriptions = Subscription::with('subdomain')->latest()->paginate(15);
-        $subdomains = Subdomain::orderBy('name')->get();
-        return view('admin.subscriptions.index', compact('subscriptions', 'subdomains'));
+        // Cache subdomains list since it's used in dropdowns
+        $subdomains = cache()->remember('subdomains_list', 3600, function() {
+            return Subdomain::orderBy('name')->get(['id', 'name', 'subdomain']);
+        });
+        return view('main-site.admin.subscriptions.index', compact('subscriptions', 'subdomains'));
     }
 
     public function create()
     {
-        $subdomains = Subdomain::orderBy('name')->get();
+        // Use cached subdomains
+        $subdomains = cache()->remember('subdomains_list', 3600, function() {
+            return Subdomain::orderBy('name')->get(['id', 'name', 'subdomain']);
+        });
         
         if (request()->ajax()) {
             return response()->json([
-                'html' => view('admin.subscriptions.partials.create-modal', compact('subdomains'))->render()
+                'html' => view('main-site.admin.subscriptions.partials.create-modal', compact('subdomains'))->render()
             ]);
         }
         
-        return view('admin.subscriptions.create', compact('subdomains'));
+        return view('main-site.admin.subscriptions.create', compact('subdomains'));
     }
 
     public function store(Request $request)
@@ -76,6 +82,10 @@ class SubscriptionController extends Controller
 
         // Enable subdomain if subscription is active
         $subdomain->update(['is_active' => true]);
+        
+        // Clear caches when subscription is created
+        cache()->forget('subdomains_list');
+        cache()->forget("subdomain_{$subdomain->id}_subscription_active");
 
         if ($request->ajax()) {
             return response()->json([
@@ -103,6 +113,10 @@ class SubscriptionController extends Controller
         } elseif ($validated['status'] === 'active' && $subscription->end_date >= now()) {
             $subscription->subdomain->update(['is_active' => true]);
         }
+        
+        // Clear caches when subscription status is updated
+        cache()->forget('subdomains_list');
+        cache()->forget("subdomain_{$subscription->subdomain_id}_subscription_active");
 
         return response()->json([
             'success' => true,

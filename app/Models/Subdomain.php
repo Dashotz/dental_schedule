@@ -11,6 +11,7 @@ class Subdomain extends Model
 {
     protected $fillable = [
         'subdomain',
+        'port',
         'name',
         'description',
         'email',
@@ -40,6 +41,56 @@ class Subdomain extends Model
         return $this->hasMany(RegistrationLink::class);
     }
 
+    public function patients(): HasMany
+    {
+        return $this->hasMany(Patient::class);
+    }
+
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
+    public function doctors(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function treatmentPlans(): HasMany
+    {
+        return $this->hasMany(TreatmentPlan::class);
+    }
+
+    public function quotes(): HasMany
+    {
+        return $this->hasMany(Quote::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function teethRecords(): HasMany
+    {
+        return $this->hasMany(TeethRecord::class);
+    }
+
+    public function treatments(): HasMany
+    {
+        return $this->hasMany(Treatment::class);
+    }
+
+    public function doctorAvailabilities(): HasMany
+    {
+        return $this->hasMany(DoctorAvailability::class);
+    }
+
     public function activeSubscription()
     {
         return $this->subscriptions()
@@ -51,9 +102,12 @@ class Subdomain extends Model
 
     public function isSubscriptionActive(): bool
     {
-        return $this->subscriptions()
-            ->where('status', 'active')
-            ->where('end_date', '>=', now())
-            ->exists();
+        // Cache the result for 5 minutes to avoid repeated queries
+        return cache()->remember("subdomain_{$this->id}_subscription_active", 300, function() {
+            return $this->subscriptions()
+                ->where('status', 'active')
+                ->where('end_date', '>=', now())
+                ->exists();
+        });
     }
 }

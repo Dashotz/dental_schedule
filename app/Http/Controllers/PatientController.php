@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Patient;
 use App\Models\Appointment;
 use App\Models\RegistrationLink;
+use App\Services\Tenant\TenantContext;
+use App\Services\Patient\PatientService;
+use App\Http\Requests\Patient\UpdateRequest;
 use App\Traits\SanitizesInput;
+use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -13,11 +17,18 @@ use Illuminate\Validation\Rule;
 
 class PatientController extends Controller
 {
-    use SanitizesInput;
+    use SanitizesInput, UsesSubdomainViews;
+
+    protected PatientService $patientService;
+
+    public function __construct(PatientService $patientService)
+    {
+        $this->patientService = $patientService;
+    }
 
     public function showRegistrationForm()
     {
-        return view('patient.register');
+        return view('subdomain-template.register');
     }
 
     public function store(Request $request, $token = null)
@@ -27,11 +38,26 @@ class PatientController extends Controller
                 ->with('error', 'Registration is only available through a valid registration link.');
         }
 
+        // Security: Validate token format first
+        if (!RegistrationLink::isValidTokenFormat($token)) {
+            \Log::warning('Invalid registration token format in store attempt', [
+                'token_length' => strlen($token),
+                'ip' => $request->ip(),
+            ]);
+            return redirect()->route('home')
+                ->with('error', 'Invalid or expired registration link.');
+        }
+
         $registrationLink = RegistrationLink::where('token', $token)
             ->where('is_active', true)
             ->first();
 
         if (!$registrationLink || !$registrationLink->isUsable()) {
+            \Log::warning('Registration link validation failed in store', [
+                'token_exists' => $registrationLink !== null,
+                'is_usable' => $registrationLink ? $registrationLink->isUsable() : false,
+                'ip' => $request->ip(),
+            ]);
             return redirect()->route('home')
                 ->with('error', 'Invalid or expired registration link.');
         }
@@ -113,7 +139,7 @@ class PatientController extends Controller
         $appointmentDateTime = $appointmentDate->format('Y-m-d') . ' ' . $appointmentTime;
 
         // Get all active doctors
-        $doctors = \App\Models\User::where('role', 'doctor')
+        $doctors = \App\Models\User::where('is_active', true)
             ->where('is_active', true)
             ->get();
 
@@ -152,8 +178,15 @@ class PatientController extends Controller
         try {
             DB::beginTransaction();
 
+            // Get current subdomain
+            $subdomain = TenantContext::getCurrentSubdomain();
+            if (!$subdomain && $registrationLink) {
+                $subdomain = $registrationLink->subdomain;
+            }
+
             // Create patient with sanitized data
             $patient = Patient::create([
+                'subdomain_id' => $subdomain?->id,
                 'first_name' => $sanitized['first_name'],
                 'last_name' => $sanitized['last_name'],
                 'date_of_birth' => $sanitized['date_of_birth'] ?? null,
@@ -176,6 +209,7 @@ class PatientController extends Controller
 
             // Create appointment with assigned doctor
             $appointment = Appointment::create([
+                'subdomain_id' => $subdomain?->id,
                 'patient_id' => $patient->id,
                 'doctor_id' => $availableDoctor->id,
                 'appointment_date' => $appointmentDateTime,
@@ -186,12 +220,27 @@ class PatientController extends Controller
                 'duration' => 30, // Default 30 minutes
             ]);
 
-            // Increment registration link usage
+            // Increment registration link usage and log
             if ($token && $registrationLink) {
                 $registrationLink->increment('used_count');
+                
+                \Log::info('Registration link used successfully', [
+                    'link_id' => $registrationLink->id,
+                    'subdomain_id' => $registrationLink->subdomain_id,
+                    'used_count' => $registrationLink->used_count,
+                    'max_uses' => $registrationLink->max_uses,
+                    'ip' => $request->ip(),
+                ]);
             }
 
             DB::commit();
+
+            // Clear tenant-specific caches
+            $subdomainId = TenantContext::getSubdomainId();
+            if ($subdomainId) {
+                cache()->forget(TenantContext::getCacheKey('patients_list', $subdomainId));
+                cache()->forget(TenantContext::getCacheKey('dashboard_stats', $subdomainId));
+            }
 
             return redirect()->route('home')
                 ->with('success', 'Registration and appointment booking successful! Your appointment is scheduled for ' . $appointment->appointment_date->format('F d, Y \a\t g:i A'));
@@ -277,11 +326,19 @@ class PatientController extends Controller
             return [];
         }
 
+        // Get current subdomain for filtering
+        $subdomain = TenantContext::getCurrentSubdomain();
+        
         // Get blocked slots from the new blocked_slots table
-        $blockedSlots = \DB::table('blocked_slots')
+        $blockedSlotsQuery = \DB::table('blocked_slots')
             ->where('doctor_id', $doctorId)
-            ->where('slot_date', $date->format('Y-m-d'))
-            ->get()
+            ->where('slot_date', $date->format('Y-m-d'));
+        
+        if ($subdomain) {
+            $blockedSlotsQuery->where('subdomain_id', $subdomain->id);
+        }
+        
+        $blockedSlots = $blockedSlotsQuery->get()
             ->map(function($block) {
                 $startTime = $block->slot_start_time;
                 $endTime = $block->slot_end_time;
@@ -471,17 +528,20 @@ class PatientController extends Controller
             ->latest()
             ->paginate(15);
         
-        return view('patient.index', compact('patients'));
+        return $this->subdomainView('patient.index', compact('patients'));
     }
 
     public function show(Patient $patient)
     {
+        // Authorization via policy
+        $this->authorize('view', $patient);
+        
         $patient->load(['appointments', 'treatmentPlans', 'teethRecords', 'treatments']);
         
         // If AJAX request, return modal content
         if (request()->ajax()) {
             return response()->json([
-                'html' => view('patient.partials.view-modal', compact('patient'))->render()
+                'html' => view($this->getSubdomainViewPath() . '.patient.partials.view-modal', compact('patient'))->render()
             ]);
         }
         
@@ -491,43 +551,29 @@ class PatientController extends Controller
 
     public function edit(Patient $patient)
     {
+        // Authorization via policy
+        $this->authorize('update', $patient);
+        
         // If AJAX request, return modal content
         if (request()->ajax()) {
             return response()->json([
-                'html' => view('patient.partials.edit-modal', compact('patient'))->render()
+                'html' => view($this->getSubdomainViewPath() . '.patient.partials.edit-modal', compact('patient'))->render()
             ]);
         }
         
-        return view('patient.edit', compact('patient'));
+        return $this->subdomainView('patient.edit', compact('patient'));
     }
 
-    public function update(Request $request, Patient $patient)
+    public function update(UpdateRequest $request, Patient $patient)
     {
-        $validated = $request->validate([
-            'first_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s\-\']+$/'],
-            'last_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s\-\']+$/'],
-            'date_of_birth' => ['nullable', 'date', 'before:today'],
-            'gender' => ['nullable', Rule::in(['male', 'female', 'other'])],
-            'email' => ['nullable', 'email', 'max:255'],
-            'phone' => ['required', 'string', 'max:20', 'regex:/^[\d\s\-\+\(\)]+$/'],
-            'phone_alt' => ['nullable', 'string', 'max:20', 'regex:/^[\d\s\-\+\(\)]+$/'],
-            'address' => ['nullable', 'string', 'max:500'],
-            'city' => ['nullable', 'string', 'max:255', 'regex:/^[a-zA-Z\s\-\']+$/'],
-            'state' => ['nullable', 'string', 'max:255', 'regex:/^[a-zA-Z\s\-\']+$/'],
-            'zip_code' => ['nullable', 'string', 'max:20', 'regex:/^[\d\w\s\-]+$/'],
-            'emergency_contact_name' => ['nullable', 'string', 'max:255', 'regex:/^[a-zA-Z\s\-\']+$/'],
-            'emergency_contact_phone' => ['nullable', 'string', 'max:20', 'regex:/^[\d\s\-\+\(\)]+$/'],
-            'medical_history' => ['nullable', 'string', 'max:2000'],
-            'allergies' => ['nullable', 'string', 'max:1000'],
-            'medications' => ['nullable', 'string', 'max:1000'],
-            'insurance_provider' => ['nullable', 'string', 'max:255'],
-            'insurance_policy_number' => ['nullable', 'string', 'max:255'],
-            'notes' => ['nullable', 'string', 'max:1000'],
-        ]);
+        // Authorization via policy
+        $this->authorize('update', $patient);
 
         // Sanitize inputs
-        $sanitized = $this->sanitizeInput($validated);
-        $patient->update($sanitized);
+        $sanitized = $this->sanitizeInput($request->validated());
+        
+        // Use service to update patient
+        $this->patientService->update($patient, $sanitized);
 
         // If AJAX request, return JSON response
         if (request()->ajax()) {

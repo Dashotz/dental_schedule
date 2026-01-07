@@ -16,16 +16,28 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        if (!auth()->check()) {
-            return redirect()->route('login');
-        }
-
-        $user = auth()->user();
-        
-        if (!in_array($user->role, $roles)) {
+        // Check admin guard first
+        if (auth('admin')->check()) {
+            // Admin is authenticated, allow access to admin routes
+            if (in_array('admin', $roles)) {
+                return $next($request);
+            }
             abort(403, 'Unauthorized access');
         }
 
-        return $next($request);
+        // Check web guard (doctors)
+        if (auth('web')->check()) {
+            // Doctor is authenticated, allow access to doctor routes
+            if (in_array('doctor', $roles)) {
+                return $next($request);
+            }
+            abort(403, 'Unauthorized access');
+        }
+
+        // Not authenticated
+        if (in_array('admin', $roles)) {
+            return redirect()->route('admin.login');
+        }
+        return redirect()->route('doctor.login');
     }
 }

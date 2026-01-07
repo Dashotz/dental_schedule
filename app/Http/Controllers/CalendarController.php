@@ -4,22 +4,41 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\DoctorAvailability;
+use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class CalendarController extends Controller
 {
+    use UsesSubdomainViews;
     public function index(Request $request)
     {
+        // Authorization: Ensure user is authenticated (doctor)
+        if (!auth()->check()) {
+            abort(403, 'Unauthorized access.');
+        }
+        
         $year = $request->get('year', now()->year);
         $month = $request->get('month', now()->month);
+        
+        // Validate year and month inputs
+        $year = (int) $year;
+        $month = (int) $month;
+        
+        if ($year < 2020 || $year > 2100) {
+            $year = now()->year;
+        }
+        if ($month < 1 || $month > 12) {
+            $month = now()->month;
+        }
         
         $startDate = Carbon::create($year, $month, 1)->startOfMonth();
         $endDate = $startDate->copy()->endOfMonth();
         
-        // Get all appointments for the month
+        // Get all appointments for the month - optimized query
         $appointments = Appointment::whereBetween('appointment_date', [$startDate, $endDate])
-            ->with(['patient', 'doctor'])
+            ->with(['patient:id,first_name,last_name', 'doctor:id,name'])
+            ->select('id', 'patient_id', 'doctor_id', 'appointment_date', 'appointment_time', 'status', 'type')
             ->get()
             ->groupBy(function($appointment) {
                 return $appointment->appointment_date->format('Y-m-d');
@@ -30,30 +49,35 @@ class CalendarController extends Controller
         if (auth()->check() && auth()->user()->isDoctor()) {
             $doctorId = auth()->id();
             
-            // Get all availability entries for this month
-            $availabilities = DoctorAvailability::where('doctor_id', $doctorId)
-                ->where(function($query) use ($startDate, $endDate) {
-                    $query->where(function($q) use ($startDate, $endDate) {
-                        // Weekly schedules
-                        $q->where('type', 'weekly');
-                    })->orWhere(function($q) use ($startDate, $endDate) {
-                        // Specific dates in this month
-                        $q->where('type', 'specific_date')
-                          ->whereBetween('specific_date', [$startDate, $endDate]);
-                    })->orWhere(function($q) use ($startDate, $endDate) {
-                        // Date ranges that overlap with this month
-                        $q->where('type', 'date_range')
-                          ->where(function($subQ) use ($startDate, $endDate) {
-                              $subQ->whereBetween('start_date', [$startDate, $endDate])
-                                   ->orWhereBetween('end_date', [$startDate, $endDate])
-                                   ->orWhere(function($r) use ($startDate, $endDate) {
-                                       $r->where('start_date', '<=', $startDate)
-                                         ->where('end_date', '>=', $endDate);
-                                   });
-                          });
-                    });
+            // Get all availability entries for this month - optimized query
+            // Load weekly schedules (they apply to all months)
+            $weeklyAvailabilities = DoctorAvailability::where('doctor_id', $doctorId)
+                ->where('type', 'weekly')
+                ->get();
+            
+            // Load specific dates in this month
+            $specificDateAvailabilities = DoctorAvailability::where('doctor_id', $doctorId)
+                ->where('type', 'specific_date')
+                ->whereBetween('specific_date', [$startDate, $endDate])
+                ->get();
+            
+            // Load date ranges that overlap with this month
+            $dateRangeAvailabilities = DoctorAvailability::where('doctor_id', $doctorId)
+                ->where('type', 'date_range')
+                ->where(function($q) use ($startDate, $endDate) {
+                    $q->whereBetween('start_date', [$startDate, $endDate])
+                      ->orWhereBetween('end_date', [$startDate, $endDate])
+                      ->orWhere(function($r) use ($startDate, $endDate) {
+                          $r->where('start_date', '<=', $startDate)
+                            ->where('end_date', '>=', $endDate);
+                      });
                 })
                 ->get();
+            
+            // Combine all availabilities
+            $availabilities = $weeklyAvailabilities
+                ->merge($specificDateAvailabilities)
+                ->merge($dateRangeAvailabilities);
             
             // Group by date
             $currentDate = $startDate->copy();
@@ -133,7 +157,7 @@ class CalendarController extends Controller
         $prevMonth = $startDate->copy()->subMonth();
         $nextMonth = $startDate->copy()->addMonth();
         
-        return view('calendar.index', compact(
+        return $this->subdomainView('calendar.index', compact(
             'calendar',
             'startDate',
             'year',

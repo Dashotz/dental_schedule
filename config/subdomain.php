@@ -21,5 +21,16 @@ return [
     |
     */
     'base_domain' => env('BASE_DOMAIN', 'helioho.st'),
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Subdomain Port
+    |--------------------------------------------------------------------------
+    |
+    | The port number for accessing subdomains (e.g., 10000)
+    | Subdomains will be accessible via http://127.0.0.1:10000?subdomain=clinic-name
+    |
+    */
+    'subdomain_port' => env('SUBDOMAIN_PORT', 10000),
 ];
 

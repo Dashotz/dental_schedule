@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\DoctorAvailability;
 use App\Models\User;
+use App\Services\Tenant\TenantContext;
+use App\Services\Availability\AvailabilityService;
+use App\Http\Requests\Availability\StoreRequest;
+use App\Http\Requests\Availability\UpdateRequest;
+use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Schema;
@@ -12,6 +17,14 @@ use Carbon\Carbon;
 
 class AvailabilityController extends Controller
 {
+    use UsesSubdomainViews;
+
+    protected AvailabilityService $availabilityService;
+
+    public function __construct(AvailabilityService $availabilityService)
+    {
+        $this->availabilityService = $availabilityService;
+    }
     public function index()
     {
         $doctor = auth()->user();
@@ -26,7 +39,7 @@ class AvailabilityController extends Controller
             ->orderBy('start_time')
             ->get();
 
-        return view('availability.index', compact('availabilities', 'doctor'));
+        return $this->subdomainView('availability.index', compact('availabilities', 'doctor'));
     }
 
     public function create()
@@ -37,10 +50,10 @@ class AvailabilityController extends Controller
             abort(403, 'Only doctors can manage availability');
         }
 
-        return view('availability.create');
+        return $this->subdomainView('availability.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         $doctor = auth()->user();
         
@@ -48,23 +61,11 @@ class AvailabilityController extends Controller
             abort(403, 'Only doctors can manage availability');
         }
 
-        $validated = $request->validate([
-            'type' => ['required', 'in:weekly,specific_date,date_range'],
-            'day_of_week' => ['nullable', 'integer', 'min:0', 'max:6'],
-            'specific_date' => ['nullable', 'date', 'required_if:type,specific_date'],
-            'start_date' => ['nullable', 'date', 'required_if:type,date_range'],
-            'end_date' => ['nullable', 'date', 'required_if:type,date_range', 'after_or_equal:start_date'],
-            'start_time' => ['required', 'date_format:H:i'],
-            'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
-            'slot_duration' => ['required', 'integer', 'in:15,30,45,60'],
-            'is_available' => ['nullable', 'boolean'],
-            'notes' => ['nullable', 'string', 'max:500'],
-        ]);
+        // Authorization via policy
+        $this->authorize('create', DoctorAvailability::class);
 
-        $validated['doctor_id'] = $doctor->id;
-        $validated['is_available'] = $validated['is_available'] ?? true;
-
-        DoctorAvailability::create($validated);
+        // Use service to create availability
+        $this->availabilityService->create($request->validated(), $doctor);
 
         return redirect()->route('availability.index')
             ->with('success', 'Availability schedule created successfully.');
@@ -72,39 +73,19 @@ class AvailabilityController extends Controller
 
     public function edit(DoctorAvailability $availability)
     {
-        $doctor = auth()->user();
-        
-        if (!$doctor->isDoctor() || $availability->doctor_id !== $doctor->id) {
-            abort(403, 'Unauthorized');
-        }
+        // Authorization via policy
+        $this->authorize('update', $availability);
 
-        return view('availability.edit', compact('availability'));
+        return $this->subdomainView('availability.edit', compact('availability'));
     }
 
-    public function update(Request $request, DoctorAvailability $availability)
+    public function update(UpdateRequest $request, DoctorAvailability $availability)
     {
-        $doctor = auth()->user();
-        
-        if (!$doctor->isDoctor() || $availability->doctor_id !== $doctor->id) {
-            abort(403, 'Unauthorized');
-        }
+        // Authorization via policy
+        $this->authorize('update', $availability);
 
-        $validated = $request->validate([
-            'type' => ['required', 'in:weekly,specific_date,date_range'],
-            'day_of_week' => ['nullable', 'integer', 'min:0', 'max:6'],
-            'specific_date' => ['nullable', 'date', 'required_if:type,specific_date'],
-            'start_date' => ['nullable', 'date', 'required_if:type,date_range'],
-            'end_date' => ['nullable', 'date', 'required_if:type,date_range', 'after_or_equal:start_date'],
-            'start_time' => ['required', 'date_format:H:i'],
-            'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
-            'slot_duration' => ['required', 'integer', 'in:15,30,45,60'],
-            'is_available' => ['nullable', 'boolean'],
-            'notes' => ['nullable', 'string', 'max:500'],
-        ]);
-
-        $validated['is_available'] = $validated['is_available'] ?? true;
-
-        $availability->update($validated);
+        // Use service to update availability
+        $this->availabilityService->update($availability, $request->validated());
 
         return redirect()->route('availability.index')
             ->with('success', 'Availability schedule updated successfully.');
@@ -112,13 +93,11 @@ class AvailabilityController extends Controller
 
     public function destroy(DoctorAvailability $availability)
     {
-        $doctor = auth()->user();
-        
-        if (!$doctor->isDoctor() || $availability->doctor_id !== $doctor->id) {
-            abort(403, 'Unauthorized');
-        }
+        // Authorization via policy
+        $this->authorize('delete', $availability);
 
-        $availability->delete();
+        // Use service to delete availability
+        $this->availabilityService->delete($availability);
 
         return redirect()->route('availability.index')
             ->with('success', 'Availability schedule deleted successfully.');
@@ -126,9 +105,17 @@ class AvailabilityController extends Controller
 
     public function getAvailableSlots(Request $request)
     {
+        // Rate limiting is handled by route middleware, but add validation
         $request->validate([
             'doctor_id' => ['required', 'integer', 'exists:users,id'],
             'date' => ['required', 'date', 'after_or_equal:today'],
+        ]);
+        
+        // Log public endpoint usage for security monitoring
+        \Log::info('Public availability slots requested', [
+            'doctor_id' => $request->doctor_id,
+            'date' => $request->date,
+            'ip' => $request->ip(),
         ]);
 
         $doctor = User::findOrFail($request->doctor_id);
@@ -211,10 +198,18 @@ class AvailabilityController extends Controller
             return response()->json(['slots' => []]);
         }
 
-        $blockedSlots = DB::table('blocked_slots')
+        // Get current subdomain for filtering
+        $subdomain = TenantContext::getCurrentSubdomain();
+        
+        $blockedSlotsQuery = DB::table('blocked_slots')
             ->where('doctor_id', $doctor->id)
-            ->where('slot_date', $date->format('Y-m-d'))
-            ->get()
+            ->where('slot_date', $date->format('Y-m-d'));
+        
+        if ($subdomain) {
+            $blockedSlotsQuery->where('subdomain_id', $subdomain->id);
+        }
+        
+        $blockedSlots = $blockedSlotsQuery->get()
             ->map(function($block) {
                 $startTime = $this->normalizeTime($block->slot_start_time);
                 $endTime = $this->normalizeTime($block->slot_end_time);
@@ -344,8 +339,12 @@ class AvailabilityController extends Controller
     {
         $doctor = auth()->user();
         
-        if (!$doctor->isDoctor()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+        if (!$doctor || !$doctor->isDoctor()) {
+            \Log::warning('Unauthorized quick set availability attempt', [
+                'user_id' => $doctor->id ?? 'unknown',
+                'ip' => $request->ip(),
+            ]);
+            return response()->json(['error' => 'Unauthorized', 'message' => 'Only doctors can access this'], 403);
         }
 
         $validated = $request->validate([
@@ -365,9 +364,18 @@ class AvailabilityController extends Controller
                 ], 422);
             }
             
-            $deletedCount = DB::table('blocked_slots')
+            // Get current subdomain for filtering
+            $subdomain = TenantContext::getCurrentSubdomain();
+            
+            $deleteQuery = DB::table('blocked_slots')
                 ->where('doctor_id', $doctor->id)
-                ->where('slot_date', $date->format('Y-m-d'))
+                ->where('slot_date', $date->format('Y-m-d'));
+            
+            if ($subdomain) {
+                $deleteQuery->where('subdomain_id', $subdomain->id);
+            }
+            
+            $deletedCount = $deleteQuery
                 ->delete();
             
             DoctorAvailability::where('doctor_id', $doctor->id)
@@ -401,7 +409,11 @@ class AvailabilityController extends Controller
                 return response()->json(['success' => true, 'message' => 'Day already blocked']);
             }
             
+            // Get current subdomain
+            $subdomain = TenantContext::getCurrentSubdomain();
+            
             DoctorAvailability::create([
+                'subdomain_id' => $subdomain?->id,
                 'doctor_id' => $doctor->id,
                 'type' => 'specific_date',
                 'specific_date' => $date->format('Y-m-d'),
@@ -426,13 +438,25 @@ class AvailabilityController extends Controller
                 $slotStart = $current->format('H:i');
                 $slotEnd = $current->copy()->addMinutes(30)->format('H:i');
                 
-                if (!DB::table('blocked_slots')
+                // Get current subdomain for filtering
+                $subdomain = request()->attributes->get('current_subdomain');
+                
+                $checkQuery = DB::table('blocked_slots')
                     ->where('doctor_id', $doctor->id)
                     ->where('slot_date', $slotDate)
                     ->where('slot_start_time', $slotStart)
-                    ->where('slot_end_time', $slotEnd)
-                    ->exists()) {
+                    ->where('slot_end_time', $slotEnd);
+                
+                if ($subdomain) {
+                    $checkQuery->where('subdomain_id', $subdomain->id);
+                }
+                
+                if (!$checkQuery->exists()) {
+                    // Get current subdomain
+                    $subdomain = TenantContext::getCurrentSubdomain();
+                    
                     DB::table('blocked_slots')->insert([
+                        'subdomain_id' => $subdomain?->id,
                         'doctor_id' => $doctor->id,
                         'slot_date' => $slotDate,
                         'slot_start_time' => $slotStart,
@@ -590,13 +614,16 @@ class AvailabilityController extends Controller
             ], 422);
         } catch (\Exception $e) {
             \Log::error('getDateAvailability error: ' . $e->getMessage());
-            \Log::error('getDateAvailability file: ' . $e->getFile() . ':' . $e->getLine());
-            \Log::error('getDateAvailability trace: ' . substr($e->getTraceAsString(), 0, 1000)); // Limit trace length
             
-            $errorMessage = 'An error occurred while loading availability';
+            // Only log detailed info in debug mode
             if (config('app.debug')) {
-                $errorMessage = $e->getMessage() . ' in ' . basename($e->getFile()) . ':' . $e->getLine();
+                \Log::error('getDateAvailability file: ' . $e->getFile() . ':' . $e->getLine());
+                \Log::error('getDateAvailability trace: ' . substr($e->getTraceAsString(), 0, 1000));
             }
+            
+            $errorMessage = config('app.debug') 
+                ? $e->getMessage() . ' in ' . basename($e->getFile()) . ':' . $e->getLine()
+                : 'An error occurred while loading availability. Please try again.';
             
             return response()->json([
                 'error' => 'Failed to load availability',

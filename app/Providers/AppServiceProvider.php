@@ -15,6 +15,17 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
+     * The policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        \App\Models\Patient::class => \App\Policies\PatientPolicy::class,
+        \App\Models\Appointment::class => \App\Policies\AppointmentPolicy::class,
+        \App\Models\DoctorAvailability::class => \App\Policies\AvailabilityPolicy::class,
+    ];
+
+    /**
      * Bootstrap any application services.
      */
     public function boot(): void

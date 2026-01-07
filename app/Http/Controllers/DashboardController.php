@@ -5,48 +5,70 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Patient;
 use App\Models\Invoice;
+use App\Services\Tenant\TenantContext;
+use App\Traits\UsesSubdomainViews;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
+    use UsesSubdomainViews;
     public function index()
     {
+        $subdomainId = TenantContext::getSubdomainId();
+        $cacheKey = TenantContext::getCacheKey('dashboard_stats', $subdomainId);
+        
+        // Try to get cached dashboard stats (cache for 5 minutes)
+        $cachedStats = Cache::get($cacheKey);
+        
+        if ($cachedStats) {
+            return $this->subdomainView('dashboard', $cachedStats);
+        }
+        
         $today = Carbon::today();
         $startOfWeek = $today->copy()->startOfWeek();
         $endOfWeek = $today->copy()->endOfWeek();
+        $sevenDaysFromNow = $today->copy()->addDays(7);
 
-        // Today's appointments
-        $todayAppointments = Appointment::whereDate('appointment_date', $today)
+        // Optimize: Get all appointments in date ranges in fewer queries
+        // Get today's and week's appointments in one query
+        $appointmentsInRange = Appointment::whereBetween('appointment_date', [$startOfWeek, $sevenDaysFromNow])
             ->with('patient')
             ->orderBy('appointment_date')
             ->get();
+        
+        // Filter in memory (faster than multiple DB queries)
+        $todayAppointments = $appointmentsInRange->filter(function($apt) use ($today) {
+            return $apt->appointment_date->isSameDay($today);
+        })->values();
+        
+        $weekAppointments = $appointmentsInRange->filter(function($apt) use ($startOfWeek, $endOfWeek) {
+            return $apt->appointment_date->between($startOfWeek, $endOfWeek);
+        })->values();
+        
+        $upcomingAppointments = $appointmentsInRange->filter(function($apt) use ($today, $sevenDaysFromNow) {
+            return $apt->appointment_date->gt($today) 
+                && $apt->appointment_date->lte($sevenDaysFromNow)
+                && in_array($apt->status, ['scheduled', 'confirmed']);
+        })->take(10)->values();
 
-        // This week's appointments
-        $weekAppointments = Appointment::whereBetween('appointment_date', [$startOfWeek, $endOfWeek])
-            ->with('patient')
-            ->orderBy('appointment_date')
-            ->get();
-
-        // Upcoming appointments (next 7 days)
-        $upcomingAppointments = Appointment::where('appointment_date', '>', $today)
-            ->where('appointment_date', '<=', $today->copy()->addDays(7))
-            ->whereIn('status', ['scheduled', 'confirmed'])
-            ->with('patient')
-            ->orderBy('appointment_date')
-            ->limit(10)
-            ->get();
-
-        // Statistics
-        $totalPatients = Patient::count();
-        $totalAppointments = Appointment::count();
-        $todayAppointmentsCount = $todayAppointments->count();
-        $pendingAppointments = Appointment::whereIn('status', ['scheduled', 'confirmed'])->count();
+        // Optimize: Get statistics in single queries
+        $stats = Appointment::selectRaw('
+            COUNT(*) as total,
+            SUM(CASE WHEN DATE(appointment_date) = ? THEN 1 ELSE 0 END) as today_count,
+            SUM(CASE WHEN status IN ("scheduled", "confirmed") THEN 1 ELSE 0 END) as pending_count
+        ', [$today])->first();
+        
+        $totalAppointments = $stats->total ?? 0;
+        $todayAppointmentsCount = $stats->today_count ?? 0;
+        $pendingAppointments = $stats->pending_count ?? 0;
+        $totalPatients = Patient::count(); // Keep separate as it's a different table
 
         // Recent patients
         $recentPatients = Patient::latest()->limit(5)->get();
-
-        return view('dashboard', compact(
+        
+        $data = compact(
             'todayAppointments',
             'weekAppointments',
             'upcomingAppointments',
@@ -55,6 +77,11 @@ class DashboardController extends Controller
             'todayAppointmentsCount',
             'pendingAppointments',
             'recentPatients'
-        ));
+        );
+        
+        // Cache the dashboard stats for 5 minutes
+        Cache::put($cacheKey, $data, 300);
+
+        return $this->subdomainView('dashboard', $data);
     }
 }

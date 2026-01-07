@@ -14,48 +14,50 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Total subdomains
-        $totalSubdomains = Subdomain::count();
-        $activeSubdomains = Subdomain::where('is_active', true)->count();
-        $inactiveSubdomains = Subdomain::where('is_active', false)->count();
-
-        // Subscription statistics
-        $activeSubscriptions = Subscription::where('status', 'active')
-            ->where('end_date', '>=', now())
-            ->count();
+        // Optimize: Get subdomain counts in a single query
+        $subdomainStats = Subdomain::selectRaw('
+            COUNT(*) as total,
+            SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as active,
+            SUM(CASE WHEN is_active = 0 THEN 1 ELSE 0 END) as inactive
+        ')->first();
         
-        $expiringSubscriptions = Subscription::where('status', 'active')
-            ->where('end_date', '>=', now())
-            ->where('end_date', '<=', now()->addDays(7))
-            ->count();
+        $totalSubdomains = $subdomainStats->total;
+        $activeSubdomains = $subdomainStats->active;
+        $inactiveSubdomains = $subdomainStats->inactive;
 
-        $expiredSubscriptions = Subscription::where('status', 'expired')
-            ->orWhere(function($query) {
-                $query->where('status', 'active')
-                    ->where('end_date', '<', now());
-            })
-            ->count();
-
-        // Revenue statistics
-        $totalRevenue = Subscription::where('status', 'active')
-            ->sum('amount');
+        // Optimize: Get subscription statistics in fewer queries
+        $now = now();
+        $sevenDaysFromNow = $now->copy()->addDays(7);
+        $currentMonth = $now->month;
+        $currentYear = $now->year;
         
-        $monthlyRevenue = Subscription::where('status', 'active')
-            ->whereMonth('last_payment_date', now()->month)
-            ->whereYear('last_payment_date', now()->year)
-            ->sum('amount');
+        $subscriptionStats = Subscription::selectRaw('
+            SUM(CASE WHEN status = "active" AND end_date >= ? THEN 1 ELSE 0 END) as active_count,
+            SUM(CASE WHEN status = "active" AND end_date >= ? AND end_date <= ? THEN 1 ELSE 0 END) as expiring_count,
+            SUM(CASE WHEN status = "expired" OR (status = "active" AND end_date < ?) THEN 1 ELSE 0 END) as expired_count,
+            SUM(CASE WHEN status = "active" THEN amount ELSE 0 END) as total_revenue,
+            SUM(CASE WHEN status = "active" AND MONTH(last_payment_date) = ? AND YEAR(last_payment_date) = ? THEN amount ELSE 0 END) as monthly_revenue
+        ', [$now, $now, $sevenDaysFromNow, $now, $currentMonth, $currentYear])->first();
+        
+        $activeSubscriptions = $subscriptionStats->active_count ?? 0;
+        $expiringSubscriptions = $subscriptionStats->expiring_count ?? 0;
+        $expiredSubscriptions = $subscriptionStats->expired_count ?? 0;
+        $totalRevenue = $subscriptionStats->total_revenue ?? 0;
+        $monthlyRevenue = $subscriptionStats->monthly_revenue ?? 0;
 
-        // Recent subdomains
+        // Recent subdomains with eager loading
         $recentSubdomains = Subdomain::latest()->limit(5)->get();
 
-        // Subdomains with expiring subscriptions
-        $expiringSoon = Subdomain::whereHas('subscriptions', function($query) {
-            $query->where('status', 'active')
-                ->where('end_date', '>=', now())
-                ->where('end_date', '<=', now()->addDays(7));
-        })->get();
+        // Optimize: Get expiring subdomains with join instead of whereHas
+        $expiringSoon = Subdomain::join('subscriptions', 'subdomains.id', '=', 'subscriptions.subdomain_id')
+            ->where('subscriptions.status', 'active')
+            ->where('subscriptions.end_date', '>=', $now)
+            ->where('subscriptions.end_date', '<=', $sevenDaysFromNow)
+            ->select('subdomains.*')
+            ->distinct()
+            ->get();
 
-        // Analytics data
+        // Analytics data - already optimized with groupBy
         $subscriptionsByPlan = Subscription::selectRaw('plan_name, count(*) as count')
             ->groupBy('plan_name')
             ->get();
@@ -64,7 +66,7 @@ class DashboardController extends Controller
             ->groupBy('status')
             ->get();
 
-        return view('admin.dashboard', compact(
+        return view('main-site.admin.dashboard', compact(
             'totalSubdomains',
             'activeSubdomains',
             'inactiveSubdomains',

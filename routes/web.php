@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\Auth\DoctorLoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\AppointmentController;
@@ -14,49 +15,118 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\AvailabilityController;
 use Illuminate\Support\Facades\Route;
 
-// Authentication routes (accessible from all domains)
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+// Landing page - environment-aware routing
+Route::get('/', function () {
+    $host = request()->getHost();
+    $subdomain = request()->attributes->get('current_subdomain');
+    $isProduction = config('app.env') === 'production';
+    
+    // PRODUCTION: Use hostname-based routing
+    if ($isProduction) {
+        $mainDomain = parse_url(config('app.url', config('subdomain.parent_domain')), PHP_URL_HOST);
+        $adminDomain = config('app.admin_domain', 'admin.' . $mainDomain);
+        $adminHost = parse_url($adminDomain, PHP_URL_HOST);
+        
+        // Admin/main site
+        if ($host === $mainDomain || $host === $adminHost || str_starts_with($host, 'admin.')) {
+            return view('main-site.index');
+        }
+        
+        // Subdomain-specific
+        if ($subdomain) {
+            $viewPath = \App\Services\SubdomainTemplateService::getViewPath($subdomain);
+            return view($viewPath . '.index');
+        }
+        
+        // Default template
+        return view('subdomain-template.index');
+    }
+    
+    // DEVELOPMENT: Use port-based routing
+    $port = request()->getPort();
+    if ($port == 9000) {
+        return view('main-site.index');
+    } elseif ($port == 8000) {
+        return view('subdomain-template.index');
+    } elseif ($port >= 10000) {
+        // Port-based subdomain access (10000+)
+        // The CheckSubdomainStatus middleware will handle finding the subdomain by port
+        if ($subdomain) {
+            $viewPath = \App\Services\SubdomainTemplateService::getViewPath($subdomain);
+            return view($viewPath . '.index');
+        }
+        return view('subdomain-template.index');
+    }
+    abort(403, 'Invalid port access');
+})->middleware('subdomain.check')->name('home');
 
-// CAPTCHA reload route (with subdomain check)
-Route::middleware('subdomain.check')->group(function () {
+// Main-site routes (admin login/logout)
+// In production: accessible on admin domain or main domain
+// In development: restricted to port 9000
+Route::middleware(config('app.env') === 'production' ? [] : ['restrict.port:9000'])->group(function () {
+    Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/admin/login', [AdminLoginController::class, 'login'])
+        ->middleware(['throttle:5,1', 'account.lockout']); // 5 attempts per minute + account lockout
+    Route::post('/admin/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+});
+
+// Doctor authentication routes
+// In production: accessible on all subdomains
+// In development: accessible on port 8000 or subdomain-specific ports 10000+
+Route::middleware(config('app.env') === 'production' ? [] : ['allow.subdomain.ports'])->group(function () {
+    Route::get('/doctor/login', [DoctorLoginController::class, 'showLoginForm'])->name('doctor.login');
+    Route::post('/doctor/login', [DoctorLoginController::class, 'login'])
+        ->middleware(['throttle:5,1', 'account.lockout']); // 5 attempts per minute + account lockout
+    Route::post('/doctor/logout', [DoctorLoginController::class, 'logout'])->name('doctor.logout');
+});
+
+// Public routes
+// In production: accessible on all subdomains
+// In development: accessible on port 8000 or subdomain-specific ports 10000+
+Route::middleware(config('app.env') === 'production' ? ['subdomain.check'] : ['allow.subdomain.ports', 'subdomain.check'])->group(function () {
+
+    // Patient registration via special link only
+    Route::get('/register/{token}', [RegistrationLinkController::class, 'showRegistrationForm'])
+        ->middleware('throttle:10,1') // 10 attempts per minute per IP
+        ->name('patient.register');
+    Route::post('/register/{token}', [PatientController::class, 'store'])
+        ->middleware('throttle:5,1') // 5 submissions per minute per IP
+        ->name('patient.store');
+    
+    // Public availability endpoint for registration form (no auth required)
+    Route::get('/availability/slots', [AvailabilityController::class, 'getAvailableSlots'])
+        ->middleware('throttle:30,1') // 30 requests per minute
+        ->name('availability.slots.public');
+    
+    // CAPTCHA reload route
     Route::get('/captcha/reload', function() {
         try {
             // Generate new CAPTCHA and return the image HTML
             $captcha = captcha_img('flat');
             return response()->json(['captcha' => $captcha]);
         } catch (\Exception $e) {
-            \Log::error('CAPTCHA reload error: ' . $e->getMessage() . ' | Trace: ' . $e->getTraceAsString());
-            // Return error details for debugging
+            \Log::error('CAPTCHA reload error: ' . $e->getMessage());
+            // Don't expose file paths or line numbers in production
+            $errorMessage = config('app.debug') 
+                ? $e->getMessage() 
+                : 'Failed to generate CAPTCHA. Please try again.';
+            
             return response()->json([
                 'error' => 'Failed to generate CAPTCHA',
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'message' => $errorMessage
             ], 500);
         }
-    })->name('captcha.reload');
-});
-
-// Public routes (with subdomain check, but allow parent domain)
-Route::middleware('subdomain.check')->group(function () {
-    Route::get('/', function () {
-        return view('welcome');
-    })->name('home');
-
-    // Patient registration via special link only
-    Route::get('/register/{token}', [RegistrationLinkController::class, 'showRegistrationForm'])->name('patient.register');
-    Route::post('/register/{token}', [PatientController::class, 'store'])->name('patient.store');
-    
-    // Public availability endpoint for registration form (no auth required)
-    Route::get('/availability/slots', [AvailabilityController::class, 'getAvailableSlots'])->name('availability.slots.public');
+    })->middleware('throttle:10,1')->name('captcha.reload'); // Rate limit CAPTCHA requests
 });
 
 // Protected routes (require authentication)
-Route::middleware('auth')->group(function () {
-    // Admin routes (accessible to admins from any domain)
-    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+// Admin routes
+// In production: accessible on admin domain or main domain
+// In development: restricted to port 9000
+Route::middleware(config('app.env') === 'production' 
+    ? ['auth:admin', 'role:admin'] 
+    : ['auth:admin', 'restrict.port:9000', 'role:admin']
+)->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         
         // Subdomains
@@ -74,10 +144,15 @@ Route::middleware('auth')->group(function () {
         // Reports & Insights
         Route::get('/reports', [ReportsController::class, 'reports'])->name('reports.index');
         Route::get('/insights', [ReportsController::class, 'insights'])->name('insights.index');
-    });
-    
-    // Doctor Dashboard (with subdomain check)
-    Route::middleware('subdomain.check')->group(function () {
+});
+
+// Doctor routes
+// In production: accessible on all subdomains
+// In development: accessible on port 8000 or subdomain-specific ports 10000+
+Route::middleware(config('app.env') === 'production'
+    ? ['auth:web', 'subdomain.check']
+    : ['auth:web', 'allow.subdomain.ports', 'subdomain.check']
+)->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         
         // Patients
@@ -89,14 +164,18 @@ Route::middleware('auth')->group(function () {
         // Appointments
         Route::resource('appointments', AppointmentController::class);
         Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
-    });
-    
-    // Doctor only routes
-    Route::middleware(['subdomain.check', 'role:doctor'])->group(function () {
+});
+
+// Doctor only routes
+// In production: accessible on all subdomains
+// In development: accessible on port 8000 or subdomain-specific ports 10000+
+Route::middleware(config('app.env') === 'production'
+    ? ['auth:web', 'subdomain.check', 'role:doctor']
+    : ['auth:web', 'allow.subdomain.ports', 'subdomain.check', 'role:doctor']
+)->group(function () {
         // Availability management - specific routes must come BEFORE resource route
         Route::get('/availability/date-availability', [AvailabilityController::class, 'getDateAvailability'])->name('availability.date-availability');
         Route::post('/availability/quick-set', [AvailabilityController::class, 'quickSetAvailability'])->name('availability.quick-set');
         // Resource route (exclude 'show' since we don't need individual availability view)
         Route::resource('availability', AvailabilityController::class)->except(['show']);
-    });
 });
