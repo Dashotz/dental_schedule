@@ -109,7 +109,7 @@ return [
 
 ## 🚀 Platform-Specific Setup
 
-### Railway
+### Railway (Note: Gives you $5 FREE credit/month - you don't pay it!)
 
 1. **Deploy main application**
 2. **Configure subdomains:**

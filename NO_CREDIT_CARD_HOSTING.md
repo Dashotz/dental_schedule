@@ -2,7 +2,10 @@
 
 ## 🎯 Best Options (No Credit Card Needed)
 
-Since Fly.io, Railway, and Render require credit cards, here are the best **truly free** alternatives that don't require any payment method:
+Since Fly.io, Railway, and Render require credit cards (even though they're free to use), here are the best **truly free** alternatives that don't require any payment method:
+
+### ⚠️ Note About Railway
+Railway gives you **$5 FREE credit** every month - you don't pay $5, they give it to you! But you still need a credit card on file. If you can't provide a credit card, use the options below.
 
 ---
 

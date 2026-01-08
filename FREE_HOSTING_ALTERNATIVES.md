@@ -16,23 +16,35 @@ Laravel requires:
 
 ## ✅ Best Free Hosting Options for Laravel
 
-### 1. **Railway** ⭐ (Recommended)
+### 1. **Railway** ⚠️ (NOT Free - $5/month minimum)
 **Best for: Modern deployment, easy setup**
 
-- **Free Tier**: $5 credit/month (enough for small apps)
-- **Credit Card**: ⚠️ **REQUIRED** (but free tier doesn't charge)
+- **Hobby Plan**: $5/month **minimum** (includes $5 of usage)
+- **Upfront Cost**: **$5** to activate the plan
+- **Credit Card**: ⚠️ **REQUIRED** (mandatory)
+- **Monthly Cost**: **$5/month minimum** (even if usage is less)
 - **Features**:
   - Automatic deployments from GitHub
   - Built-in PostgreSQL/MySQL
   - Environment variables management
   - SSL certificates included
   - Custom domains supported
+  - 8 GB RAM / 8 vCPU per service
 - **Limitations**: 
+  - **NOT free** - requires $5/month minimum
   - Sleeps after inactivity (free tier)
   - Limited resources
-  - **Requires credit card** (won't charge on free tier)
+  - **Requires credit card** and upfront payment
+  - Charges for usage above $5/month
 - **Setup**: Very easy, connects to GitHub
 - **URL**: https://railway.app
+
+**Important**: Railway is **NOT free**. It requires:
+1. **$5 upfront** to activate Hobby plan
+2. **$5/month minimum** charge (even if you use less)
+3. Additional charges if you exceed $5 usage/month
+
+**See `RAILWAY_CLARIFICATION.md` for detailed pricing breakdown.**
 
 **Deployment Steps:**
 1. Sign up with GitHub
@@ -192,25 +204,37 @@ Laravel requires:
 
 ## 📊 Comparison Table
 
-| Platform | Free Tier | Credit Card | Database | Always-On | Ease of Setup | Best For |
-|----------|-----------|-------------|----------|-----------|---------------|----------|
-| **Railway** | $5 credit/month | ⚠️ Required | ✅ Included | ⚠️ Sleeps | ⭐⭐⭐⭐⭐ | Modern apps |
-| **Render** | 750 hrs/month | ⚠️ Required | ✅ 90 days free | ⚠️ Sleeps | ⭐⭐⭐⭐⭐ | Simple deployment |
-| **Fly.io** | 3 VMs | ⚠️ Required | ✅ Included | ✅ Always-on | ⭐⭐⭐ | Global apps |
-| **InfinityFree** | Unlimited | ✅ **NO** | ✅ MySQL | ✅ Always-on | ⭐⭐⭐ | Traditional hosting |
-| **000WebHost** | 1GB/10GB | ✅ **NO** | ✅ MySQL | ✅ Always-on | ⭐⭐⭐ | Testing |
-| **AwardSpace** | 1GB/5GB | ✅ **NO** | ✅ MySQL | ✅ Always-on | ⭐⭐⭐ | Basic hosting |
+| Platform | Tier | Credit Card | Monthly Cost | Database | Always-On | Ease of Setup | Best For |
+|----------|------|-------------|--------------|----------|-----------|---------------|----------|
+| **Railway** | Hobby Plan | ⚠️ Required | **$5/month** (minimum) | ✅ Included | ⚠️ Sleeps | ⭐⭐⭐⭐⭐ | Modern apps |
+| **Render** | Free Tier | ⚠️ Required | **$0** (free tier) | ✅ 90 days free | ⚠️ Sleeps | ⭐⭐⭐⭐⭐ | Simple deployment |
+| **Fly.io** | Free Tier | ⚠️ Required | **$0** (free tier) | ✅ Included | ✅ Always-on | ⭐⭐⭐ | Global apps |
+| **InfinityFree** | Free | ✅ **NO** | **$0** (truly free) | ✅ MySQL | ✅ Always-on | ⭐⭐⭐ | Traditional hosting |
+| **000WebHost** | Free | ✅ **NO** | **$0** (truly free) | ✅ MySQL | ✅ Always-on | ⭐⭐⭐ | Testing |
+| **AwardSpace** | Free | ✅ **NO** | **$0** (truly free) | ✅ MySQL | ✅ Always-on | ⭐⭐⭐ | Basic hosting |
 
 ---
 
 ## 🎯 Recommendations
 
 ### ⚠️ Platforms Requiring Credit Card:
-1. **Railway** - Best balance of features and ease (requires CC)
-2. **Render** - Good for simple deployments (requires CC)
-3. **Fly.io** - Best for performance, always-on (requires CC)
 
-**Note**: These platforms require a credit card but won't charge on free tier. They're safe to use.
+1. **Railway** - ⚠️ **NOT FREE** - $5/month minimum
+   - **Cost**: $5 upfront + $5/month minimum
+   - **Requires**: Credit card (mandatory)
+   - **Note**: Charges $5/month even if usage is less
+
+2. **Render** - ✅ Free tier available
+   - **Cost**: $0/month (free tier)
+   - **Requires**: Credit card (won't charge on free tier)
+   - **Note**: Services sleep after inactivity
+
+3. **Fly.io** - ✅ Free tier available
+   - **Cost**: $0/month (free tier)
+   - **Requires**: Credit card (won't charge on free tier)
+   - **Note**: Always-on, no sleep
+
+**Important**: Railway is **NOT free** - it requires $5/month minimum. Render and Fly.io have truly free tiers (but require credit card).
 
 ### ✅ Platforms WITHOUT Credit Card Required:
 1. **InfinityFree** - Unlimited resources, truly free
@@ -220,13 +244,15 @@ Laravel requires:
 ### For Your Multi-Tenant SaaS:
 
 #### If You Have a Credit Card:
-**Recommended: Railway, Render, or Fly.io**
+**Recommended: Render or Fly.io** (both have free tiers)
 - Easy GitHub integration
 - Built-in databases
 - Environment variable management
 - SSL certificates included
 - Custom domains
 - Good for multi-tenant architecture
+
+**Note**: Railway requires $5/month minimum, so it's not truly free. Render and Fly.io have free tiers.
 
 #### If You DON'T Have a Credit Card:
 **Recommended: InfinityFree**
