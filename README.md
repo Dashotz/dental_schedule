@@ -1,6 +1,6 @@
 # Dental Scheduling System
 
-A comprehensive web-based dental clinic management system designed to streamline patient management, appointment scheduling, and clinic operations.
+A comprehensive **B2B SaaS (Software as a Service)** platform designed for dental clinics to streamline patient management, appointment scheduling, and operations.
 
 ## Table of Contents
 
@@ -13,7 +13,7 @@ A comprehensive web-based dental clinic management system designed to streamline
 
 ## Overview
 
-This system provides a complete solution for managing dental clinic operations, from patient registration to appointment scheduling and treatment tracking. The platform is designed with security and ease of use in mind, featuring role-based access control and comprehensive administrative tools.
+This system is architected as a **multi-tenant SaaS solution**, enabling multiple dental clinics to operate independently on a single deployment. It provides a complete suite of tools for business operations, from patient registration to billing and subscription management. The platform features strict data isolation between tenants, role-based access control, and a centralized administration panel for platform owners.
 
 ## Features
 
@@ -50,11 +50,26 @@ This system provides a complete solution for managing dental clinic operations, 
 
 ## Technology Stack
 
-- **Backend Framework**: Laravel (Modern PHP framework)
-- **Database**: SQLite (development) / MySQL (production)
-- **Frontend**: Tailwind CSS, Blade Templates
-- **UI Components**: Modern responsive design
-- **Security**: Role-based authentication and authorization
+### Backend Core
+- **Framework**: **Laravel 12.x** (PHP 8.2+)
+  - robust MVC architecture
+  - built-in security features
+- **Database**: 
+  - **Development**: **SQLite** (Zero-configuration, file-based)
+  - **Production**: **MySQL** (Scalable, enterprise-grade)
+- **Security**: 
+  - Role-based Access Control (RBAC)
+  - CSRF Protection
+  - `mews/captcha` integration for spam prevention
+
+### Frontend
+- **Templating**: **Blade** (Laravel's powerful native templating engine)
+- **Styling**: **Tailwind CSS 3.4**
+  - Utility-first approach
+  - Mobile-first responsive design
+  - `@tailwindcss/forms` and `@tailwindcss/typography` plugins for enhanced UI
+- **Build Tool**: **Vite 6** (Fast development server and bundling)
+- **Icons**: Blade Heroicons
 
 ## Running the Application
 
